@@ -1,0 +1,16 @@
+% Ignore file for Git
+% Add files, file extensions or directories which shouldn't be uploaded to Github
+
+% Ignore directory
+Unwanted-directory/*
+
+% Ignore file extension
+*.pdf
+
+% Ignore file
+unwanted_file.m
+test_*.m
+
+% Disregard rules for some file
+
+manual.pdf % Will be uploaded
