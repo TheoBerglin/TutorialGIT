@@ -13,4 +13,4 @@ test_*.m
 
 % Disregard rules for some file
 
-manual.pdf % Will be uploaded
+!manual.pdf % Will be uploaded
