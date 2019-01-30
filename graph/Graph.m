@@ -175,7 +175,15 @@ classdef Graph < handle & matlab.mixin.Copyable
     % Author: Mite Mijalkov, Ehsan Kakaei & Giovanni Volpe
     % Date: 2016/01/01
     
-    properties (Constant)
+    properties (Constant)    
+        % Graph types
+        BD = 1; % Binary Directed
+        BU = 2; % Binary Undirected
+        WD = 3; % Weighted Directed
+        WU = 4; % Weighted Undirected
+        WDN = 5; % Weighted Directed with Negative weights 
+        WUN = 6; % Weighted Undirected with Negative weights  
+        
         % measures
         DEGREE = 1;
         DEGREE_NAME = 'degree';

@@ -139,6 +139,7 @@ classdef GraphWU < GraphWD
             ]
     end
     properties (Access = protected)
+        TYPE % graph type
     end
     methods
         function g = GraphWU(A,varargin)
@@ -161,6 +162,8 @@ classdef GraphWU < GraphWD
             A = Graph.symmetrize(A,varargin{:});  % symmetrized connection matrix
 
             g = g@GraphWD(A,varargin{:});
+            
+            g.TYPE = Graph.WU;
         end
         function bool = directed(g)  
             % DIRECTED checks if graph is directed

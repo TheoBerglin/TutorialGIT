@@ -140,6 +140,7 @@ classdef GraphBU < GraphBD
     properties (Access = protected)
         % [D B] = distance(g)
         B  % number of edges in shortest weighted path matrix
+        TYPE % graph type
     end
     methods
         function g = GraphBU(A,varargin)
@@ -168,6 +169,8 @@ classdef GraphBU < GraphBD
             
             g = g@GraphBD(A,varargin{:});
             g.C = C;
+            
+            g.TYPE = Graph.BU;
         end
         function bool = directed(g)
             % DIRECTED checks if graph is directed

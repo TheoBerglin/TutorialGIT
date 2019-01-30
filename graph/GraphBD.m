@@ -106,6 +106,8 @@ classdef GraphBD < Graph
     % Date: 2016/01/01
     
     properties (Constant)
+        type = 
+        
         MEASURES_BD = [ ...
             Graph.DEGREE ...
             Graph.DEGREEAV ...
@@ -157,6 +159,7 @@ classdef GraphBD < Graph
     properties (GetAccess = public, SetAccess = protected)
         C  % weighted correlation matrix
         threshold
+        TYPE % graph type
     end
     properties (Access = protected)
     end
@@ -184,6 +187,8 @@ classdef GraphBD < Graph
             g = g@Graph(A,varargin{:});
             g.C = C;
             g.threshold = threshold;
+            
+            g.TYPE = Graph.BD;
         end
         function d = density(g,varargin)
             % DENSITY density of a graph

@@ -164,6 +164,7 @@ classdef GraphWD < Graph
         % [D,L,B] = distance(g)
         L  % egde length matrix
         B  % number of edges in shortest weighted path matrix
+        TYPE % graph type
     end
     methods
         function g = GraphWD(A,varargin)
@@ -179,6 +180,7 @@ classdef GraphWD < Graph
             % See also Graph, GraphWU.
             
             g = g@Graph(A,varargin{:});
+            g.TYPE = Graph.WD; 
         end
         function bool = weighted(g)
             % WEIGHTED checks if graph is weighted

@@ -3,13 +3,13 @@
 
 % Ignore directory
 Unwanted-directory/*
-
+graph/oldTests/*
 % Ignore file extension
 *.pdf
 
 % Ignore file
 unwanted_file.m
-test_*.m
+
 
 % Disregard rules for some file
 
