@@ -106,7 +106,6 @@ classdef GraphBD < Graph
     % Date: 2016/01/01
     
     properties (Constant)
-        type = 
         
         MEASURES_BD = [ ...
             Graph.DEGREE ...
