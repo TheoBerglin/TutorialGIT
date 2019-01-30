@@ -1,7 +1,0 @@
-% This is the HelloWorld file
-% Should be an implementation of HelloWorld
-
-% Nice comment
-disp('Hello World')
-
-% this is a change
