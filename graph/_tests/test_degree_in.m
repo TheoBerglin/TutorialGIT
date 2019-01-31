@@ -58,11 +58,12 @@ test_struct(6) = get_test_struct(A6, type6, exp_res6, 'Negative Weighted directe
 
 %% Perform test
 disp('Running tests for in degree calculations')
+tol = 1e-6;
 for i=1:length(test_struct)
     res = degree_in(test_struct(i).connectivity);
     exp_result = test_struct(i).exp_result;
     name = test_struct(i).name;
-    if all(res == exp_result)
+    if all(abs(res - exp_result) < tol)
         fprintf('%s - Passed\n', name)
     else
         fprintf('%s - Failed\n', name)

@@ -66,6 +66,7 @@ test_struct(8) = get_test_struct(A6, type6, degree6, 'Negative Weighted Directed
 
 %% Perform tests
 disp('Running tests for degree calculations')
+tol = 1e-6;
 for i=1:length(test_struct)
     connectivity_matrix = test_struct(i).connectivity;
     type = test_struct(i).type;
@@ -73,7 +74,7 @@ for i=1:length(test_struct)
     name = test_struct(i).name;
     
     deg = degree(connectivity_matrix, type);
-    if isequal(deg, exp_result)
+    if all(abs(deg - exp_result) < tol)
         fprintf('%s - passed\n', name)
     else
         fprintf('%s - failed\n', name)
