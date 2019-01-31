@@ -9,7 +9,7 @@ graph/oldTests/*
 
 % Ignore file
 unwanted_file.m
-
+*.asv
 
 % Disregard rules for some file
 
