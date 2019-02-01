@@ -81,7 +81,7 @@ exp_res6 = zeros(5);
 test_struct(8) = get_test_struct(A6, type6, exp_res6, 'Negative Weighted Directed');
 
 %% Perform tests
-disp('Running tests for degree calculations')
+disp('Running tests for distance calculations')
 tol = 1e-6;
 for i=1:length(test_struct)
     connectivity_matrix = test_struct(i).connectivity;
