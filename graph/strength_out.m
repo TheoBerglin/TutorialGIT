@@ -6,7 +6,8 @@ function outstr = strength_out(A, ~)
 %   The input parameter ~ specifies that this function is independent of
 %   the graph type.
 %
-% The out-strength is the sum of weights of the outwards edges.
+% The out-strength is the sum of weights of the outwards edges. Thgese  are
+% the values in the row of A corresponding to each node.
 %
 % In these calculations, the diagonal of the connection matrix is removed
 % i.e. self-connections are not considered.

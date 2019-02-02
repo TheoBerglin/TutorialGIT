@@ -6,7 +6,8 @@ function instr = strength_in(A, ~)
 %   The input parameter ~ specifies that this function is independent of
 %   the graph type.
 %
-% The in-strength is the sum of weights of the inwards edges.
+% The in-strength is the sum of weights of the inwards edges. Thgese  are
+% the values in the column of A corresponding to each node.
 %
 % In these calculations, the diagonal of the connection matrix is removed
 % i.e. self-connections are not considered.
