@@ -140,7 +140,6 @@ classdef GraphBU < GraphBD
     properties (Access = protected)
         % [D B] = distance(g)
         B  % number of edges in shortest weighted path matrix
-        TYPE % graph type
     end
     methods
         function g = GraphBU(A,varargin)

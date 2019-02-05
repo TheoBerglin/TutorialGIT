@@ -164,7 +164,6 @@ classdef GraphWD < Graph
         % [D,L,B] = distance(g)
         L  % egde length matrix
         B  % number of edges in shortest weighted path matrix
-        TYPE % graph type
     end
     methods
         function g = GraphWD(A,varargin)

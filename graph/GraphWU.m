@@ -139,7 +139,6 @@ classdef GraphWU < GraphWD
             ]
     end
     properties (Access = protected)
-        TYPE % graph type
     end
     methods
         function g = GraphWU(A,varargin)

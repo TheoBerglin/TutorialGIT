@@ -86,6 +86,7 @@ classdef Graph < handle & matlab.mixin.Copyable
     %   A        -   connection matrix
     %   P        -   coefficient p-values
     %   S        -   default community structure
+    %   TYPE     -   graph type
     %
     % Graph properties (Access = protected):
     %   N        -   number of nodes
@@ -140,6 +141,7 @@ classdef Graph < handle & matlab.mixin.Copyable
     %   randomize    -   randomize graph while preserving degree distribution
     %
     % Graph methods :
+    %   get_type            -   returns the type of the graph
     %   subgraph            -   creates subgraph from given nodes
     %   nodeattack          -   removes given nodes from a graph
     %   edgeattack          -   removes given edges from a graph
@@ -644,6 +646,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         A  % connection matrix
         P  % coefficient p-values
         S  % community structure
+        TYPE % Graph type
     end
     properties (Access = protected)
         % N = nodenumber(g)
@@ -793,6 +796,20 @@ classdef Graph < handle & matlab.mixin.Copyable
         randomize(g)  % randomize graph while preserving degree distribution
     end
     methods
+        function type = get_type(g)
+            % GET_TYPE returns the type of the graph G.
+            %
+            % TYPE = GET_TYPE(G) Returns the TYPE of the graph G
+            %   TYPE specifies the type of graph:
+            %   Graph.BD = Binary Directed
+            %   Graph.BU = Binary Undirected
+            %   Graph.WD = Weighted Directed
+            %   Graph.WU = Weighted Undirected
+            %   Graph.WDN = Weighted Directed with Negative weights
+            %   Graph.WUN = Weighted Undirected with Negative weights
+           
+            type = g.TYPE; 
+        end
         function sg = subgraph(g,nodes)
             % SUBGRAPH creates subgraph from given nodes
             %
