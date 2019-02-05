@@ -165,6 +165,12 @@ classdef Graph < handle & matlab.mixin.Copyable
     %   hist                -   plots the histogram and density of a matrix
     %   isnodal             -   checks if measure is nodal
     %   isglobal            -   checks if measure is global
+    %   is_directed         -   checks if the graph type is directed
+    %   is_undirected       -   checks if the graph type is undirected
+    %   is_binary           -   checks if the graph type is binary
+    %   is_weighted         -   checks if the graph type is weighted
+    %   is_positive         -   checks if the graph type has only non-negative weights
+    %   is_negative         -   checks if the graph type has also negative weights
     %
     % Graph methods (Static, Abstract):
     %   measurelist         -   list of measures valid for a graph
@@ -1841,6 +1847,56 @@ classdef Graph < handle & matlab.mixin.Copyable
             
             bool = ~Graph.isnodal(mi);
         end
+        function bool = is_directed(type)
+            % IS_DIRECTED checks if the graph type is directed
+            %
+            % BOOL = IS_DIRECTED(TYPE) returns true if the graph type TYPE
+            %   is directed, false otherwise.
+            
+            bool = type==Graph.BD || type==Graph.WD || type==Graph.WDN;
+        end
+        function bool = is_undirected(type)
+            % IS_UNDIRECTED checks if the graph type is undirected
+            %
+            % BOOL = IS_UNDIRECTED(TYPE) returns true if the graph type TYPE
+            %   is undirected, false otherwise.
+            
+            bool = type==Graph.BU || type==Graph.WU || type==Graph.WUN;
+        end
+        function bool = is_binary(type)
+            % IS_BINARY checks if the graph type is binary
+            %
+            % BOOL = IS_BINARY(TYPE) returns true if the graph type TYPE
+            %   is binary, false otherwise.
+            
+            bool = type==Graph.BD || type==Graph.BU;
+        end   
+        function bool = is_weighted(type)
+            % IS_WEIGHTED checks if the graph type is weighted
+            %
+            % BOOL = IS_WEIGHTED(TYPE) returns true if the graph type TYPE
+            %   is weighted, false otherwise.
+            
+            bool = type==Graph.WD || type==Graph.WU || ...
+                type==Graph.WUN || type==Graph.WDN;
+        end 
+        function bool = is_positive(type)
+            % IS_POSITIVE checks if the graph type has only non-negative weights
+            %
+            % BOOL = IS_POSITIVE(TYPE) returns true if the graph type TYPE
+            %   has only non-negative weights, false otherwise.
+            
+            bool = type==Graph.BD || type==Graph.BU || ...
+                type==Graph.WU || type==Graph.WD;
+        end
+        function bool = is_negative(type)
+            % IS_NEGATIVE checks if the graph type has also negative weights
+            %
+            % BOOL = IS_NEGATIVE(TYPE) returns true if the graph type TYPE
+            %   has also negative weights, false otherwise.
+            
+            bool = type==Graph.WUN || type==Graph.WDN;
+        end  
     end
     methods (Static,Abstract)
         measurelist(nodal)  % list of measures valid for a graph (no argin = all; true = only nodal; false = only non-nodal)
