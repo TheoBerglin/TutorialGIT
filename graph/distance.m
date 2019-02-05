@@ -36,7 +36,7 @@ function D = distance( A, type )
 % Date: 2019/01/31
 % http://braph.org/
 
-if type==Graph.BD || type==Graph.BU
+if Graph.is_binary(type)
     l = 1;  % path length
     D = A;  % distance matrix
     
@@ -52,7 +52,7 @@ if type==Graph.BD || type==Graph.BU
     D(~D) = inf;  % assign inf to disconnected nodes
     D = remove_diagonal(D);  % assign 0 to the diagonal
     
-elseif type==Graph.WD || type==Graph.WU
+elseif Graph.is_weighted(type) && Graph.is_positive(type)
     L = A;  % length matrix
     ind = L~=0;
     L(ind) = L(ind).^-1;  % length is inversely prop to weights
@@ -86,7 +86,7 @@ elseif type==Graph.WD || type==Graph.WU
         
     end
     
-elseif type==Graph.WDN || type==Graph.WUN
+elseif Graph.is_negative(type)
     error('Negative weights, not implemented')
 end
 

@@ -23,8 +23,7 @@ function deg = degree( A, type )
 
 deg = degree_in(A, type) + degree_out(A, type);
 
-% If it's an undirected graph, divide the degree by two
-if type==Graph.BU || type==Graph.WU || type==Graph.WUN
+if Graph.is_undirected(type)
     deg = deg/2;
 end
 

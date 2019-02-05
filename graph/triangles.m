@@ -38,12 +38,12 @@ function t = triangles( A, type )
 A = remove_diagonal(A);
 N = size(A,2); % Number of nodes
 
-if type == Graph.BU || type == Graph.WU || type == Graph.WUN
+if Graph.is_undirected(type)
     A13 = abs(A).^(1/3).*sign(A); % No imaginary numbers for negative matrix, Binary matrix won't change
     A3 = A13^3;
     t = diag(A3)'/2;
     
-else % if type == Graph.BD || type == Graph.WD || type == Graph.WDN
+else % Graph is directed
     t = zeros(1,N);
     W = abs(A).^(1/3).*sign(A); % No imaginary numbers for negative matrix, Binary matrix won't change
     for u = 1:1:N

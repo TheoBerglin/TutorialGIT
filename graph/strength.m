@@ -22,7 +22,7 @@ function str = strength(A, type)
 
 str = strength_in(A)+strength_out(A);
 
-if type == Graph.WU || type == Graph.BU || type == Graph.WUN
+if Graph.is_undirected(type)
     str = str / 2;
 end
 
