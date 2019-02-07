@@ -36,6 +36,7 @@ function t = triangles( A, type )
 % http://braph.org/
 
 A = remove_diagonal(A);
+A = normalize_matrix(A); % Normalize the matrix needed for weighted calculations, Binary matrix won't change
 N = size(A,2); % Number of nodes
 
 if Graph.is_undirected(type)
