@@ -58,6 +58,7 @@ else % Graph is directed
         end
     end
 end
+t(isnan(t)) = 0; % Should return zeros, not nan
 
 end
 

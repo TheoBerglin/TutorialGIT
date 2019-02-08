@@ -66,7 +66,7 @@ A5 = [1 1 0 0 1;
     0 3 1 2 0;
     0 1 2 1 1;
     1 0 0 1 1];
-exp_res5 = [0 6^(1/3) 6^(1/3) 6^(1/3) 0];
+exp_res5 = [0 6^(1/3) 6^(1/3) 6^(1/3) 0]/3;
 type5 = Graph.WU;
 test_struct(6) = get_test_struct(A5, type5, exp_res5, 'Weighted undirected matrix 1');
 
@@ -76,7 +76,7 @@ A6 = [1 0 0 0 2;
     0 0 1 0 5;
     1 0 1 1 1;
     0 3 0 0 1];
-exp_res6 = [6 18 12 0 18];
+exp_res6 = [6 18 12 0 18]/5;
 type6 = Graph.WD;
 test_struct(7) = get_test_struct(A5, type5, exp_res5, 'Weighted directed matrix 1');
 
@@ -86,7 +86,7 @@ A7 = [1 1 0 0 1;
     0 -3 1 -2 0;
     0 1 -2 1 1;
     1 0 0 1 1];
-exp_res7 = [0 6^(1/3) 6^(1/3) 6^(1/3) 0];
+exp_res7 = [0 6^(1/3) 6^(1/3) 6^(1/3) 0]/3;
 type7 = Graph.WUN;
 test_struct(8) = get_test_struct(A7, type7, exp_res7, 'Weighted undirected matrix negative 1');
 
@@ -96,7 +96,7 @@ A8 = [1 1 0 0 1;
     0 3 1 2 0;
     0 -1 2 1 1;
     1 0 0 1 1];
-exp_res8 = [0 -(6^(1/3)) -(6^(1/3)) -(6^(1/3)) 0];
+exp_res8 = [0 -(6^(1/3)) -(6^(1/3)) -(6^(1/3)) 0]/3;
 type8 = Graph.WUN;
 test_struct(9) = get_test_struct(A8, type8, exp_res8, 'Weighted undirected matrix negative 2');
 
@@ -106,7 +106,7 @@ A9 = [1 0 0 0 2;
     0 0 1 0 -5;
     1 0 1 1 1;
     0 -3 0 0 1];
-exp_res9 = [-(6^(1/3)) ((4*5*3)^(1/3)-6^(1/3)) (4*5*3)^(1/3)  0 ((4*5*3)^(1/3)-6^(1/3))];
+exp_res9 = [-(6^(1/3)) ((4*5*3)^(1/3)-6^(1/3)) (4*5*3)^(1/3)  0 ((4*5*3)^(1/3)-6^(1/3))]/5;
 type9 = Graph.WDN;
 test_struct(10) = get_test_struct(A9, type9, exp_res9, 'Weighted directed negative matrix');
 
