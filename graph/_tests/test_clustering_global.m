@@ -71,14 +71,14 @@ type5 = Graph.WU;
 test_struct(6) = get_test_struct(A5, type5, exp_res5, 'Weighted undirected matrix 1');
 
 %% Known matrix 1 weighted directed
-A6 = [1 0 0 0 2;
-    1 1 4 0 0;
-    0 0 1 0 5;
+A6 = [1 0 0 0 1/2;
+    1 1 1/4 0 0;
+    0 0 1 0 1/5;
     1 0 1 1 1;
-    0 3 0 0 1];
-exp_res6 = mean([6/2 18/2 12/2 0 18/3]/5);
+    0 1/3 0 0 1];
+exp_res6 = mean([(1/6)^(1/3) (1/6)^(1/3)+(1/(3*4*5))^(1/3) (1/(3*4*5))^(1/3) 0 (1/6)^(1/3)+(1/(3*4*5))^(1/3)]./[2 2 2 inf 3]);
 type6 = Graph.WD;
-test_struct(7) = get_test_struct(A5, type5, exp_res5, 'Weighted directed matrix 1');
+test_struct(7) = get_test_struct(A6, type6, exp_res6, 'Weighted directed matrix 1');
 
 %% Known matrix weighted undirected negative 1
 A7 = [1 1 0 0 1;
