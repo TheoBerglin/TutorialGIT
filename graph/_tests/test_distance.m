@@ -87,12 +87,16 @@ test_struct(8) = get_test_struct(A6, type6, exp_res6, 'Weighted Undirected');
 
 %% Negative Weighted Directed matrix
 A7 = [-1 4 0 0 0;
-    2 -3 0 3.2 -1.4;
-    0 0 1.8 -1.7 -3.4;
-    -4.2 0 -2 1 0;
+    2 -3 0 3.2 -4;
+    0 0 1.8 -4 -3.4;
+    -4.2 0 2 1 0;
     0 0 0 3.1 -0.4];
 type7 = Graph.WDN;
-exp_res7 = zeros(5);
+exp_res7 = [0 1/4 51/62 10/31 0;
+    -431/2604 0 71/124 9/124 -1/4;
+    -41/84 -5/21 0 -1/4 -5/17;
+    -5/21 1/84 1/2 0 -5/21;
+    55/651 484/1447 51/62 10/31 0];
 test_struct(9) = get_test_struct(A7, type7, exp_res7, 'Negative Weighted Directed');
 
 %% Negative Weighted Undirected matrix
@@ -102,7 +106,7 @@ A8 = [-1 4 0 -4.2 0;
     -4.2 3.2 -1.7 1 0;
     0 -1.4 -3.4 0 -0.4];
 type8 = Graph.WUN;
-exp_res8 = zeros(5);
+exp_res8 = -inf(5);
 test_struct(10) = get_test_struct(A8, type8, exp_res8, 'Negative Weighted Undirected');
 
 %% Perform tests
