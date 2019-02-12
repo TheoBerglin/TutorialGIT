@@ -87,7 +87,48 @@ elseif Graph.is_weighted(type) && Graph.is_positive(type)
     end
     
 elseif Graph.is_negative(type)
-    error('Negative weights, not implemented')
+    n = size(A, 2);  % nbr of nodes
+    
+    if Graph.is_undirected(type)
+        A = remove_diagonal(A);
+        if any(any(A<0))  % neg weight in undirected graph => neg cycle with 2 nodes
+            D = -inf(n);
+            return;
+        end
+    end
+    
+    L = A;  % length matrix
+    L = remove_diagonal(L);  % should self-connections be ignored?
+    ind = L~=0;
+    L(ind) = L(ind).^-1;  % length is inversely prop to weights
+    
+    D = inf(n);
+    D(1:n+1:end) = 0;  % distance matrix
+    
+    for i = 1:n  % loop through all nodes
+        for j = 1:n-1  % relax edges n-1 times
+            for k = 1:n  % loop through nodes row-wise to find edges
+                edges = find(L(k,:)~=0);  % find neighbours from node k
+                for l = edges
+                    if D(i, k) + L(k, l) < D(i, l)  % distance update criteria
+                        D(i, l) = D(i, k) + L(k, l);
+                    end
+                end
+            end
+        end
+        
+        % check for negative-weight cycles
+        for k = 1:n  % loop through nodes row-wise
+            edges = find(L(k,:)~=0);  % find neighbours from node k
+            for l = edges
+                if D(i, k) + L(k, l) < D(i, l)  % negative cycle detected
+                    D = -inf(n);
+                    return;
+                end
+            end
+        end
+    end
+
 end
 
 end
