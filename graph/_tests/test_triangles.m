@@ -1,135 +1,116 @@
-% File to test the use of triangles measure.
+function [ passed, details ] = test_triangles(  )
+%TEST_TRIANGLES Test the use of triangles measure
 %
-% Reference on calculations: 
-% * J.P.Onnela et al. "Intensity and coherence of motifs in weighted complex networks"
-% * G.Fagiolo, "Clustering in complex directed networks"
-% * Negative matrix: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3931641/
-%
-% Author: Adam Liberda & Theo Berglin
-% Date: 2019/01/29
+% Authors: Adam Liberda, Theo Berglin
+% Date: 2019/02/11
 % http://braph.org/
 
-close all, clear all, clc
-%% Diagonal matrix
-A1 = eye(5);
-exp_res1 = zeros(1, 5);
-type1 = Graph.BU;
-test_struct(1) = get_test_struct(A1, type1, exp_res1, 'Diagonal matrix');
+%% Initializations
+test_func = 'triangles';
+N = 5; % number of nodes
 
-%% Known matrix 1 binary undirected
-A2 = [1 1 0 0 1;
-    1 1 1 1 0;
+%% Diagonal adjacency matrix
+A1 = eye(N);
+type11 = Graph.BD;
+exp_res1 = zeros(1,N);
+test_struct(1) = get_test_struct(A1, type11, exp_res1, 'Diagonal matrix Binary Directed');
+type12 = Graph.WU;
+test_struct(2) = get_test_struct(0.5*A1, type12, exp_res1, 'Diagonal matrix Weighted Undirected');
+
+%% Fully connected adj matrix
+A2 = ones(N);
+type21 = Graph.BU;
+exp_res2 = 6*ones(1,N);
+test_struct(3) = get_test_struct(A2, type21, exp_res2, 'Fully Connected Binary Undirected');
+type22 = Graph.WD;
+test_struct(4) = get_test_struct(0.5*A2, type22, 2*exp_res2, 'Fully Connected Weighted Directed');
+
+%% Binary Directed matrix
+A3 =[1 0 0 0 1;
+    1 1 0 1 0;
     0 1 1 1 0;
-    0 1 1 1 1;
-    1 0 0 1 1];
-exp_res2 = [0 1 1 1 0];
-type2 = Graph.BU;
-test_struct(2) = get_test_struct(A2, type2, exp_res2, 'Binary undirected matrix 1');
+    0 0 0 1 0;
+    0 0 0 1 1];
+type3 = Graph.BD;
+exp_res3 = [0 0 0 0 0];
+test_struct(5) = get_test_struct(A3, type3, exp_res3, 'Binary Directed');
 
-%% Known matrix 2 binary undirected
-A3 = [1 1 0 0 0 1 1;
+%% Binary Undirected matrix
+A4 = [1 1 0 0 0 1 1;
     1 1 1 0 0 0 1;
     0 1 1 1 0 0 1;
     0 0 1 1 1 0 1;
     0 0 0 1 1 1 1;
     1 0 0 0 1 1 1;
     1 1 1 1 1 1 1];
-exp_res3 = [2 2 2 2 2 2 6];
-type3 = Graph.BU;
-test_struct(3) = get_test_struct(A3, type3, exp_res3, 'Binary undirected matrix 2');
+type4 = Graph.BU;
+exp_res4 = [2 2 2 2 2 2 6];
+test_struct(6) = get_test_struct(A4, type4, exp_res4, 'Binary Undirected');
 
-%% Known matrix 1 binary directed
-A3 = [1 1 0 0 0 0 1;
-    0 1 1 0 0 0 1;
-    0 0 1 1 0 0 0;
-    0 0 0 1 0 0 1;
-    0 0 0 1 1 0 0;
-    1 0 0 0 1 1 0;
-    0 0 1 0 1 1 1];
-exp_res3 = [1 0 1 2 1 1 3];
-type3 = Graph.BD;
-test_struct(4) = get_test_struct(A3, type3, exp_res3, 'Binary directed matrix 1');
-
-%% Known matrix 2 binary directed
-A4 = [1 0 0 0 1;
-    1 1 0 1 0;
-    0 1 1 1 0;
-    0 0 0 1 0;
-    0 0 0 1 1];
-exp_res4 = [0 0 0 0 0];
-type4 = Graph.BD;
-test_struct(5) = get_test_struct(A4, type4, exp_res4, 'Binary directed matrix 2');
-
-%% Known matrix 1 weighted undirected
-A5 = [1 1 0 0 1;
-    1 1 3 1 0;
-    0 3 1 2 0;
-    0 1 2 1 1;
-    1 0 0 1 1];
-exp_res5 = [0 6^(1/3) 6^(1/3) 6^(1/3) 0]/3;
-type5 = Graph.WU;
-test_struct(6) = get_test_struct(A5, type5, exp_res5, 'Weighted undirected matrix 1');
-
-%% Known matrix 1 weighted directed
-A6 = [1 0 0 0 1/2;
+%% Weighted Directed matrix
+A5 = [1 0 0 0 1/2;
     1 1 1/4 0 0;
     0 0 1 0 1/5;
     1 0 1 1 1;
     0 1/3 0 0 1];
-exp_res6 = [(1/6)^(1/3) (1/6)^(1/3)+(1/(3*4*5))^(1/3) (1/(3*4*5))^(1/3) 0 (1/6)^(1/3)+(1/(3*4*5))^(1/3)];
-type6 = Graph.WD;
-test_struct(7) = get_test_struct(A6, type6, exp_res6, 'Weighted directed matrix 1');
+type5 = Graph.WD;
+exp_res5 = [(1/6)^(1/3) (1/6)^(1/3)+(1/(3*4*5))^(1/3) (1/(3*4*5))^(1/3) 0 (1/6)^(1/3)+(1/(3*4*5))^(1/3)];
+test_struct(7) = get_test_struct(A5, type5, exp_res5, 'Weighted Directed');
 
-%% Known matrix weighted undirected negative 1
-A7 = [1 1 0 0 1;
-    1 1 -3 1 0;
-    0 -3 1 -2 0;
-    0 1 -2 1 1;
-    1 0 0 1 1];
-exp_res7 = [0 6^(1/3) 6^(1/3) 6^(1/3) 0]/3;
-type7 = Graph.WUN;
-test_struct(8) = get_test_struct(A7, type7, exp_res7, 'Weighted undirected matrix negative 1');
-
-%% Known matrix weighted undirected negative 2
-A8 = [1 1 0 0 1;
-    1 1 3 -1 0;
+%% Weighted Undirected matrix
+A6 = [1 1 0 0 1;
+    1 1 3 1 0;
     0 3 1 2 0;
-    0 -1 2 1 1;
+    0 1 2 1 1;
     1 0 0 1 1];
-exp_res8 = [0 -(6^(1/3)) -(6^(1/3)) -(6^(1/3)) 0]/3;
-type8 = Graph.WUN;
-test_struct(9) = get_test_struct(A8, type8, exp_res8, 'Weighted undirected matrix negative 2');
+type6 = Graph.WU;
+exp_res6 = [0 6^(1/3) 6^(1/3) 6^(1/3) 0]/3;
+test_struct(8) = get_test_struct(A6, type6, exp_res6, 'Weighted Undirected');
 
-%% Known matrix weighted directed negative
-A9 = [1 0 0 0 2;
+%% Negative Weighted Directed matrix
+A7 = [1 0 0 0 2;
     1 1 4 0 0;
     0 0 1 0 -5;
     1 0 1 1 1;
     0 -3 0 0 1];
-exp_res9 = [-(6^(1/3)) ((4*5*3)^(1/3)-6^(1/3)) (4*5*3)^(1/3)  0 ((4*5*3)^(1/3)-6^(1/3))]/5;
-type9 = Graph.WDN;
-test_struct(10) = get_test_struct(A9, type9, exp_res9, 'Weighted directed negative matrix');
+type7 = Graph.WDN;
+exp_res7 = [-(6^(1/3)) ((4*5*3)^(1/3)-6^(1/3)) (4*5*3)^(1/3)  0 ((4*5*3)^(1/3)-6^(1/3))]/5;
+test_struct(9) = get_test_struct(A7, type7, exp_res7, 'Negative Weighted Directed');
 
-%% Perform test
-disp('Running tests for triangles calculations')
-tolerance = 1e-6;
+%% Negative Weighted Undirected matrix
+A8 = [1 1 0 0 1;
+    1 1 -3 1 0;
+    0 -3 1 -2 0;
+    0 1 -2 1 1;
+    1 0 0 1 1];
+type8 = Graph.WUN;
+exp_res8 = [0 6^(1/3) 6^(1/3) 6^(1/3) 0]/3;
+test_struct(10) = get_test_struct(A8, type8, exp_res8, 'Negative Weighted Undirected');
+
+%% Perform tests
+tol = 1e-6;
+passed = true;
+
 for i=1:length(test_struct)
-    
+    connectivity_matrix = test_struct(i).connectivity;
+    type = test_struct(i).type;
     exp_result = test_struct(i).exp_result;
-    name = test_struct(i).name;
     
     try
-        res = triangles(test_struct(i).connectivity, test_struct(i).type);
+        eval(['res=' test_func '(connectivity_matrix, type);']);
     catch MException
-        if isequal(MException.message, 'ERROR, not implemented for this graph type')
+        if isequal(MException.message, 'Negative weights, not implemented')
             res = exp_result;
-            disp(MException.message)
         end
     end
-    if all(res == exp_result) || all(abs(exp_result-res) < tolerance)
-        fprintf('%s - Passed\n', name)
-    else
-        fprintf('%s - Failed\n', name)
-    end
     
+    if isequaln(res, exp_result) || all(all(abs(res - exp_result) < tol))
+        test_struct(i).passed = true;
+    else
+        passed = false;
+    end
+end
+
+details = test_struct;
+
 end

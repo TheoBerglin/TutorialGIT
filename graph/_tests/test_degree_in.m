@@ -1,71 +1,113 @@
-% File to test the use of in degree measure.
+function [ passed, details ] = test_degree_in(  )
+%TEST_DEGREE_IN Test function for the degree-in measures
 %
-% Author: Adam Liberda & Theo Berglin
-% Date: 2019/01/29
+% Authors: Adam Liberda, Theo Berglin
+% Date: 2019/02/11
 % http://braph.org/
 
-clear all, close all, clc
+%% Initializations
+test_func = 'degree_in';
+N = 5; % number of nodes
 
-%% Diagonal matrix
-A1 = eye(5);
-exp_res1 = zeros(1, 5);
-type1 = Graph.BD;
-test_struct(1) = get_test_struct(A1, type1, exp_res1, 'Diagonal matrix');
+%% Diagonal adjacency matrix
+A1 = eye(N);
+type11 = Graph.BD;
+exp_res1 = zeros(1,N);
+test_struct(1) = get_test_struct(A1, type11, exp_res1, 'Diagonal matrix Binary Directed');
+type12 = Graph.WU;
+test_struct(2) = get_test_struct(A1, type12, exp_res1, 'Diagonal matrix Weighted Undirected');
 
-%% Fully connected matrix
-A2 = ones(5);
-exp_res2 = 4*ones(1, 5);
-type2 = Graph.BD;
-test_struct(2) = get_test_struct(A2, type2, exp_res2, 'Fully connected matrix');
+%% Fully connected adj matrix
+A2 = ones(N);
+type21 = Graph.BU;
+exp_res2 = (N-1)*ones(1, N);
+test_struct(3) = get_test_struct(A2, type21, exp_res2, 'Fully Connected Binary Undirected');
+type22 = Graph.WD;
+test_struct(4) = get_test_struct(A2, type22, exp_res2, 'Fully Connected Weighted Directed');
 
-%% Binary undirected test
-A3 = [1 0 1 1;
-    0 1 0 1;
-    1 0 1 0;
-    1 1 0 1];
-exp_res3 = [2 1 1 2];
-type3 = Graph.BU;
-test_struct(3) = get_test_struct(A3, type3, exp_res3, 'Binary Undirected');
-
-%% Binary directed test
-A4 = [1 1 0 0 0;
+%% Binary Directed matrix
+A3 = [1 1 0 0 0;
     1 1 0 1 1;
     0 0 1 1 1;
     1 0 1 1 0;
     0 0 0 1 1];
-exp_res4 = [2 1 1 3 2];
-type4 = Graph.BD;
-test_struct(4) = get_test_struct(A4, type4, exp_res4, 'Binary Directed');
+type3 = Graph.BD;
+exp_res3 = [2 1 1 3 2];
+test_struct(5) = get_test_struct(A3, type3, exp_res3, 'Binary Directed');
 
-%% Negative values weighted undirected test
-A5 = [1 0 -2 1;
-    0 1 0 0.5;
-    4 0 1 0;
-    1 -3 0 1];
-exp_res5 = [2 1 1 2];
-type5 = Graph.BU;
-test_struct(5) = get_test_struct(A5, type5, exp_res5, 'Negative Weighted Undirected');
+%% Binary Undirected matrix
+A4 = [1 0 1 1;
+    0 1 0 1;
+    1 0 1 0;
+    1 1 0 1];
+exp_res4 = [2 1 1 2];
+type4 = Graph.BU;
+test_struct(6) = get_test_struct(A4, type4, exp_res4, 'Binary Undirected');
 
-%% Negative values weighted directed
-A6 = [-1 1 0 0 0;
-    -2 1 0 1 4;
-    0 0 1 -0.5 1;
-    1 0 -1 1 0;
-    0 0 0 -1 1];
-exp_res6 = [2 1 1 3 2];
-type6 = Graph.BD;
-test_struct(6) = get_test_struct(A6, type6, exp_res6, 'Negative Weighted directed');
+%% Weighted Directed matrix
+A5 = [0 1/2 0 0 0;
+    1/5 0 0 1/3 2;
+    0 0 0 3/5 0;
+    1 0 4/5 0 0;
+    0 0 0 1/5 0];
+type5 = Graph.WD;
+exp_res5 = [2 1 1 3 1];
+test_struct(7) = get_test_struct(A5, type5, exp_res5, 'Weighted Directed');
 
-%% Perform test
-disp('Running tests for in degree calculations')
+%% Weighted Undirected matrix
+A6 = [0 1/2 0 2 0;
+    1/2 0 0 1/3 2;
+    0 0 0 1/4 0;
+    2 1/3 1/4 0 3;
+    0 2 0 3 0];
+type6 = Graph.WU;
+exp_res6 = [2 3 1 4 2];
+test_struct(8) = get_test_struct(A6, type6, exp_res6, 'Weighted Undirected');
+
+%% Negative Weighted Directed matrix
+A7 = [-1 4 0 0 0;
+    2 -3 0 3.2 -1.4;
+    0 0 1.8 -1.7 -3.4;
+    -4.2 0 -2 1 0;
+    0 0 0 3.1 -0.4];
+type7 = Graph.WDN;
+exp_res7 = [2 1 1 3 2];
+test_struct(9) = get_test_struct(A7, type7, exp_res7, 'Negative Weighted Directed');
+
+%% Negative Weighted Undirected matrix
+A8 = [-1 4 0 -4.2 0;
+    4 -3 0 3.2 -1.4;
+    0 0 1.8 -1.7 -3.4;
+    -4.2 3.2 -1.7 1 0;
+    0 -1.4 -3.4 0 -0.4];
+type8 = Graph.WUN;
+exp_res8 = [2 3 2 3 2];
+test_struct(10) = get_test_struct(A8, type8, exp_res8, 'Negative Weighted Undirected');
+
+%% Perform tests
 tol = 1e-6;
+passed = true;
+
 for i=1:length(test_struct)
-    res = degree_in(test_struct(i).connectivity);
+    connectivity_matrix = test_struct(i).connectivity;
+    type = test_struct(i).type;
     exp_result = test_struct(i).exp_result;
-    name = test_struct(i).name;
-    if all(abs(res - exp_result) < tol)
-        fprintf('%s - Passed\n', name)
-    else
-        fprintf('%s - Failed\n', name)
+    
+    try
+        eval(['res=' test_func '(connectivity_matrix, type);']);
+    catch MException
+        if isequal(MException.message, 'Negative weights, not implemented')
+            res = exp_result;
+        end
     end
+    
+    if isequaln(res, exp_result) || all(all(abs(res - exp_result) < tol))
+        test_struct(i).passed = true;
+    else
+        passed = false;
+    end
+end
+
+details = test_struct;
+
 end
