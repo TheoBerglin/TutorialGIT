@@ -18,14 +18,15 @@ function D = distance( A, type )
 %   have the minimum weighted distance, which is inversely proportional
 %   to the weight, i.e a higher weight implies a shorter connection.
 %   Note that the minimum weighted distance is not necessarily the
-%   minimum number of edges. The calculation for graphs with negative
-%   weights is not implemented and returns a matrix containing zeros.
+%   minimum number of edges. If a graph with negative weights contains a 
+%   negative cycle all distances are set to -infinity.
 %
 % Lengths between disconnected nodes are set to Inf. Lengths on the main
 %   diagonal are set to 0.
 %
-% The algorithm used is a breadth-first search for binary graphs and
-%   Dijkstra's algorithm for the weighted graphs.
+% The algorithm used is a breadth-first search for binary graphs,
+%   Dijkstra's algorithm for the weighted graphs and Bellman-Ford 
+%   algorithm for the graphs with negative weights.
 %
 % Reference: "Combinatorics and Graph theory", J.M. Harris, J.L.Hirst
 %            and M.J. Mossinghoff
@@ -88,9 +89,9 @@ elseif Graph.is_weighted(type) && Graph.is_positive(type)
     
 elseif Graph.is_negative(type)
     n = size(A, 2);  % nbr of nodes
-    
+    A = remove_diagonal(A);  % ignore self-connections
+
     if Graph.is_undirected(type)
-        A = remove_diagonal(A);
         if any(any(A<0))  % neg weight in undirected graph => neg cycle with 2 nodes
             D = -inf(n);
             return;
@@ -98,16 +99,16 @@ elseif Graph.is_negative(type)
     end
     
     L = A;  % length matrix
-    L = remove_diagonal(L);  % should self-connections be ignored?
     ind = L~=0;
     L(ind) = L(ind).^-1;  % length is inversely prop to weights
     
-    D = inf(n);
-    D(1:n+1:end) = 0;  % distance matrix
+    D = inf(n);  % distance matrix
+    D(1:n+1:end) = 0;
     
     for i = 1:n  % loop through all nodes
+        % find all shortest paths from node i to all others
         for j = 1:n-1  % relax edges n-1 times
-            for k = 1:n  % loop through nodes row-wise to find edges
+            for k = 1:n  % loop through nodes row-wise to find all edges
                 edges = find(L(k,:)~=0);  % find neighbours from node k
                 for l = edges
                     if D(i, k) + L(k, l) < D(i, l)  % distance update criteria
@@ -118,7 +119,7 @@ elseif Graph.is_negative(type)
         end
         
         % check for negative-weight cycles
-        for k = 1:n  % loop through nodes row-wise
+        for k = 1:n  % loop through nodes row-wise to find all edges
             edges = find(L(k,:)~=0);  % find neighbours from node k
             for l = edges
                 if D(i, k) + L(k, l) < D(i, l)  % negative cycle detected
