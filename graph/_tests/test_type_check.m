@@ -7,7 +7,7 @@ function [ passed, details ] = test_type_check(  )
 
 %% Test
 method = {'is_directed', 'is_undirected', 'is_binary', 'is_weighted', 'is_positive', 'is_negative'};
-type = {Graph.BD, Graph.BU, Graph.WD, Graph.WU, Graph.WDN, Graph.WUN};
+type = {Graph.BD, GraphBU([]), GraphWD([]), Graph.WU, Graph.WDN, Graph.WUN};
 exp_res = [true, false, true, false, true, false;
     false, true, false, true, false, true;
     true, true, false, false, false, false;
@@ -19,7 +19,14 @@ passed = true;
 
 for j=1:length(method)
     for i=1:length(type)
-        res = eval(['Graph.', method{j},'(',int2str(type{i}),')']);
+        arg = type{i};
+        if isnumeric(arg)
+            arg = int2str(arg);
+            res = eval(['Graph.', method{j},'(', arg,')']);
+        else
+            res = eval(['Graph.', method{j},'(arg)']);
+        end
+            
         if res ~= exp_res(j, i)
             if passed
                 details(1) = struct('name', method{j}, 'passed', false);

@@ -1864,53 +1864,149 @@ classdef Graph < handle & matlab.mixin.Copyable
             
             bool = ~Graph.isnodal(mi);
         end
-        function bool = is_directed(type)
+        function bool = is_directed(arg)
             % IS_DIRECTED checks if the graph type is directed
             %
-            % BOOL = IS_DIRECTED(TYPE) returns true if the graph type TYPE
-            %   is directed, false otherwise.
+            % BOOL = IS_DIRECTED(TYPE) returns true if TYPE corresponds to
+            %   a directed graph type, false otherwise. 
+            %   TYPE specifies the type of graph:
+            %   Graph.BD = Binary Directed
+            %   Graph.BU = Binary Undirected
+            %   Graph.WD = Weighted Directed
+            %   Graph.WU = Weighted Undirected
+            %   Graph.WDN = Weighted Directed with Negative weights
+            %   Graph.WUN = Weighted Undirected with Negative weights
+            %
+            % BOOL = IS_DIRECTED(GRAPH) returns true if GRAPH is a directed
+            %   graph, false otherwise.
             
+            if isnumeric(arg)  % if graph type as input
+                type = arg;
+            else  % if graph object as input
+                type = arg.get_type();
+            end
+                
             bool = type==Graph.BD || type==Graph.WD || type==Graph.WDN;
         end
-        function bool = is_undirected(type)
+        function bool = is_undirected(arg)
             % IS_UNDIRECTED checks if the graph type is undirected
             %
-            % BOOL = IS_UNDIRECTED(TYPE) returns true if the graph type TYPE
-            %   is undirected, false otherwise.
+            % BOOL = IS_UNDIRECTED(TYPE) returns true if TYPE corresponds to
+            %   an undirected graph type, false otherwise. 
+            %   TYPE specifies the type of graph:
+            %   Graph.BD = Binary Directed
+            %   Graph.BU = Binary Undirected
+            %   Graph.WD = Weighted Directed
+            %   Graph.WU = Weighted Undirected
+            %   Graph.WDN = Weighted Directed with Negative weights
+            %   Graph.WUN = Weighted Undirected with Negative weights
+            %
+            % BOOL = IS_UNDIRECTED(GRAPH) returns true if GRAPH is an udirected
+            %   graph, false otherwise.
+            
+            if isnumeric(arg)  % if graph type as input
+                type = arg;
+            else  % if graph object as input
+                type = arg.get_type();
+            end
             
             bool = type==Graph.BU || type==Graph.WU || type==Graph.WUN;
         end
-        function bool = is_binary(type)
+        function bool = is_binary(arg)
             % IS_BINARY checks if the graph type is binary
             %
-            % BOOL = IS_BINARY(TYPE) returns true if the graph type TYPE
-            %   is binary, false otherwise.
+            % BOOL = IS_BINARY(TYPE) returns true if TYPE corresponds to
+            %   a binary graph type, false otherwise. 
+            %   TYPE specifies the type of graph:
+            %   Graph.BD = Binary Directed
+            %   Graph.BU = Binary Undirected
+            %   Graph.WD = Weighted Directed
+            %   Graph.WU = Weighted Undirected
+            %   Graph.WDN = Weighted Directed with Negative weights
+            %   Graph.WUN = Weighted Undirected with Negative weights
+            %
+            % BOOL = IS_BINARY(GRAPH) returns true if GRAPH is a binary
+            %   graph, false otherwise.
+            
+            if isnumeric(arg)  % if graph type as input
+                type = arg;
+            else  % if graph object as input
+                type = arg.get_type();
+            end
             
             bool = type==Graph.BD || type==Graph.BU;
         end   
-        function bool = is_weighted(type)
+        function bool = is_weighted(arg)
             % IS_WEIGHTED checks if the graph type is weighted
             %
-            % BOOL = IS_WEIGHTED(TYPE) returns true if the graph type TYPE
-            %   is weighted, false otherwise.
+            % BOOL = IS_WEIGHTED(TYPE) returns true if TYPE corresponds to
+            %   a weighted graph type, false otherwise. 
+            %   TYPE specifies the type of graph:
+            %   Graph.BD = Binary Directed
+            %   Graph.BU = Binary Undirected
+            %   Graph.WD = Weighted Directed
+            %   Graph.WU = Weighted Undirected
+            %   Graph.WDN = Weighted Directed with Negative weights
+            %   Graph.WUN = Weighted Undirected with Negative weights
+            %
+            % BOOL = IS_WEIGHTED(GRAPH) returns true if GRAPH is a weighted
+            %   graph, false otherwise.
+            
+            if isnumeric(arg)  % if graph type as input
+                type = arg;
+            else  % if graph object as input
+                type = arg.get_type();
+            end
             
             bool = type==Graph.WD || type==Graph.WU || ...
                 type==Graph.WUN || type==Graph.WDN;
         end 
-        function bool = is_positive(type)
+        function bool = is_positive(arg)
             % IS_POSITIVE checks if the graph type has only non-negative weights
             %
-            % BOOL = IS_POSITIVE(TYPE) returns true if the graph type TYPE
-            %   has only non-negative weights, false otherwise.
+            % BOOL = IS_POSITIVE(TYPE) returns true if TYPE corresponds to
+            %   a graph type with only non-negative weights, false otherwise. 
+            %   TYPE specifies the type of graph:
+            %   Graph.BD = Binary Directed
+            %   Graph.BU = Binary Undirected
+            %   Graph.WD = Weighted Directed
+            %   Graph.WU = Weighted Undirected
+            %   Graph.WDN = Weighted Directed with Negative weights
+            %   Graph.WUN = Weighted Undirected with Negative weights
+            %
+            % BOOL = IS_POSITIVE(GRAPH) returns true if GRAPH is a graph
+            %   with only non-negative weights, false otherwise. 
+            
+            if isnumeric(arg)  % if graph type as input
+                type = arg;
+            else  % if graph object as input
+                type = arg.get_type();
+            end
             
             bool = type==Graph.BD || type==Graph.BU || ...
                 type==Graph.WU || type==Graph.WD;
         end
-        function bool = is_negative(type)
+        function bool = is_negative(arg)
             % IS_NEGATIVE checks if the graph type has also negative weights
             %
-            % BOOL = IS_NEGATIVE(TYPE) returns true if the graph type TYPE
-            %   has also negative weights, false otherwise.
+            % BOOL = IS_NEGATIVE(TYPE) returns true if TYPE corresponds to
+            %   a graph type tthat can have negative weights, false otherwise. 
+            %   TYPE specifies the type of graph:
+            %   Graph.BD = Binary Directed
+            %   Graph.BU = Binary Undirected
+            %   Graph.WD = Weighted Directed
+            %   Graph.WU = Weighted Undirected
+            %   Graph.WDN = Weighted Directed with Negative weights
+            %   Graph.WUN = Weighted Undirected with Negative weights
+            %
+            % BOOL = IS_NEGATIVE(GRAPH) returns true if GRAPH is a graph
+            %   that can have negative weights, false otherwise. 
+            
+            if isnumeric(arg)  % if graph type as input
+                type = arg;
+            else  % if graph object as input
+                type = arg.get_type();
+            end
             
             bool = type==Graph.WUN || type==Graph.WDN;
         end  
