@@ -1,8 +1,8 @@
 function eccout = eccentricity_out( A, type )
 % ECCENTRICITY_OUT out-eccentricity of nodes
 %
-% ECCOUT = ECCENTRICITY_OUT(A,type) calculates the out-eccentricity ECCIN of
-%   all nodes in the graph represented by the connectivity matrix A.
+% ECCOUT = ECCENTRICITY_OUT(A,type) calculates the out-eccentricity ECCOUT 
+%   of all nodes in the graph represented by the connectivity matrix A.
 %   TYPE specifies the type of graph:
 %   Graph.BD = Binary Directed
 %   Graph.BU = Binary Undirected

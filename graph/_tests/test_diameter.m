@@ -26,11 +26,11 @@ type22 = Graph.WD;
 test_struct(4) = get_test_struct(A2, type22, exp_res2, 'Fully Connected Weighted Directed');
 
 %% Binary Directed matrix
-A3 = [1 1 0 0 0;
-    1 1 0 1 1;
-    0 0 1 1 1;
+A3 = [1 1 1 1 0;
+    0 1 0 1 0;
+    0 1 1 0 0;
     1 0 1 1 0;
-    0 0 0 1 1];
+    0 0 0 0 1];
 type3 = Graph.BD;
 exp_res3 = 3;
 test_struct(5) = get_test_struct(A3, type3, exp_res3, 'Binary Directed');
