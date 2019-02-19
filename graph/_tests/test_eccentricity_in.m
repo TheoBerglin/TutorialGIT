@@ -1,5 +1,5 @@
-function [ passed, details ] = test_eccentricity_in(  )
-%TEST_ECCENTRICITY_IN Test function for the eccentricity_in measures
+function [test_struct, test_func] = test_eccentricity_in(  )
+%TEST_ECCENTRICITY_IN Test suite for the eccentricity_in measures
 %
 % Authors: Adam Liberda, Theo Berglin
 % Date: 2019/02/11
@@ -84,31 +84,5 @@ A8 = [-1 4 0 -4.2 0;
 type8 = Graph.WUN;
 exp_res8 = zeros(1, 5);
 test_struct(10) = get_test_struct(A8, type8, exp_res8, 'Negative Weighted Undirected');
-
-%% Perform tests
-tol = 1e-6;
-passed = true;
-
-for i=1:length(test_struct)
-    connectivity_matrix = test_struct(i).connectivity;
-    type = test_struct(i).type;
-    exp_result = test_struct(i).exp_result;
-    
-    try
-        eval(['res=' test_func '(connectivity_matrix, type);']);
-    catch MException
-        if isequal(MException.message, 'Negative weights, not implemented')
-            res = exp_result;
-        end
-    end
-    
-    if isequaln(res, exp_result) || all(all(abs(res - exp_result) < tol))
-        test_struct(i).passed = true;
-    else
-        passed = false;
-    end
-end
-
-details = test_struct;
 
 end

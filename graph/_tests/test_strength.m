@@ -1,5 +1,5 @@
-function [ passed, details ] = test_strength(  )
-%TEST_STRENGTH Test the use of strength measure
+function [test_struct, test_func] = test_strength(  )
+%TEST_STRENGTH Test suite for the strength measure
 %
 % Authors: Adam Liberda, Theo Berglin
 % Date: 2019/02/11
@@ -84,31 +84,5 @@ A8 = [1 -6 0 0 7;
 type8 = Graph.WUN;
 exp_res8 = [-3 -4 0 4 3]/2;
 test_struct(10) = get_test_struct(A8, type8, exp_res8, 'Negative Weighted Undirected');
-
-%% Perform tests
-tol = 1e-6;
-passed = true;
-
-for i=1:length(test_struct)
-    connectivity_matrix = test_struct(i).connectivity;
-    type = test_struct(i).type;
-    exp_result = test_struct(i).exp_result;
-    
-    try
-        eval(['res=' test_func '(connectivity_matrix, type);']);
-    catch MException
-        if isequal(MException.message, 'Negative weights, not implemented')
-            res = exp_result;
-        end
-    end
-    
-    if isequaln(res, exp_result) || all(all(abs(res - exp_result) < tol))
-        test_struct(i).passed = true;
-    else
-        passed = false;
-    end
-end
-
-details = test_struct;
 
 end
