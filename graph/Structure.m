@@ -1,12 +1,12 @@
 classdef Structure < handle & matlab.mixin.Copyable
     % Structure < handle & matlab.mixin.Copyable : Creates and implements structure
-    %   Structure represents a custom structure or a set of parameters that 
+    %   Structure represents a custom structure or a set of parameters that
     %   define how a structure should be calculated.
     %
     % Structure properties (Constant):
     %
     %   CI_DEFAULT          -   default community structure
-    %   ALGORITHM_LOUVAIN   -   specification of 'Louvain' algorithm 
+    %   ALGORITHM_LOUVAIN   -   specification of 'Louvain' algorithm
     %   ALGORITHM_NEWMAN    -   specification of 'Newman' algorithm
     %   ALGORITHM_FIXED     -   specification of 'fixed' algorithm
     %   ALGORITHM_DEFAULT   -   default algorithm
@@ -36,9 +36,9 @@ classdef Structure < handle & matlab.mixin.Copyable
     %   extract         - extracts community structure
     %
     % See also Graph, handle, matlab.mixin.Copyable.
-    
-    % Author: Mite Mijalkov, Ehsan Kakaei & Giovanni Volpe
-    % Date: 2016/01/01
+    %
+    % Authors: Adam Liberda, Theo Berglin, Mite Mijalkov, Ehsan Kakaei & Giovanni Volpe
+    % Date: 2019/02/18
     
     properties (Constant)
         
@@ -50,12 +50,12 @@ classdef Structure < handle & matlab.mixin.Copyable
         ALGORITHM_NEWMAN = 'Newman'
         ALGORITHM_FIXED = 'fixed'
         ALGORITHM_DEFAULT = Structure.ALGORITHM_LOUVAIN
-
+        
         % gamma
         GAMMA_DEFAULT = 1
         
         % notes
-        NOTES_DEFAULT = '---'
+        NOTES_DEFAULT = ''
     end
     properties (Access = protected)
         Ci  % community structure
@@ -84,7 +84,7 @@ classdef Structure < handle & matlab.mixin.Copyable
             %   should also provided as an input.
             %
             % See also Structure.
-
+            
             ci.Ci = Structure.CI_DEFAULT;
             ci.gamma = Structure.GAMMA_DEFAULT;
             ci.algorithm = Structure.ALGORITHM_DEFAULT;
@@ -108,17 +108,17 @@ classdef Structure < handle & matlab.mixin.Copyable
             % DISP(CS) displays the community structure of CS and its properties.
             %
             % See also Structure.
-
+            
             if cs.isFixed()
-                disp(['<a href="matlab:help Structure">Structure</a> (fixed; ' num2str(cs.Ci) '; notes=' cs.getNotes() ')'])
+                disp(['(fixed; ' num2str(cs.Ci) '; notes=' cs.getNotes() ')'])
             else
-                disp(['<a href="matlab:help Structure">Structure</a> (algorithm=' cs.getAlgorithm() '; gamma=' num2str(cs.getGamma()) '; notes=' cs.getNotes() ')'])
+                disp(['(algorithm=' cs.getAlgorithm() '; gamma=' num2str(cs.getGamma()) '; notes=' cs.getNotes() ')'])
             end
-        end        
+        end
         function setCi(cs,ci)
             % SETCI sets community structure
             %
-            % SETCI(CS,CI) sets the community structure of the object CS to 
+            % SETCI(CS,CI) sets the community structure of the object CS to
             %   the custom structure defined by CI.
             %   The CI should be an array of positive integers.
             %
@@ -129,7 +129,7 @@ classdef Structure < handle & matlab.mixin.Copyable
             if isrow(ci)
                 cs.Ci = ci;
             elseif iscolumn(ci)
-                cs.Ci = ci';                
+                cs.Ci = ci';
             else
                 error('Ci must be a row vector of positive integers')
             end
@@ -227,7 +227,7 @@ classdef Structure < handle & matlab.mixin.Copyable
         function bool = isFixed(cs)
             % ISFIXED returns if structure is fixed
             %
-            % BOOL = ISFIXED(CS) returns true if CS's algotrithm is 'fixed' 
+            % BOOL = ISFIXED(CS) returns true if CS's algotrithm is 'fixed'
             %   and false otherwise.
             %
             % See also Structure.
@@ -245,7 +245,7 @@ classdef Structure < handle & matlab.mixin.Copyable
             %   and false otherwise.
             %
             % See also Structure.
-
+            
             bool = ~cs.isFixed();
         end
         function scs = extract(cs,brs)
@@ -256,7 +256,7 @@ classdef Structure < handle & matlab.mixin.Copyable
             %   In the case of dynamic structure, it just makes a copy.
             %
             % See also Structure.
-
+            
             scs = copy(cs);
             
             if cs.isFixed()
