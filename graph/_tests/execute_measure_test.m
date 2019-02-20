@@ -12,9 +12,14 @@ for i=1:length(test_struct)
     connectivity_matrix = test_struct(i).connectivity;
     type = test_struct(i).type;
     exp_result = test_struct(i).exp_result;
+    community_structure = test_struct(i).community_structure;
     
     try
-        eval(['res=' test_func '(connectivity_matrix, type);']);
+        if isempty(community_structure)
+            eval(['res=' test_func '(connectivity_matrix, type);']);
+        else
+            eval(['res=' test_func '(connectivity_matrix, type, community_structure);']);
+        end
     catch MException
         if isequal(MException.message, 'Negative weights, not implemented')
             res = exp_result;

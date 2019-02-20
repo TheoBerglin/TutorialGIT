@@ -8,6 +8,6 @@ function test_struct = get_test_struct(connectivity, type, exp_result, name)
 % NAME is the name of the test.
 
 test_struct = struct('connectivity', connectivity, 'type', type, ...
-    'exp_result', exp_result, 'name', name, 'passed', false);
+    'exp_result', exp_result, 'name', name, 'community_structure', [], 'passed', false);
 end
 
