@@ -858,9 +858,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         directed(g)  % direced graph
         undirected(g)  % undirected graph
         distance(g)  % distance between nodes (shortest path length)
-        % measure(g,mi)  % calculates given measure
         randomize(g)  % randomize graph while preserving degree distribution
-        measure(g,mi)  % calculates given measure
     end
     methods
         function community_structure = get_community_structure(g)
