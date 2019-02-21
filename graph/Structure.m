@@ -110,9 +110,20 @@ classdef Structure < handle & matlab.mixin.Copyable
             % See also Structure.
             
             if cs.isFixed()
-                disp(['(fixed; ' num2str(cs.Ci) '; notes=' cs.getNotes() ')'])
+                disp(['<a href="matlab:help Structure">Structure</a> (fixed; ' num2str(cs.Ci) '; notes=' cs.getNotes() ')'])
             else
-                disp(['(algorithm=' cs.getAlgorithm() '; gamma=' num2str(cs.getGamma()) '; notes=' cs.getNotes() ')'])
+                disp(['<a href="matlab:help Structure">Structure</a> (algorithm=' cs.getAlgorithm() '; gamma=' num2str(cs.getGamma()) '; notes=' cs.getNotes() ')'])
+            end
+        end
+        function str = toString(cs)
+            % TOSTRING return a string containing structure info
+            %
+            % TOSTRING(CS) returns the community structure of CS and its properties.
+                        
+            if cs.isFixed()
+                str = ['(fixed; ' num2str(cs.Ci) '; notes=' cs.getNotes() ')'];
+            else
+                str = ['(algorithm=' cs.getAlgorithm() '; gamma=' num2str(cs.getGamma()) '; notes=' cs.getNotes() ')'];
             end
         end
         function setCi(cs,ci)

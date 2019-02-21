@@ -815,13 +815,12 @@ classdef Graph < handle & matlab.mixin.Copyable
             %
             % See also Graph.
             
-            % [z,zin,zout] = zscore(g)
-            z = [];
-            zin = [];
-            zout = [];
-            
-            % p = participation(g)
-            p = [];
+            n_meas = length(g.MS);
+            for i = 1:n_meas
+               if g.MS{i}.STRUCTURAL
+                   g.MS{i}.VALUE = Graph.DEFAULT_MEASURE_VALUE;
+               end                
+            end
         end
         function cp = copyElement(g)
             % COPYELEMENT copies elements of graph
@@ -847,6 +846,26 @@ classdef Graph < handle & matlab.mixin.Copyable
         randomize(g)  % randomize graph while preserving degree distribution
     end
     methods
+        function community_structure = get_community_structure(g)
+            % GET_COMMUNITY_STRUCTURE returns the current community 
+            %   structure
+            
+            graph_structure_param = g.CS.LAST_PARAMS;
+            obj_structure_param = g.S.toString();
+            if ~isequal(graph_structure_param, obj_structure_param)
+                g.set_community_structure();
+            end
+            community_structure = g.CS.VALUE;
+            
+        end
+        function set_community_structure(g)
+            % SET_COMMUNITY_STRUCTURE calls the method for resetting the 
+            %   current values for the structure related measures and 
+            %   calls the method for calculating a new community structure
+            
+           g.reset_structure_related_measures();
+           g.calculate_community_structure();
+        end
         function type = get_type(g)
             % GET_TYPE returns the type of the graph G.
             %
