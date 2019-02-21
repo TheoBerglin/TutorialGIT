@@ -13,17 +13,25 @@ N = 5; % number of nodes
 A1 = eye(N);
 type11 = Graph.BD;
 exp_res1 = zeros(1,N);
-test_struct(1) = get_test_struct(A1, type11, exp_res1, 'Diagonal matrix Binary Directed', [1 2 3 4 5]);
+g11 = GraphBD(A1);
+struc11 = g11.get_community_structure();
+test_struct(1) = get_test_struct(A1, type11, exp_res1, 'Diagonal matrix Binary Directed', struc11);
 type12 = Graph.WU;
-test_struct(2) = get_test_struct(A1, type12, exp_res1, 'Diagonal matrix Weighted Undirected', [1 2 3 4 5]);
+g12 = GraphWU(A1);
+struc12 = g12.get_community_structure();
+test_struct(2) = get_test_struct(A1, type12, exp_res1, 'Diagonal matrix Weighted Undirected', struc12);
 
 %% Fully connected adj matrix
 A2 = ones(N);
 type21 = Graph.BU;
 exp_res2 = zeros(1,N);
-test_struct(3) = get_test_struct(A2, type21, exp_res2, 'Fully Connected Binary Undirected', ones(1,N));
+g21 = GraphBU(A2);
+struc21 = g21.get_community_structure();
+test_struct(3) = get_test_struct(A2, type21, exp_res2, 'Fully Connected Binary Undirected', struc21);
 type22 = Graph.WD;
-test_struct(4) = get_test_struct(A2, type22, exp_res2, 'Fully Connected Weighted Directed', ones(1,N));
+g22 = GraphWD(A2);
+struc22 = g22.get_community_structure();
+test_struct(4) = get_test_struct(A2, type22, exp_res2, 'Fully Connected Weighted Directed', struc22);
 
 %% Binary Directed matrix
 A3 = [1 1 0 0 0;
@@ -33,8 +41,10 @@ A3 = [1 1 0 0 0;
     1 0 0 1 1];
 
 type3 = Graph.BD;
+g3 = GraphBD(A3);
+struc3 = g3.get_community_structure();
 exp_res3 = [0.577350269189626 0.577350269189626 -1.154700538379252 0 0];
-test_struct(5) = get_test_struct(A3, type3, exp_res3, 'Binary Directed', [1 1 1 2 2]);
+test_struct(5) = get_test_struct(A3, type3, exp_res3, 'Binary Directed', struc3);
 
 %% Binary Undirected matrix
 A4 = [1 1 0 0 1;
@@ -43,9 +53,10 @@ A4 = [1 1 0 0 1;
     0 1 1 1 1;
     1 0 0 1 0];
 type4 = Graph.BU;
-
+g4 = GraphBU(A4);
+struc4 = g4.get_community_structure();
 exp_res4 = [0.707106781186548 0 0 0 -0.707106781186548];
-test_struct(6) = get_test_struct(A4, type4, exp_res4, 'Binary Undirected', [1 2 2 2 1]);
+test_struct(6) = get_test_struct(A4, type4, exp_res4, 'Binary Undirected', struc4);
 
 %% Weighted Directed matrix
 A5 = [1 2 0 0 0;
@@ -54,8 +65,10 @@ A5 = [1 2 0 0 0;
     0 2 0 1 2;
     1 0 0 2 1];
 type5 = Graph.WD;
+g5 = GraphWD(A5);
+struc5 = g5.get_community_structure();
 exp_res5 = [0.218217890235993 0.872871560943970 -1.091089451179962 0 0];
-test_struct(7) = get_test_struct(A5, type5, exp_res5, 'Weighted Directed', [1 1 1 2 2]);
+test_struct(7) = get_test_struct(A5, type5, exp_res5, 'Weighted Directed', struc5);
 
 %% Weighted Undirected matrix
 A6 = [1 2 0 0 1;
@@ -64,8 +77,10 @@ A6 = [1 2 0 0 1;
     0 2 1 1 2;
     1 0 0 2 1];
 type6 = Graph.WU;
+g6 = GraphWU(A6);
+struc6 = g6.get_community_structure();
 exp_res6 = [-0.872871560943969 1.091089451179962 -0.218217890235992 0 0];
-test_struct(8) = get_test_struct(A6, type6, exp_res6, 'Weighted Undirected', [1 1 1 2 2]);
+test_struct(8) = get_test_struct(A6, type6, exp_res6, 'Weighted Undirected', struc6);
 
 %% Negative Weighted Directed matrix
 A7 = [1 -2 0 0 0;
