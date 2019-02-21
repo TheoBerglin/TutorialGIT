@@ -55,7 +55,6 @@ classdef Graph < handle & matlab.mixin.Copyable
     %   OUT_LEFFNODE        -   out-local efficiency of a node
     %   CLUSTER             -   clustering coefficient of a graph
     %   CLUSTERNODE         -   clustering coefficient around a node
-    %   MODULARITY          -   modularity
     %   BETWEENNESS         -   betweenness centrality of a node
     %   CLOSENESS           -   closeness centrality of a node
     %   IN_CLOSENESS        -   in-closeness centrality of a node
@@ -152,7 +151,6 @@ classdef Graph < handle & matlab.mixin.Copyable
     %   pl                  -   path length of nodes
     %   closeness           -   closeness centrality of nodes
     %   structure           -   community structures of a graph
-    %   modularity          -   modularty of a graph
     %   zscore              -   within module degree z-score
     %   participation       -   participation coefficient of nodes
     %   smallworldness       -   small-wordness of the graph
@@ -1776,25 +1774,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             end
             
             reset_structure_related_measures(g)
-        end
-        function m = modularity(g)
-            % MODULARITY modularity of a graph
-            %
-            % M = MODULARITY(G) returns the maximized modularity M of the graph G.
-            %   Before the modularity can be calculated, a custom structure should be
-            %   provided as input to the graph, or alternatively the function
-            %   G.structure() should be called to calculate the optimized community structure.
-            %
-            %   The modularity is a parameter that signifies the degree at which the
-            %   graph can be divided into distinct communities.
-            %
-            % See also Graph, Structure.
-            
-            if isempty(g.m)
-                g.structure();
-            end
-            
-            m = g.m;
         end
         function [z,zin,zout] = zscore(g)
             % ZSCORE within module degree z-score
