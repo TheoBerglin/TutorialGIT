@@ -175,8 +175,13 @@ classdef GraphWD < Graph
             %   Admissible properties are:
             %       P           -   coefficient p-values
             %       structure   -   community structure object
+            %       absolute    -   whether to include negative values from 
+            %                       the adjacency matrix by taking the 
+            %                       absolute value, false (default) | true
             %
             % See also Graph, GraphWU.
+            
+            A = Graph.positivize(A,varargin{:});
             
             g = g@Graph(A,varargin{:});
             g.TYPE = Graph.WD; 

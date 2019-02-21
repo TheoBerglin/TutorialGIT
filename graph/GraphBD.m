@@ -175,14 +175,15 @@ classdef GraphBD < Graph
             %     diagonal     -   'exclude' (default) | 'include'
             %     P            -   coefficient p-values
             %     structure    -   community structure object
-            %     negative     -   whether to include negative values from
-            %                      the adjacency matrix, false (default) |
-            %                      true
+            %     absolute     -   whether to include negative values from 
+            %                      the adjacency matrix by taking the 
+            %                      absolute value, false (default) | true
             %
             % See also Graph, GraphBU.
             
             C = A;
             
+            A = Graph.positivize(A,varargin{:});
             [A,threshold] = Graph.binarize(A,varargin{:});  % binarized connection matrix
             
             g = g@Graph(A,varargin{:});

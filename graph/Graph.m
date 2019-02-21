@@ -1974,6 +1974,30 @@ classdef Graph < handle & matlab.mixin.Copyable
             B = A;
             B(1:length(A)+1:numel(A)) = value;
         end
+        function B = positivize(A,varargin)
+            % POSITIVIZE sets negative entries of matrix to zero
+            %
+            % B = POSITIVIZE(A) sets all negative elements of A to zero
+            % 
+            % B = POSITIVIZE(A,'PropertyName',PropertyValue) sets all 
+            %   negative elements of A to zero or to their absolute value
+            %   depending on the value of the property 
+            %       absolute   -   false (default) | true
+            
+            absolute = false;
+            for n = 1:1:length(varargin)-1
+                if strcmpi(varargin{n},'absolute')
+                    absolute = varargin{n+1};
+                end
+            end
+            
+            if absolute
+                B = abs(A);
+            else
+                B = A;
+                B(A<0) = 0;
+            end
+        end
         function B = symmetrize(A,varargin)
             % SYMMETRIZE symmetrizes a matrix
             %
@@ -2068,14 +2092,11 @@ classdef Graph < handle & matlab.mixin.Copyable
             %       bins        -   -1:.001:1 (default)
             %       density     -   percentage of connections
             %       diagonal    -   'exclude' (default) | 'include'
-            %       negative    -   whether to include negative weights,
-            %                       false (default) | true
             %
             % See also Graph, histogram.
             
             % Threshold and density
             threshold = 0;
-            negative = false;
             for n = 1:1:length(varargin)-1
                 if strcmpi(varargin{n},'threshold')
                     threshold = varargin{n+1};
@@ -2087,19 +2108,12 @@ classdef Graph < handle & matlab.mixin.Copyable
                     else
                         threshold = threshold(1);
                     end
-                elseif strcmpi(varargin{n},'negative')
-                    negative = varargin{n+1};
                 end
             end
             
             % Calculates binary graph
-            if negative
-                B = A;
-                B(B~=0) = 1;
-            else
-                B = zeros(size(A));
-                B(A>threshold) = 1;
-            end
+            B = zeros(size(A));
+            B(A>threshold) = 1;
         end
         function h = plotw(A,varargin)
             % PLOTW plots a weighted matrix

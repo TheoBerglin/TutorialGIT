@@ -159,14 +159,17 @@ classdef GraphBU < GraphBD
             %                   'sum' - sum of inconnection and outconnection
             %     P         -   coefficient p-values
             %     structure -   community structure object
-            %     negative  -   whether to include negative values from
-            %                   the adjacency matrix, false (default) | true
+            %     absolute  -   whether to include negative values from 
+            %                   the adjacency matrix by taking the 
+            %                   absolute value, false (default) | true
             %
             % See also Graph, GraphBD.
             
             C = A;
+            A = Graph.positivize(A,varargin{:});
+                        
             A = Graph.symmetrize(A,varargin{:});  % symmetrized connection matrix
-            
+
             g = g@GraphBD(A,varargin{:});
             g.C = C;
             

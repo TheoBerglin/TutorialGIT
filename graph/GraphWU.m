@@ -154,9 +154,13 @@ classdef GraphWU < GraphWD
             %                   'sum' - sum of inconnection and outconnection
             %     P         -   coefficient p-values
             %     structure -   community structure object
+            %     absolute  -   whether to include negative values from 
+            %                   the adjacency matrix by taking the 
+            %                   absolute value, false (default) | true
             %
             % See also Graph, GraphWD.
             
+            A = Graph.positivize(A,varargin{:});
             A = Graph.symmetrize(A,varargin{:});  % symmetrized connection matrix
             
             g = g@GraphWD(A,varargin{:});
