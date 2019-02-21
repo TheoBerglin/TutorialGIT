@@ -15,7 +15,7 @@ gd = GraphBD(zeros(5));
 n_measures = size(gd.MS,2);
 test_function_nbr = NaN;
 for i = 1:n_measures
-    if isequal(gd.MS{i}.FUNCTION, test_func)
+    if isequal(gd.MS{i}.FUNCTION, test_func) && ~gd.MS{i}.AVERAGE
         test_function_nbr = i;
         break;
     end
@@ -50,7 +50,6 @@ for i=1:length(test_struct)
                 res = exp_result;
             end
             res = exp_result-1;
-            
         end
     else
         res = exp_result;
