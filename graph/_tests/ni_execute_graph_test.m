@@ -12,10 +12,10 @@ function [passed, test_struct] = ni_execute_graph_test(test_name)
 tol = 1e-6;
 passed = true;
 
-n_measures = size(Graph.MEASURES,1);
+n_measures = size(Graph.MS,1);
 test_function_nbr = NaN;
 for i = 1:n_measures
-    if Graph.MEASURES(i).FUNCTION == test_func
+    if Graph.MS{i}.FUNC == test_func
         test_function_nbr = i;
         break;
     end
@@ -27,7 +27,6 @@ if isnan(test_function_nbr)
     return
 end
 
-return_parameter = Graph.MEASURES(test_function_nbr).VARIABLE; % Change when implemented in Graph object
 for i=1:length(test_struct)
     connectivity_matrix = test_struct(i).connectivity;
     type = test_struct(i).type;
@@ -46,7 +45,7 @@ for i=1:length(test_struct)
     if ~isnan(g)
         try
             eval(['g.measure(' test_function_nbr ');']);
-            eval(['res = g.' return_parameter ';']);
+            eval(['res = g.MS{' test_function_nbr '}.VALUE;']);
         catch MException
             if isequal(MException.message, 'Negative weights, not implemented')
                 res = exp_result;
