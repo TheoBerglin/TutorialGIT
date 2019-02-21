@@ -5,12 +5,12 @@ classdef GraphWU < GraphWD
     %
     % GraphWU properties (Constant):
     %   MEASURES_WD     -   array of measures defined for weighted directed graph < GraphWD
-    %   MEASURES_WU     -   array of measures defined for binary undirected graph 
+    %   MEASURES_WU     -   array of measures defined for binary undirected graph
     %
     % GraphWU properties (GetAccess = public, SetAccess = protected):
     %   A               -   connection matrix < Graph
     %   P               -   coefficient p-values < Graph
-    %   S               -   community structure < Graph    
+    %   S               -   community structure < Graph
     %
     % GraphWU properties (Access = protected):
     %   N        -   number of nodes < Graph
@@ -78,7 +78,7 @@ classdef GraphWU < GraphWD
     %   geff                -   global efficiency < GraphWD
     %   leff                -   local efficiency < GraphWD
     %   betweenness         -   betweenness centrality of a node < GraphWD
-    %   directed            -   checks if graph is directed 
+    %   directed            -   checks if graph is directed
     %   undirected          -   checks if graph is undirected
     %   degree              -   degree of a node
     %   strength            -   strength of a node
@@ -118,11 +118,11 @@ classdef GraphWU < GraphWD
             Graph.DIAMETER ...
             Graph.ECCENTRICITY ...
             Graph.ECCENTRICITYAV ...
-            Graph.CPL ... 
-            Graph.CPL_WSG ... 
-            Graph.PL ... 
-            Graph.GEFF ... 
-            Graph.GEFFNODE ... 
+            Graph.CPL ...
+            Graph.CPL_WSG ...
+            Graph.PL ...
+            Graph.GEFF ...
+            Graph.GEFFNODE ...
             Graph.LEFF ...
             Graph.LEFFNODE ...
             Graph.CLUSTER ...
@@ -130,10 +130,9 @@ classdef GraphWU < GraphWD
             Graph.BETWEENNESS ...
             Graph.CLOSENESS ...
             Graph.TRANSITIVITY ...
-            Graph.MODULARITY ... 
-            Graph.ZSCORE ... 
-            Graph.PARTICIPATION ... 
-            Graph.ASSORTATIVITY ...
+            Graph.MODULARITY ...
+            Graph.ZSCORE ...
+            Graph.PARTICIPATION ...
             Graph.SW ...
             Graph.SW_WSG ...
             ]
@@ -145,7 +144,7 @@ classdef GraphWU < GraphWD
             % GRAPHWU(A) creates a weighted undirected graph with default properties
             %
             % GRAPHWU(A,Property1,Value1,Property2,Value2,...) creates a graph from
-            %   a weighted symmetric connection matrix A and initializes property 
+            %   a weighted symmetric connection matrix A and initializes property
             %   Property1 to Value1, Property2 to Value2, ... .
             %   Admissible properties are:
             %     rule      -   'max' (default) | 'min' | 'av' | 'sum'
@@ -155,16 +154,16 @@ classdef GraphWU < GraphWD
             %                   'sum' - sum of inconnection and outconnection
             %     P         -   coefficient p-values
             %     structure -   community structure object
-            %   
+            %
             % See also Graph, GraphWD.
             
             A = Graph.symmetrize(A,varargin{:});  % symmetrized connection matrix
-
+            
             g = g@GraphWD(A,varargin{:});
             
             g.TYPE = Graph.WU;
         end
-        function bool = directed(g)  
+        function bool = directed(g)
             % DIRECTED checks if graph is directed
             %
             % BOOL = DIRECTED(G) returns false for undirected graphs.
@@ -173,7 +172,7 @@ classdef GraphWU < GraphWD
             
             bool = false;
         end
-        function bool = undirected(g)  
+        function bool = undirected(g)
             % UNDIRECTED checks if graph is undirected
             %
             % BOOL = UNDIRECTED(G) returns true for undirected graphs.
@@ -187,7 +186,7 @@ classdef GraphWU < GraphWD
             %
             % DEG = DEGREE(G) calculates the degree DEG of all nodes in the graph G.
             %
-            % The node degree is the number of links connected to a node. In the case 
+            % The node degree is the number of links connected to a node. In the case
             %   of weighted graphs, the weights of the edges are not considered and the
             %   diagonal of connection matrix is removed i.e. self-connections are also
             %   not considered.
@@ -201,12 +200,12 @@ classdef GraphWU < GraphWD
             %
             % STR = STENGTH(G) calculates the strength STR of all nodes in the graph G.
             %
-            % The node strength is the sum of the weights of the edges connected to a 
-            %   node. In these calculations, the diagonal of connection matrix is removed 
-            %   i.e. self-connections are also not considered. 
+            % The node strength is the sum of the weights of the edges connected to a
+            %   node. In these calculations, the diagonal of connection matrix is removed
+            %   i.e. self-connections are also not considered.
             %
             % Reference: "The architecture of complex weighted networks", A.Barrat et al.
-            %   
+            %
             % See also GraphWU.
             
             str = strength@GraphWD(g)/2;
@@ -214,13 +213,13 @@ classdef GraphWU < GraphWD
         function t = triangles(g)
             % TRIANGLES contribution of triangles around a node
             %
-            % T = TRIANGLES(G) calculates the contribution of triangles T around 
+            % T = TRIANGLES(G) calculates the contribution of triangles T around
             %   all nodes in the graph G.
-            %   
-            % Triangles are the number of pairs of neighbours of a node that are 
-            %   connected with each other. 
             %
-            % In weighted graphs, a contribution of a triangle is defined as the 
+            % Triangles are the number of pairs of neighbours of a node that are
+            %   connected with each other.
+            %
+            % In weighted graphs, a contribution of a triangle is defined as the
             %   geometric mean of the weigths of the edges froming the triangle.
             %
             % Reference: "Intensity and coherence of motifs in weighted complex networks", J.P.Onnela et al.
@@ -242,23 +241,23 @@ classdef GraphWU < GraphWD
             % [CL,CLNODE] = CLUSTER(G) calculates the clustering coefficient of all
             %   nodes CLNODE and the average clustering coefficient CL of the graph G.
             %
-            % Clustering coefficient of a node is defined as the fraction of triangles 
+            % Clustering coefficient of a node is defined as the fraction of triangles
             %   around the node (the fraction of node's neighbors that are neighbors of
-            %   each other). Clustering coefficient of the graph is defined as the 
+            %   each other). Clustering coefficient of the graph is defined as the
             %   average of the clustering coefficients of all nodes in the graph.
             %
-            % In weighted graphs, a contribution of a triangle is defined as the 
+            % In weighted graphs, a contribution of a triangle is defined as the
             %   geometric mean of the weigths of the edges froming the triangle.
             %
             % Reference: "Intensity and coherence of motifs in weighted complex networks", J.P.Onnela et al.
             %            "Clustering in complex directed networks", G.Fagiolo
             %
             % See also GraphWU.
-
+            
             if isempty(g.cl) || isempty(g.clnode)
                 t = g.triangles();
-                K = g.degree();            	
-               
+                K = g.degree();
+                
                 K(t==0) = inf;  % if no 3-cycles exist, make C = 0 (via K = inf)
                 g.clnode = (2*t./(K.*(K-1)));  % clustering coefficient
                 g.cl = mean(g.clnode);
@@ -273,242 +272,21 @@ classdef GraphWU < GraphWD
             % TR = TRANSITIVITY(G) calculates the transitivity of the graph G.
             %
             % Transitivity of a graph is defined as the fraction of triangles to
-            %   triplets in a graph. In weighted graphs, a contribution of a triangle 
-            %   is defined as the geometric mean of the weigths of the edges froming 
+            %   triplets in a graph. In weighted graphs, a contribution of a triangle
+            %   is defined as the geometric mean of the weigths of the edges froming
             %   the triangle.
             %
             % Reference: "Ego-centered networks and the ripple effect", M.E.J. Newman
             %
             % See also GraphWU, triangles, cluster.
-
+            
             if isempty(g.tr)
-                K = g.degree();             	
-                t = g.triangles();           
+                K = g.degree();
+                t = g.triangles();
                 g.tr = 3*sum(t)./sum((K.*(K-1)));  % transitivity
             end
             
             tr = g.tr;
-        end
-        function a = assortativity(g)
-            % ASSORTATIVITY Assortativity coefficient
-            %
-            % A = ASSORTATIVITY(G) calcualtes the assortativity of the graph G.
-            %
-            % The assortativity coefficient is a correlation coefficient between the
-            %   strenghts of all nodes on two opposite ends of a link. A positive
-            %   assortativity coefficient indicates that nodes tend to link to other
-            %   nodes with the same or similar strength.
-            %
-            % See also GraphWU.
-            
-            if isempty(g.a)
-                g.a = assortativity_wei(Graph.removediagonal(g.A),0);
-            end
-
-            a = g.a;
-
-            function   r = assortativity_wei(CIJ,flag)
-                % ASSORTATIVITY Assortativity coefficient
-                %
-                %   r = assortativity_wei(CIJ,flag);
-                %
-                %   The assortativity coefficient is a correlation coefficient between the
-                %   strengths (weighted degrees) of all nodes on two opposite ends of a link.
-                %   A positive assortativity coefficient indicates that nodes tend to link to
-                %   other nodes with the same or similar strength.
-                %
-                %   Inputs:     CIJ,    weighted directed/undirected connection matrix
-                %               flag,   0, undirected graph: strength/strength correlation
-                %                       1, directed graph: out-strength/in-strength correlation
-                %                       2, directed graph: in-strength/out-strength correlation
-                %                       3, directed graph: out-strength/out-strength correlation
-                %                       4, directed graph: in-strength/in-strength correlation
-                %
-                %   Outputs:    r,      assortativity coefficient
-                %
-                %   Notes: The main diagonal should be empty. For flag 1 the function computes
-                %   the directed assortativity described in Rubinov and Sporns (2010) NeuroImage.
-                %
-                %   Reference:  Newman (2002) Phys Rev Lett 89:208701
-                %               Foster et al. (2010) PNAS 107:10815-10820
-                %
-                %   Olaf Sporns, Indiana University, 2007/2008
-                %   Vassilis Tsiaras, University of Crete, 2009
-                %   Murray Shanahan, Imperial College London, 2012
-                %   Mika Rubinov, University of Cambridge, 2012
-                
-                if (flag==0)                        % undirected version
-                    str = strengths_und(CIJ);
-                    [i,j] = find(triu(CIJ,1)>0);
-                    K = length(i);
-                    stri = str(i);
-                    strj = str(j);
-                    
-                else                                % directed versions
-                    [is,os] = strengths_dir(CIJ);
-                    [i,j] = find(CIJ>0);
-                    K = length(i);
-                    
-                    switch flag
-                        case 1
-                            stri = os(i);
-                            strj = is(j);
-                        case 2
-                            stri = is(i);
-                            strj = os(j);
-                        case 3
-                            stri = os(i);
-                            strj = os(j);
-                        case 4
-                            stri = is(i);
-                            strj = is(j);
-                    end
-                end
-                
-                % compute assortativity
-                r = ( sum(stri.*strj)/K - (sum(0.5*(stri+strj))/K)^2 ) / ...
-                    ( sum(0.5*(stri.^2+strj.^2))/K - (sum(0.5*(stri+strj))/K)^2 );
-            end
-            function [str] = strengths_und(CIJ)
-                %STRENGTHS_UND        Strength
-                %
-                %   str = strengths_und(CIJ);
-                %
-                %   Node strength is the sum of weights of links connected to the node.
-                %
-                %   Input:      CIJ,    undirected weighted connection matrix
-                %
-                %   Output:     str,    node strength
-                %
-                %
-                %   Olaf Sporns, Indiana University, 2002/2006/2008
-                
-                % compute strengths
-                str = sum(CIJ);        % strength
-            end
-            function [is,os,str] = strengths_dir(CIJ)
-                %STRENGTHS_DIR      Instrength and outstrength
-                %
-                %   [is,os,str] = strengths_dir(CIJ);
-                %
-                %   Node strength is the sum of weights of links connected to the node. The
-                %   instrength is the sum of inward link weights and the outstrength is the
-                %   sum of outward link weights.
-                %
-                %   Input:      CIJ,    directed weighted connection matrix
-                %
-                %   Output:     is,     node instrength
-                %               os,     node outstrength
-                %               str,    node strength (instrength + outstrength)
-                %
-                %   Notes:  Inputs are assumed to be on the columns of the CIJ matrix.
-                %
-                %
-                %   Olaf Sporns, Indiana University, 2002/2006/2008
-                
-                
-                % compute strengths
-                is = sum(CIJ,1);    % instrength = column sum of CIJ
-                os = sum(CIJ,2)';   % outstrength = row sum of CIJ
-                str = is+os;        % strength = instrength+outstrength
-            end
-        end
-        function res = measure(g,mi)
-            % MEASURE calculates given measure
-            %
-            % RES = MEASURE(G,MI) calculates the measure of the graph G specified
-            %   by MI and returns the result RES.
-            %   Admissible measures for weighted undirected graphs are:
-            %     Graph.DEGREE
-            %     Graph.DEGREEAV
-            %     Graph.STRENGTH
-            %     Graph.STRENGTHAV
-            %     Graph.RADIUS
-            %     Graph.DIAMETER
-            %     Graph.ECCENTRICITY
-            %     Graph.ECCENTRICITYAV
-            %     Graph.TRIANGLES
-            %     Graph.CPL
-            %     Graph.CPL_WSG
-            %     Graph.PL
-            %     Graph.GEFF
-            %     Graph.GEFFNODE
-            %     Graph.LEFF
-            %     Graph.LEFFNODE
-            %     Graph.CLUSTER
-            %     Graph.CLUSTERNODE
-            %     Graph.BETWEENNESS
-            %     Graph.CLOSENESS
-            %     Graph.TRANSITIVITY
-            %     Graph.MODULARITY
-            %     Graph.ZSCORE
-            %     Graph.PARTICIPATION
-            %     Graph.ASSORTATIVITY
-            %     Graph.SW
-            %
-            % See also GraphWU.
-            
-            if ~any(GraphWU.measurelist()==mi)
-                g.ERR_MEASURE_NOT_DEFINED(mi)
-            end
-
-            switch mi
-                case Graph.DEGREE
-                    res = g.degree();
-                case Graph.DEGREEAV
-                    res = mean(g.degree());
-                case Graph.STRENGTH
-                    res = g.strength();
-                case Graph.STRENGTHAV
-                    res = mean(g.strength());
-                case Graph.RADIUS
-                    res = g.radius();
-                case Graph.DIAMETER
-                    res = g.diameter();
-                case Graph.ECCENTRICITY
-                    res = g.eccentricity();
-                case Graph.ECCENTRICITYAV
-                    res = mean(g.eccentricity());
-                case Graph.TRIANGLES
-                    res = g.triangles();
-                case Graph.CPL
-                    res = mean(g.pl());
-                case Graph.CPL_WSG
-                    tmp = g.pl();
-                    res = mean(tmp(isfinite(tmp)));
-                case Graph.PL
-                    res = g.pl();
-                case Graph.GEFF
-                    res = mean(g.geff());
-                case Graph.GEFFNODE
-                    res = g.geff();
-                case Graph.LEFF
-                    res = mean(g.leff());
-                case Graph.LEFFNODE
-                    [~,res] = g.leff();
-                case Graph.CLUSTER
-                    res = g.cluster();
-                case Graph.CLUSTERNODE
-                    [~,res] = g.cluster();
-                case Graph.BETWEENNESS
-                    res = g.betweenness(true);
-                case Graph.CLOSENESS
-                    res = g.closeness();
-                case Graph.TRANSITIVITY
-                    res = g.transitivity();
-                case Graph.MODULARITY
-                    res = g.modularity();
-                case Graph.ZSCORE
-                    res = g.zscore();
-                case Graph.PARTICIPATION
-                    res = g.participation();
-                case Graph.ASSORTATIVITY
-                    res = g.assortativity();
-                case Graph.SW
-                    res = g.smallworldness();
-                case Graph.SW_WSG
-                    res = g.smallworldness(true);
-            end
         end
         function [gr,R] = randomize(g,bin_swaps,wei_freq)
             % RANDOMIZE randomizes the graph

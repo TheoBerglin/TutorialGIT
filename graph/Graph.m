@@ -357,7 +357,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         GEFF_NODAL = false;
         GEFF_DESCRIPTION = 'The global efficiency is the average inverse shortest path length in the graph. It is inversely related to the characteristic path length.';
         GEFF_FUNCTION = 'global_efficiency';
-        GEFF_AVERAGE = true;
+        GEFF_AVERAGE = false;
         GEFF_STRUCTURAL = false;
         
         GEFFNODE = 21;
@@ -695,13 +695,29 @@ classdef Graph < handle & matlab.mixin.Copyable
         SW_WSG_FUNCTION = 'smallworldness';
         SW_WSG_AVERAGE = false;
         SW_WSG_STRUCTURAL = false;
-
+        
+        DISTANCE = 63;
+        DISTANCE_NAME = 'distance';
+        DISTANCE_NODAL = true;
+        DISTANCE_DESCRIPTION = 'The distance from one node to another is the shortest path length between the two.';
+        DISTANCE_FUNCTION = 'distance';
+        DISTANCE_AVERAGE = false;
+        DISTANCE_STRUCTURAL = false;
+        
+        DENSITY = 64;
+        DENSITY_NAME = 'density';
+        DENSITY_NODAL = true;
+        DENSITY_DESCRIPTION = 'The density is the number of edges in the graph divided by the maximum number of possible edges.';
+        DENSITY_FUNCTION = 'density';
+        DENSITY_AVERAGE = false;
+        DENSITY_STRUCTURAL = false;
+        
     end
     properties (GetAccess = public, SetAccess = protected)
         A  % connection matrix
         P  % coefficient p-values
         S  % community structure
-        TYPE % Graph type      
+        TYPE % Graph type
         MS
     end
     properties (Access = protected)
@@ -805,6 +821,8 @@ classdef Graph < handle & matlab.mixin.Copyable
             g.MS{Graph.OUT_OUT_ASSORTATIVITY} = struct('NAME', Graph.OUT_OUT_ASSORTATIVITY_NAME, 'NODAL', Graph.OUT_OUT_ASSORTATIVITY_NODAL, 'DESCRIPTION', Graph.OUT_OUT_ASSORTATIVITY_DESCRIPTION, 'FUNCTION', Graph.OUT_OUT_ASSORTATIVITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_OUT_ASSORTATIVITY_AVERAGE, 'STRUCTURAL', Graph.OUT_OUT_ASSORTATIVITY_STRUCTURAL);
             g.MS{Graph.SW} = struct('NAME', Graph.SW_NAME, 'NODAL', Graph.SW_NODAL, 'DESCRIPTION', Graph.SW_DESCRIPTION, 'FUNCTION', Graph.SW_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.SW_AVERAGE, 'STRUCTURAL', Graph.SW_STRUCTURAL);
             g.MS{Graph.SW_WSG} = struct('NAME', Graph.SW_WSG_NAME, 'NODAL', Graph.SW_WSG_NODAL, 'DESCRIPTION', Graph.SW_WSG_DESCRIPTION, 'FUNCTION', Graph.SW_WSG_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.SW_WSG_AVERAGE, 'STRUCTURAL', Graph.SW_WSG_STRUCTURAL);
+            g.MS{Graph.DISTANCE} = struct('NAME', Graph.DISTANCE_NAME, 'NODAL', Graph.DISTANCE_NODAL, 'DESCRIPTION', Graph.DISTANCE_DESCRIPTION, 'FUNCTION', Graph.DISTANCE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.DISTANCE_AVERAGE, 'STRUCTURAL', Graph.DISTANCE_STRUCTURAL);
+            g.MS{Graph.DENSITY} = struct('NAME', Graph.DENSITY_NAME, 'NODAL', Graph.DENSITY_NODAL, 'DESCRIPTION', Graph.DENSITY_DESCRIPTION, 'FUNCTION', Graph.DENSITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.DENSITY_AVERAGE, 'STRUCTURAL', Graph.DENSITY_STRUCTURAL);
             
         end
         function reset_structure_related_measures(g)
@@ -817,9 +835,9 @@ classdef Graph < handle & matlab.mixin.Copyable
             
             n_meas = length(g.MS);
             for i = 1:n_meas
-               if g.MS{i}.STRUCTURAL
-                   g.MS{i}.VALUE = Graph.DEFAULT_MEASURE_VALUE;
-               end                
+                if g.MS{i}.STRUCTURAL
+                    g.MS{i}.VALUE = Graph.DEFAULT_MEASURE_VALUE;
+                end
             end
         end
         function cp = copyElement(g)
@@ -842,12 +860,13 @@ classdef Graph < handle & matlab.mixin.Copyable
         directed(g)  % direced graph
         undirected(g)  % undirected graph
         distance(g)  % distance between nodes (shortest path length)
-        measure(g,mi)  % calculates given measure
+        % measure(g,mi)  % calculates given measure
         randomize(g)  % randomize graph while preserving degree distribution
+        measure(g,mi)  % calculates given measure
     end
     methods
         function community_structure = get_community_structure(g)
-            % GET_COMMUNITY_STRUCTURE returns the current community 
+            % GET_COMMUNITY_STRUCTURE returns the current community
             %   structure
             
             graph_structure_param = g.CS.LAST_PARAMS;
@@ -888,6 +907,14 @@ classdef Graph < handle & matlab.mixin.Copyable
             %   Graph.WUN = Weighted Undirected with Negative weights
             
             type = g.TYPE;
+        end
+        function A = get_adjacency_matrix(g)
+            % GET_ADJACENCY_MATRIX returns the adjacency matrix A
+            % representing the graph.
+            %
+            % A = GET_ADJACENCY_MATRIX returns the adjacency matrix A
+            % representing the graph.
+            A = g.A;
         end
         function sg = subgraph(g,nodes)
             % SUBGRAPH creates subgraph from given nodes
@@ -1916,6 +1943,41 @@ classdef Graph < handle & matlab.mixin.Copyable
             end
             
             sw = g.sw;
+        end
+        function calculate_measure(g,mi)
+            % CALCULATE_MEASURE calculates a given measure
+            %
+            % CALCULATE_MEASURE(G,MI) calculates the measure given by the
+            % index MI of the graph G.
+            
+            % Check if it's a valid measure
+            if mi <= 0
+                error('Negative measure input')
+            end
+            
+            if mi > length(g.MS)
+                error('Too large measure input')
+            end
+            
+            % Check if measure has already been calculated
+            if ~isempty(g.MS{mi}.VALUE)
+                return
+            end
+            
+            % Special case for modularity
+            if mi == Graph.MODULARITY
+                g.get_community_structure()
+                return
+            end
+            
+            % Evaluate the measure
+            if g.MS{mi}.AVERAGE
+                g.MS{mi}.VALUE = feval('calculate_average', g.MS{mi}.FUNCTION, g.get_adjacency_matrix(), g.get_type());
+            elseif g.MS{mi}.STRUCTURAL
+                g.MS{mi}.VALUE = feval(g.MS{mi}.FUNCTION, g.get_adjacency_matrix(), g.get_type(), g.get_community_structure());
+            else
+                g.MS{mi}.VALUE = feval(g.MS{mi}.FUNCTION, g.get_adjacency_matrix(), g.get_type());
+            end
         end
     end
     methods (Static)

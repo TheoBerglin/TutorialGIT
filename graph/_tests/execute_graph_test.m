@@ -11,11 +11,11 @@ function [passed, test_struct] = ni_execute_graph_test(test_name)
 %% Perform tests
 tol = 1e-6;
 passed = true;
-
-n_measures = size(Graph.MS,1);
+gd = GraphBD(zeros(5));
+n_measures = size(gd.MS,2);
 test_function_nbr = NaN;
 for i = 1:n_measures
-    if Graph.MS{i}.FUNC == test_func
+    if isequal(gd.MS{i}.FUNCTION, test_func)
         test_function_nbr = i;
         break;
     end
@@ -23,14 +23,13 @@ end
 
 if isnan(test_function_nbr)
     passed = false;
-    test_struct = get_test_struct(zeros(5), Graph.BD, NaN, 'Test function error');
+    test_struct = get_test_struct(zeros(5), Graph.BD, NaN, sprintf('Test function error %s', test_func));
     return
 end
-
 for i=1:length(test_struct)
     connectivity_matrix = test_struct(i).connectivity;
     type = test_struct(i).type;
-    g = NaN;
+    g = [];
     exp_result = test_struct(i).exp_result;
     if type == Graph.BD
         g = GraphBD(connectivity_matrix);
@@ -42,16 +41,18 @@ for i=1:length(test_struct)
         g = GraphWD(connectivity_matrix);
     end
     
-    if ~isnan(g)
+    if ~isempty(g)
         try
-            eval(['g.measure(' test_function_nbr ');']);
-            eval(['res = g.MS{' test_function_nbr '}.VALUE;']);
+            eval(sprintf( 'g.calculate_measure(%d);', test_function_nbr) );
+            eval(sprintf('res = g.MS{%d}.VALUE;', test_function_nbr));
         catch MException
             if isequal(MException.message, 'Negative weights, not implemented')
                 res = exp_result;
             end
+            res = exp_result-1;
+            
         end
-    else 
+    else
         res = exp_result;
     end
     
