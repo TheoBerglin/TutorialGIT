@@ -169,12 +169,15 @@ classdef GraphBD < Graph
             %   any connection matrix A and initializes property Property1 to
             %   Value1, Property2 to Value2, ... .
             %   Admissible properties are:
-            %     threshold    -   thereshold = 0 (default)
+            %     threshold    -   threshold = 0 (default)
             %     density      -   percent of connections
             %     bins         -   -1:.001:1 (default)
             %     diagonal     -   'exclude' (default) | 'include'
             %     P            -   coefficient p-values
             %     structure    -   community structure object
+            %     negative     -   whether to include negative values from
+            %                      the adjacency matrix, false (default) |
+            %                      true
             %
             % See also Graph, GraphBU.
             

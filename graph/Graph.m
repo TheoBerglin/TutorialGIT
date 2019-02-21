@@ -2068,18 +2068,18 @@ classdef Graph < handle & matlab.mixin.Copyable
             %       bins        -   -1:.001:1 (default)
             %       density     -   percentage of connections
             %       diagonal    -   'exclude' (default) | 'include'
+            %       negative    -   whether to include negative weights,
+            %                       false (default) | true
             %
             % See also Graph, histogram.
             
             % Threshold and density
             threshold = 0;
+            negative = false;
             for n = 1:1:length(varargin)-1
                 if strcmpi(varargin{n},'threshold')
                     threshold = varargin{n+1};
-                end
-            end
-            for n = 1:1:length(varargin)-1
-                if strcmpi(varargin{n},'density')
+                elseif strcmpi(varargin{n},'density')
                     [~,bins,density] = Graph.histogram(A,varargin{:});
                     threshold = bins(density<varargin{n+1});
                     if isempty(threshold)
@@ -2087,12 +2087,19 @@ classdef Graph < handle & matlab.mixin.Copyable
                     else
                         threshold = threshold(1);
                     end
+                elseif strcmpi(varargin{n},'negative')
+                    negative = varargin{n+1};
                 end
             end
             
             % Calculates binary graph
-            B = zeros(size(A));
-            B(A>threshold) = 1;
+            if negative
+                B = A;
+                B(B~=0) = 1;
+            else
+                B = zeros(size(A));
+                B(A>threshold) = 1;
+            end
         end
         function h = plotw(A,varargin)
             % PLOTW plots a weighted matrix

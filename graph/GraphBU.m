@@ -159,6 +159,8 @@ classdef GraphBU < GraphBD
             %                   'sum' - sum of inconnection and outconnection
             %     P         -   coefficient p-values
             %     structure -   community structure object
+            %     negative  -   whether to include negative values from
+            %                   the adjacency matrix, false (default) | true
             %
             % See also Graph, GraphBD.
             
