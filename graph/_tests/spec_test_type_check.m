@@ -1,4 +1,4 @@
-function [ passed, details ] = test_type_check(  )
+function [ passed, details ] = spec_test_type_check(  )
 %TEST_TYPE_CHECK Test function for the type check methods
 %
 % Authors: Adam Liberda, Theo Berglin
