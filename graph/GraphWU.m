@@ -154,8 +154,8 @@ classdef GraphWU < GraphWD
             %                   'sum' - sum of inconnection and outconnection
             %     P         -   coefficient p-values
             %     structure -   community structure object
-            %     absolute  -   whether to include negative values from 
-            %                   the adjacency matrix by taking the 
+            %     absolute  -   whether to include negative values from
+            %                   the adjacency matrix by taking the
             %                   absolute value, false (default) | true
             %
             % See also Graph, GraphWD.
@@ -166,131 +166,10 @@ classdef GraphWU < GraphWD
             g = g@GraphWD(A,varargin{:});
             
             g.TYPE = Graph.WU;
-        end
-        function bool = directed(g)
-            % DIRECTED checks if graph is directed
-            %
-            % BOOL = DIRECTED(G) returns false for undirected graphs.
-            %
-            % See also GraphWD, undirected.
-            
-            bool = false;
-        end
-        function bool = undirected(g)
-            % UNDIRECTED checks if graph is undirected
-            %
-            % BOOL = UNDIRECTED(G) returns true for undirected graphs.
-            %
-            % See also GraphBD, directed.
-            
-            bool = true;
-        end
-        function deg = degree(g)
-            % DEGREE degree of a node
-            %
-            % DEG = DEGREE(G) calculates the degree DEG of all nodes in the graph G.
-            %
-            % The node degree is the number of links connected to a node. In the case
-            %   of weighted graphs, the weights of the edges are not considered and the
-            %   diagonal of connection matrix is removed i.e. self-connections are also
-            %   not considered.
-            %
-            % See also GraphWU.
-            
-            deg = degree@GraphWD(g)/2;
-        end
-        function str = strength(g)
-            % STENGTH strength of a node
-            %
-            % STR = STENGTH(G) calculates the strength STR of all nodes in the graph G.
-            %
-            % The node strength is the sum of the weights of the edges connected to a
-            %   node. In these calculations, the diagonal of connection matrix is removed
-            %   i.e. self-connections are also not considered.
-            %
-            % Reference: "The architecture of complex weighted networks", A.Barrat et al.
-            %
-            % See also GraphWU.
-            
-            str = strength@GraphWD(g)/2;
-        end
-        function t = triangles(g)
-            % TRIANGLES contribution of triangles around a node
-            %
-            % T = TRIANGLES(G) calculates the contribution of triangles T around
-            %   all nodes in the graph G.
-            %
-            % Triangles are the number of pairs of neighbours of a node that are
-            %   connected with each other.
-            %
-            % In weighted graphs, a contribution of a triangle is defined as the
-            %   geometric mean of the weigths of the edges froming the triangle.
-            %
-            % Reference: "Intensity and coherence of motifs in weighted complex networks", J.P.Onnela et al.
-            %            "Clustering in complex directed networks", G.Fagiolo
-            %
-            % See also GraphWU.
-            
-            if isempty(g.t)
-                W = Graph.removediagonal(g.A);
-                cyc3 = diag((W.^(1/3))^3);
-                g.t = 0.5*cyc3';
-            end
-            
-            t = g.t;
-        end
-        function [cl,clnode] = cluster(g)
-            % CLUSTER clustering coefficient
-            %
-            % [CL,CLNODE] = CLUSTER(G) calculates the clustering coefficient of all
-            %   nodes CLNODE and the average clustering coefficient CL of the graph G.
-            %
-            % Clustering coefficient of a node is defined as the fraction of triangles
-            %   around the node (the fraction of node's neighbors that are neighbors of
-            %   each other). Clustering coefficient of the graph is defined as the
-            %   average of the clustering coefficients of all nodes in the graph.
-            %
-            % In weighted graphs, a contribution of a triangle is defined as the
-            %   geometric mean of the weigths of the edges froming the triangle.
-            %
-            % Reference: "Intensity and coherence of motifs in weighted complex networks", J.P.Onnela et al.
-            %            "Clustering in complex directed networks", G.Fagiolo
-            %
-            % See also GraphWU.
-            
-            if isempty(g.cl) || isempty(g.clnode)
-                t = g.triangles();
-                K = g.degree();
-                
-                K(t==0) = inf;  % if no 3-cycles exist, make C = 0 (via K = inf)
-                g.clnode = (2*t./(K.*(K-1)));  % clustering coefficient
-                g.cl = mean(g.clnode);
-            end
-            
-            cl = g.cl;
-            clnode = g.clnode;
-        end
-        function tr = transitivity(g)
-            % TRANSITIVITY transitivity of a graph
-            %
-            % TR = TRANSITIVITY(G) calculates the transitivity of the graph G.
-            %
-            % Transitivity of a graph is defined as the fraction of triangles to
-            %   triplets in a graph. In weighted graphs, a contribution of a triangle
-            %   is defined as the geometric mean of the weigths of the edges froming
-            %   the triangle.
-            %
-            % Reference: "Ego-centered networks and the ripple effect", M.E.J. Newman
-            %
-            % See also GraphWU, triangles, cluster.
-            
-            if isempty(g.tr)
-                K = g.degree();
-                t = g.triangles();
-                g.tr = 3*sum(t)./sum((K.*(K-1)));  % transitivity
-            end
-            
-            tr = g.tr;
+            g.weight = true;
+            g.bin = false;
+            g.dir = false;
+            g.undir = true;
         end
         function [gr,R] = randomize(g,bin_swaps,wei_freq)
             % RANDOMIZE randomizes the graph
