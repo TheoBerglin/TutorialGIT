@@ -169,17 +169,21 @@ classdef GraphBD < Graph
             %   any connection matrix A and initializes property Property1 to
             %   Value1, Property2 to Value2, ... .
             %   Admissible properties are:
-            %     threshold    -   thereshold = 0 (default)
+            %     threshold    -   threshold = 0 (default)
             %     density      -   percent of connections
             %     bins         -   -1:.001:1 (default)
             %     diagonal     -   'exclude' (default) | 'include'
             %     P            -   coefficient p-values
             %     structure    -   community structure object
+            %     absolute     -   whether to include negative values from 
+            %                      the adjacency matrix by taking the 
+            %                      absolute value, false (default) | true
             %
             % See also Graph, GraphBU.
             
             C = A;
             
+            A = Graph.positivize(A,varargin{:});
             [A,threshold] = Graph.binarize(A,varargin{:});  % binarized connection matrix
             
             g = g@Graph(A,varargin{:});
@@ -575,162 +579,6 @@ classdef GraphBD < Graph
             end
             
             tr = g.tr;
-        end
-        function res = measure(g,mi)
-            % MEASURE calculates given measure
-            %
-            % RES = MEASURE(G,MI) calculates the measure of the graph G specified
-            %   by MI and returns the result RES.
-            %   Admissible measures for binary directed graphs are:
-            %     Graph.DEGREE
-            %     Graph.DEGREEAV
-            %     Graph.IN_DEGREE
-            %     Graph.IN_DEGREEAV
-            %     Graph.OUT_DEGREE
-            %     Graph.OUT_DEGREEAV
-            %     Graph.RADIUS
-            %     Graph.DIAMETER
-            %     Graph.ECCENTRICITY
-            %     Graph.ECCENTRICITYAV
-            %     Graph.IN_ECCENTRICITY
-            %     Graph.IN_ECCENTRICITYAV
-            %     Graph.OUT_ECCENTRICITY
-            %     Graph.OUT_ECCENTRICITYAV
-            %     Graph.TRIANGLES
-            %     Graph.CPL
-            %     Graph.PL
-            %     Graph.IN_CPL
-            %     Graph.IN_PL
-            %     Graph.OUT_CPL
-            %     Graph.OUT_PL
-            %     Graph.GEFF
-            %     Graph.GEFFNODE
-            %     Graph.IN_GEFF
-            %     Graph.IN_GEFFNODE
-            %     Graph.OUT_GEFF
-            %     Graph.OUT_GEFFNODE
-            %     Graph.LEFF
-            %     Graph.LEFFNODE
-            %     Graph.CLUSTER
-            %     Graph.CLUSTERNODE
-            %     Graph.BETWEENNESS
-            %     Graph.CLOSENESS
-            %     Graph.IN_CLOSENESS
-            %     Graph.OUT_CLOSENESS
-            %     Graph.TRANSITIVITY
-            %     Graph.MODULARITY
-            %     Graph.ZSCORE
-            %     Graph.IN_ZSCORE
-            %     Graph.OUT_ZSCORE
-            %     Graph.PARTICIPATION
-            %     Graph.SW
-            %
-            % See also GraphBD.
-            
-            if ~any(GraphBD.measurelist()==mi)
-                g.ERR_MEASURE_NOT_DEFINED(mi)
-            end
-            
-            switch mi
-                case Graph.DEGREE
-                    res = g.degree();
-                case Graph.DEGREEAV
-                    res = mean(g.degree());
-                case Graph.IN_DEGREE
-                    [~,res] = g.degree();
-                case Graph.IN_DEGREEAV
-                    [~,res] = g.degree();
-                    res = mean(res);
-                case Graph.OUT_DEGREE
-                    [~,~,res] = g.degree();
-                case Graph.OUT_DEGREEAV
-                    [~,~,res] = g.degree();
-                    res = mean(res);
-                case Graph.RADIUS
-                    res = g.radius();
-                case Graph.DIAMETER
-                    res = g.diameter();
-                case Graph.ECCENTRICITY
-                    res = g.eccentricity();
-                case Graph.ECCENTRICITYAV
-                    res = mean(g.eccentricity());
-                case Graph.IN_ECCENTRICITY
-                    [~,res] = g.eccentricity();
-                case Graph.IN_ECCENTRICITYAV
-                    [~,res] = g.eccentricity();
-                    res = mean(res);
-                case Graph.OUT_ECCENTRICITY
-                    [~,~,res] = g.eccentricity();
-                case Graph.OUT_ECCENTRICITYAV
-                    [~,~,res] = g.eccentricity();
-                    res = mean(res);
-                case Graph.TRIANGLES
-                    res = g.triangles();
-                case Graph.CPL
-                    res = mean(g.pl());
-                case Graph.PL
-                    res = g.pl();
-                case Graph.IN_CPL
-                    [~,res] = g.pl();
-                    res = mean(res);
-                case Graph.IN_PL
-                    [~,res] = g.pl();
-                case Graph.OUT_CPL
-                    [~,~,res] = g.pl();
-                    res = mean(res);
-                case Graph.OUT_PL
-                    [~,~,res] = g.pl();
-                case Graph.GEFF
-                    res = mean(g.geff());
-                case Graph.GEFFNODE
-                    res = g.geff();
-                case Graph.IN_GEFF
-                    [~,res] = g.geff();
-                    res = mean(res);
-                case Graph.IN_GEFFNODE
-                    [~,res] = g.geff();
-                case Graph.OUT_GEFF
-                    [~,~,res] = g.geff();
-                    res = mean(res);
-                case Graph.OUT_GEFFNODE
-                    [~,~,res] = g.geff();
-                case Graph.LEFF
-                    res = mean(g.leff());
-                case Graph.LEFFNODE
-                    [~,res] = g.leff();
-                % case Graph.IN_LEFF
-                % case Graph.IN_LEFFNODE
-                % case Graph.OUT_LEFF
-                % case Graph.OUT_LEFFNODE
-                case Graph.CLUSTER
-                    res = g.cluster();
-                case Graph.CLUSTERNODE
-                    [~,res] = g.cluster();
-                case Graph.BETWEENNESS
-                    res = g.betweenness(true);
-                case Graph.CLOSENESS
-                    res = g.closeness();
-                case Graph.IN_CLOSENESS
-                    [~,res] = g.closeness();
-                case Graph.OUT_CLOSENESS
-                    [~,~,res] = g.closeness();
-                case Graph.TRANSITIVITY
-                    res = g.transitivity();
-                case Graph.MODULARITY
-                    res = g.modularity();
-                case Graph.ZSCORE
-                    res = g.zscore();
-                case Graph.IN_ZSCORE
-                    [~,res] = g.zscore();
-                case Graph.OUT_ZSCORE
-                    [~,~,res] = g.zscore();
-                case Graph.PARTICIPATION
-                    res = g.participation();
-                case Graph.SW
-                    res = g.smallworldness();
-                case Graph.SW_WSG
-                    res = g.smallworldness(true);
-            end
         end
         function [gr,R] = randomize(g,bin_swaps,wei_freq)
             % RANDOMIZE randomizes the graph

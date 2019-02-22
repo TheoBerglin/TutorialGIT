@@ -10,7 +10,7 @@ classdef GraphBU < GraphBD
     % GraphBU properties (GetAccess = public, SetAccess = protected):
     %   A               -   connection matrix < Graph
     %   P               -   coefficient p-values < Graph
-    %   S               -   community structure < Graph    
+    %   S               -   community structure < Graph
     %   C               -   weighted connection matrix < GraphBD
     %   threshold       -   threshold to be applied for binarization < GraphBD
     %
@@ -118,7 +118,7 @@ classdef GraphBU < GraphBD
             Graph.ECCENTRICITYAV ...
             Graph.TRIANGLES ...
             Graph.CPL ...
-            Graph.CPL_WSG ... 
+            Graph.CPL_WSG ...
             Graph.PL ...
             Graph.GEFF ...
             Graph.GEFFNODE ...
@@ -132,7 +132,6 @@ classdef GraphBU < GraphBD
             Graph.MODULARITY ...
             Graph.ZSCORE ...
             Graph.PARTICIPATION ...
-            Graph.ASSORTATIVITY ...
             Graph.SW ...
             Graph.SW_WSG ...
             ]
@@ -160,12 +159,17 @@ classdef GraphBU < GraphBD
             %                   'sum' - sum of inconnection and outconnection
             %     P         -   coefficient p-values
             %     structure -   community structure object
+            %     absolute  -   whether to include negative values from 
+            %                   the adjacency matrix by taking the 
+            %                   absolute value, false (default) | true
             %
             % See also Graph, GraphBD.
             
             C = A;
+            A = Graph.positivize(A,varargin{:});
+                        
             A = Graph.symmetrize(A,varargin{:});  % symmetrized connection matrix
-            
+
             g = g@GraphBD(A,varargin{:});
             g.C = C;
             
@@ -269,232 +273,6 @@ classdef GraphBU < GraphBD
             end
             
             tr = g.tr;
-        end
-        function a = assortativity(g)
-            % ASSORTATIVITY Assortativity coefficient
-            %
-            % A = ASSORTATIVITY(G) calcualtes the assortativity of the graph G.
-            %
-            % The assortativity coefficient is a correlation coefficient between the
-            %   degrees of all nodes on two opposite ends of a link. A positive
-            %   assortativity coefficient indicates that nodes tend to link to other
-            %   nodes with the same or similar degree.
-            %
-            % See also GraphBU.
-            
-            if isempty(g.a)
-                g.a = assortativity_bin(Graph.removediagonal(g.A),0);
-            end
-
-            a = g.a;
-
-            function r = assortativity_bin(CIJ,flag)
-                %   ASSORTATIVITY Assortativity coefficient
-                %
-                %   r = assortativity(CIJ,flag);
-                %
-                %   The assortativity coefficient is a correlation coefficient between the
-                %   degrees of all nodes on two opposite ends of a link. A positive
-                %   assortativity coefficient indicates that nodes tend to link to other
-                %   nodes with the same or similar degree.
-                %
-                %   Inputs:     CIJ,    binary directed/undirected connection matrix
-                %               flag,   0, undirected graph: degree/degree correlation
-                %                       1, directed graph: out-degree/in-degree correlation
-                %                       2, directed graph: in-degree/out-degree correlation
-                %                       3, directed graph: out-degree/out-degree correlation
-                %                       4, directed graph: in-degree/in-degree correlation
-                %
-                %   Outputs:    r,      assortativity coefficient
-                %
-                %   Notes: The function accepts weighted networks, but all connection
-                %   weights are ignored. The main diagonal should be empty. For flag 1
-                %   the function computes the directed assortativity described in Rubinov
-                %   and Sporns (2010) NeuroImage.
-                %
-                %   Reference:  Newman (2002) Phys Rev Lett 89:208701
-                %               Foster et al. (2010) PNAS 107:10815?10820
-                %
-                %   Olaf Sporns, Indiana University, 2007/2008
-                %   Vassilis Tsiaras, University of Crete, 2009
-                %   Murray Shanahan, Imperial College London, 2012
-                %   Mika Rubinov, University of Cambridge, 2012
-                
-                if (flag==0)                        % undirected version
-                    deg = degrees_und(CIJ);
-                    [i,j] = find(triu(CIJ,1)>0);
-                    K = length(i);
-                    degi = deg(i);
-                    degj = deg(j);
-                    
-                else                                % directed versions
-                    [id,od] = degrees_dir(CIJ);
-                    [i,j] = find(CIJ>0);
-                    K = length(i);
-                    
-                    switch flag
-                        case 1
-                            degi = od(i);
-                            degj = id(j);
-                        case 2
-                            degi = id(i);
-                            degj = od(j);
-                        case 3
-                            degi = od(i);
-                            degj = od(j);
-                        case 4
-                            degi = id(i);
-                            degj = id(j);
-                    end
-                end
-                
-                % compute assortativity
-                r = ( sum(degi.*degj)/K - (sum(0.5*(degi+degj))/K)^2 ) / ...
-                    ( sum(0.5*(degi.^2+degj.^2))/K - (sum(0.5*(degi+degj))/K)^2 );
-            end
-            function [deg] = degrees_und(CIJ)
-                %DEGREES_UND        Degree
-                %
-                %   deg = degrees_und(CIJ);
-                %
-                %   Node degree is the number of links connected to the node.
-                %
-                %   Input:      CIJ,    undirected (binary/weighted) connection matrix
-                %
-                %   Output:     deg,    node degree
-                %
-                %   Note: Weight information is discarded.
-                %
-                %
-                %   Olaf Sporns, Indiana University, 2002/2006/2008
-                
-                
-                % ensure CIJ is binary...
-                CIJ = double(CIJ~=0);
-                
-                deg = sum(CIJ);
-            end
-            function [id,od,deg] = degrees_dir(CIJ)
-                %DEGREES_DIR        Indegree and outdegree
-                %
-                %   [id,od,deg] = degrees_dir(CIJ);
-                %
-                %   Node degree is the number of links connected to the node. The indegree
-                %   is the number of inward links and the outdegree is the number of
-                %   outward links.
-                %
-                %   Input:      CIJ,    directed (binary/weighted) connection matrix
-                %
-                %   Output:     id,     node indegree
-                %               od,     node outdegree
-                %               deg,    node degree (indegree + outdegree)
-                %
-                %   Notes:  Inputs are assumed to be on the columns of the CIJ matrix.
-                %           Weight information is discarded.
-                %
-                %
-                %   Olaf Sporns, Indiana University, 2002/2006/2008
-
-
-                % ensure CIJ is binary...
-                CIJ = double(CIJ~=0);
-
-                % compute degrees
-                id = sum(CIJ,1);    % indegree = column sum of CIJ
-                od = sum(CIJ,2)';   % outdegree = row sum of CIJ
-                deg = id+od;        % degree = indegree+outdegree
-            end
-        end
-        function res = measure(g,mi)
-            % MEASURE calculates given measure
-            %
-            % RES = MEASURE(G,MI) calculates the measure of the graph G specified
-            %   by MI and returns the result RES.
-            %   Admissible measures for binary undirected graphs are:
-            %     Graph.DEGREE
-            %     Graph.DEGREEAV
-            %     Graph.RADIUS
-            %     Graph.DIAMETER
-            %     Graph.ECCENTRICITY
-            %     Graph.ECCENTRICITYAV
-            %     Graph.TRIANGLES
-            %     Graph.CPL
-            %     Graph.CPL_WSG
-            %     Graph.PL
-            %     Graph.GEFF
-            %     Graph.GEFFNODE
-            %     Graph.LEFF
-            %     Graph.LEFFNODE
-            %     Graph.CLUSTER
-            %     Graph.CLUSTERNODE
-            %     Graph.BETWEENNESS
-            %     Graph.CLOSENESS
-            %     Graph.TRANSITIVITY
-            %     Graph.MODULARITY
-            %     Graph.ZSCORE
-            %     Graph.PARTICIPATION
-            %     Graph.ASSORTATIVITY
-            %     Graph.SW
-            %
-            % See also GraphBU.
-            
-            if ~any(GraphBU.measurelist()==mi)
-                g.ERR_MEASURE_NOT_DEFINED(mi)
-            end
-            
-            switch mi
-                case Graph.DEGREE
-                    res = g.degree();
-                case Graph.DEGREEAV
-                    res = mean(g.degree());
-                case Graph.RADIUS
-                    res = g.radius();
-                case Graph.DIAMETER
-                    res = g.diameter();
-                case Graph.ECCENTRICITY
-                    res = g.eccentricity();
-                case Graph.ECCENTRICITYAV
-                    res = mean(g.eccentricity());
-                case Graph.TRIANGLES
-                    res = g.triangles();
-                case Graph.CPL
-                    res = mean(g.pl());
-                case Graph.CPL_WSG
-                    tmp = g.pl();
-                    res = mean(tmp(isfinite(tmp)));
-                case Graph.PL
-                    res = g.pl();
-                case Graph.GEFF
-                    res = mean(g.geff());
-                case Graph.GEFFNODE
-                    res = g.geff();
-                case Graph.LEFF
-                    res = g.leff();
-                case Graph.LEFFNODE
-                    [~,res] = g.leff();
-                case Graph.CLUSTER
-                    res = g.cluster();
-                case Graph.CLUSTERNODE
-                    [~,res] = g.cluster();
-                case Graph.BETWEENNESS
-                    res = g.betweenness(true);
-                case Graph.CLOSENESS
-                    res = g.closeness();
-                case Graph.TRANSITIVITY
-                    res = g.transitivity();
-                case Graph.MODULARITY
-                    res = g.modularity();
-                case Graph.ZSCORE
-                    res = g.zscore();
-                case Graph.PARTICIPATION
-                    res = g.participation();
-                case Graph.ASSORTATIVITY
-                    res = g.assortativity();
-                case Graph.SW
-                    res = g.smallworldness();
-                case Graph.SW_WSG
-                    res = g.smallworldness(true);
-            end
         end
         function [gr,R] = randomize(g,bin_swaps,wei_freq)
             % RANDOMIZE randomizes the graph

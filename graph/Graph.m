@@ -55,7 +55,6 @@ classdef Graph < handle & matlab.mixin.Copyable
     %   OUT_LEFFNODE        -   out-local efficiency of a node
     %   CLUSTER             -   clustering coefficient of a graph
     %   CLUSTERNODE         -   clustering coefficient around a node
-    %   MODULARITY          -   modularity
     %   BETWEENNESS         -   betweenness centrality of a node
     %   CLOSENESS           -   closeness centrality of a node
     %   IN_CLOSENESS        -   in-closeness centrality of a node
@@ -152,7 +151,6 @@ classdef Graph < handle & matlab.mixin.Copyable
     %   pl                  -   path length of nodes
     %   closeness           -   closeness centrality of nodes
     %   structure           -   community structures of a graph
-    %   modularity          -   modularty of a graph
     %   zscore              -   within module degree z-score
     %   participation       -   participation coefficient of nodes
     %   smallworldness       -   small-wordness of the graph
@@ -357,7 +355,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         GEFF_NODAL = false;
         GEFF_DESCRIPTION = 'The global efficiency is the average inverse shortest path length in the graph. It is inversely related to the characteristic path length.';
         GEFF_FUNCTION = 'global_efficiency';
-        GEFF_AVERAGE = true;
+        GEFF_AVERAGE = false;
         GEFF_STRUCTURAL = false;
         
         GEFFNODE = 21;
@@ -695,13 +693,29 @@ classdef Graph < handle & matlab.mixin.Copyable
         SW_WSG_FUNCTION = 'smallworldness';
         SW_WSG_AVERAGE = false;
         SW_WSG_STRUCTURAL = false;
-
+        
+        DISTANCE = 63;
+        DISTANCE_NAME = 'distance';
+        DISTANCE_NODAL = true;
+        DISTANCE_DESCRIPTION = 'The distance from one node to another is the shortest path length between the two.';
+        DISTANCE_FUNCTION = 'distance';
+        DISTANCE_AVERAGE = false;
+        DISTANCE_STRUCTURAL = false;
+        
+        DENSITY = 64;
+        DENSITY_NAME = 'density';
+        DENSITY_NODAL = true;
+        DENSITY_DESCRIPTION = 'The density is the number of edges in the graph divided by the maximum number of possible edges.';
+        DENSITY_FUNCTION = 'density';
+        DENSITY_AVERAGE = false;
+        DENSITY_STRUCTURAL = false;
+        
     end
     properties (GetAccess = public, SetAccess = protected)
         A  % connection matrix
         P  % coefficient p-values
         S  % community structure
-        TYPE % Graph type      
+        TYPE % Graph type
         MS
     end
     properties (Access = protected)
@@ -805,6 +819,8 @@ classdef Graph < handle & matlab.mixin.Copyable
             g.MS{Graph.OUT_OUT_ASSORTATIVITY} = struct('NAME', Graph.OUT_OUT_ASSORTATIVITY_NAME, 'NODAL', Graph.OUT_OUT_ASSORTATIVITY_NODAL, 'DESCRIPTION', Graph.OUT_OUT_ASSORTATIVITY_DESCRIPTION, 'FUNCTION', Graph.OUT_OUT_ASSORTATIVITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_OUT_ASSORTATIVITY_AVERAGE, 'STRUCTURAL', Graph.OUT_OUT_ASSORTATIVITY_STRUCTURAL);
             g.MS{Graph.SW} = struct('NAME', Graph.SW_NAME, 'NODAL', Graph.SW_NODAL, 'DESCRIPTION', Graph.SW_DESCRIPTION, 'FUNCTION', Graph.SW_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.SW_AVERAGE, 'STRUCTURAL', Graph.SW_STRUCTURAL);
             g.MS{Graph.SW_WSG} = struct('NAME', Graph.SW_WSG_NAME, 'NODAL', Graph.SW_WSG_NODAL, 'DESCRIPTION', Graph.SW_WSG_DESCRIPTION, 'FUNCTION', Graph.SW_WSG_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.SW_WSG_AVERAGE, 'STRUCTURAL', Graph.SW_WSG_STRUCTURAL);
+            g.MS{Graph.DISTANCE} = struct('NAME', Graph.DISTANCE_NAME, 'NODAL', Graph.DISTANCE_NODAL, 'DESCRIPTION', Graph.DISTANCE_DESCRIPTION, 'FUNCTION', Graph.DISTANCE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.DISTANCE_AVERAGE, 'STRUCTURAL', Graph.DISTANCE_STRUCTURAL);
+            g.MS{Graph.DENSITY} = struct('NAME', Graph.DENSITY_NAME, 'NODAL', Graph.DENSITY_NODAL, 'DESCRIPTION', Graph.DENSITY_DESCRIPTION, 'FUNCTION', Graph.DENSITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.DENSITY_AVERAGE, 'STRUCTURAL', Graph.DENSITY_STRUCTURAL);
             
         end
         function reset_structure_related_measures(g)
@@ -815,13 +831,12 @@ classdef Graph < handle & matlab.mixin.Copyable
             %
             % See also Graph.
             
-            % [z,zin,zout] = zscore(g)
-            z = [];
-            zin = [];
-            zout = [];
-            
-            % p = participation(g)
-            p = [];
+            n_meas = length(g.MS);
+            for i = 1:n_meas
+                if g.MS{i}.STRUCTURAL
+                    g.MS{i}.VALUE = Graph.DEFAULT_MEASURE_VALUE;
+                end
+            end
         end
         function cp = copyElement(g)
             % COPYELEMENT copies elements of graph
@@ -843,10 +858,38 @@ classdef Graph < handle & matlab.mixin.Copyable
         directed(g)  % direced graph
         undirected(g)  % undirected graph
         distance(g)  % distance between nodes (shortest path length)
-        measure(g,mi)  % calculates given measure
         randomize(g)  % randomize graph while preserving degree distribution
     end
     methods
+        function community_structure = get_community_structure(g)
+            % GET_COMMUNITY_STRUCTURE returns the current community
+            %   structure
+            
+            graph_structure_param = g.CS.LAST_PARAMS;
+            obj_structure_param = g.S.toString();
+            if ~isequal(graph_structure_param, obj_structure_param)
+                g.set_community_structure();
+            end
+            community_structure = g.CS.VALUE;
+            
+        end
+        function set_community_structure(g)
+            % SET_COMMUNITY_STRUCTURE calls the method for resetting the 
+            %   current values for the structure related measures and 
+            %   calls the appropriate method for calculating a new 
+            %   community structure.
+            
+           g.reset_structure_related_measures();
+           algorithm = g.S.getAlgorithm();
+           switch algorithm
+               case Structure.ALGORITHM_LOUVAIN
+                   g.calculate_structure_louvain();
+               case Structure.ALGORITHM_NEWMAN
+                   g.calculate_structure_newman();
+               case Structure.ALGORITHM_FIXED
+                   g.calculate_structure_fixed();
+           end
+        end
         function type = get_type(g)
             % GET_TYPE returns the type of the graph G.
             %
@@ -860,6 +903,14 @@ classdef Graph < handle & matlab.mixin.Copyable
             %   Graph.WUN = Weighted Undirected with Negative weights
             
             type = g.TYPE;
+        end
+        function A = get_adjacency_matrix(g)
+            % GET_ADJACENCY_MATRIX returns the adjacency matrix A
+            % representing the graph.
+            %
+            % A = GET_ADJACENCY_MATRIX returns the adjacency matrix A
+            % representing the graph.
+            A = g.A;
         end
         function sg = subgraph(g,nodes)
             % SUBGRAPH creates subgraph from given nodes
@@ -1051,6 +1102,345 @@ classdef Graph < handle & matlab.mixin.Copyable
             clo = g.clo;
             cloin = g.cloin;
             cloout = g.cloout;
+        end
+        function calculate_structure_louvain(g)
+            % CALCULATE_STRUCTURE_LOUVAIN community structures of a graph
+            %
+            % CALCULATE_STRUCTURE_LOUVAIN(G) calculate the optimal community 
+            %   structure and maximized modularity in the graph G.
+            %   It uses the Louvain algorithm and reads the gamma value of 
+            %   the structure object to calculate the optimized community structure.
+            %
+            %   The optimal community structure is a structure with maximum number of
+            %   edges connecting nodes within communities compared to the edges
+            %   connecting nodes between communities.
+            %
+            %   The modularity is a parameter that signifies the degree at which the
+            %   graph can be divided into distinct communities.
+            
+            gamma = g.S.getGamma();  % gamma from defined structure
+            
+            A = remove_diagonal(g.A);
+            W = double(A);  % convert from logical
+            n = length(W);
+            s = sum(W(:));  % sum of edges (each undirected edge is counted twice)
+            
+            if min(W(:)) < -1e-10
+                error('W must not contain negative weights.')
+            end
+            
+            if ~exist('B','var') || isempty(B)
+                B = 'modularity';
+            end
+            if ( ~exist('gamma','var') || isempty(gamma)) && ischar(B)
+                gamma = 1;
+            end
+            if ~exist('M0','var') || isempty(M0)
+                M0 = 1:n;
+            elseif numel(M0) ~= n
+                error('M0 must contain n elements.')
+            end
+            
+            [~,~,Mb] = unique(M0);
+            M = Mb;
+            
+            if ischar(B)
+                switch B
+                    case 'modularity';
+                        B = W-gamma*(sum(W,2)*sum(W,1))/s;
+                    case 'potts';
+                        B = W-gamma*(~W);
+                    otherwise;
+                        error('Unknown objective function.');
+                end
+            else
+                B = double(B);
+                if ~isequal(size(W),size(B))
+                    error('W and B must have the same size.')
+                end
+                if max(max(abs(B-B.'))) > 1e-10
+                    warning('B is not symmetric, enforcing symmetry.')
+                end
+                if exist('gamma','var')
+                    warning('Value of gamma is ignored in generalized mode.')
+                end
+            end
+            
+            B = (B+B.')/2;  % symmetrize modularity matrix
+            Hnm = zeros(n,n);  % node-to-module degree
+            for m = 1:max(Mb)  % loop over modules
+                Hnm(:,m) = sum(B(:,Mb==m),2);
+            end
+            H = sum(Hnm,2);  % node degree
+            Hm = sum(Hnm,1);  % module degree
+            
+            Q0 = -inf;
+            Q = sum(B(bsxfun(@eq,M0,M0.')))/s;  % compute modularity
+            first_iteration = true;
+            while Q-Q0 > 1e-10
+                flag = true;  % flag for within-hierarchy search
+                while flag;
+                    flag = false;
+                    for u=randperm(n)  % loop over all nodes in random order
+                        ma = Mb(u);  % current module of u
+                        dQ = Hnm(u,:)-Hnm(u,ma)+B(u,u);
+                        dQ(ma) = 0;  % (line above) algorithm condition
+                        
+                        [max_dQ mb] = max(dQ);  % maximal increase in modularity and corresponding module
+                        if max_dQ > 1e-10;  % if maximal increase is positive
+                            flag = true;
+                            Mb(u) = mb;  % reassign module
+                            
+                            Hnm(:,mb) = Hnm(:,mb)+B(:,u);  % change node-to-module strengths
+                            Hnm(:,ma) = Hnm(:,ma)-B(:,u);
+                            Hm(mb) = Hm(mb)+H(u);  % change module strengths
+                            Hm(ma) = Hm(ma)-H(u);
+                        end
+                    end
+                end
+                [~,~,Mb] = unique(Mb);  % new module assignments
+                
+                M0 = M;
+                if first_iteration
+                    M = Mb;
+                    first_iteration = false;
+                else
+                    for u=1:n  % loop through initial module assignments
+                        M(M0==u) = Mb(u);  % assign new modules
+                    end
+                end
+                
+                n = max(Mb);  % new number of modules
+                B1 = zeros(n);  % new weighted matrix
+                for u = 1:n
+                    for v = u:n
+                        bm = sum(sum(B(Mb==u,Mb==v)));  % pool weights of nodes in same module
+                        B1(u,v) = bm;
+                        B1(v,u) = bm;
+                    end
+                end
+                B = B1;
+                
+                Mb = 1:n;  % initial module assignments
+                Hnm = B;  % node-to-module strength
+                H = sum(B);  % node strength
+                Hm = H;  % module strength
+                
+                Q0 = Q;
+                Q = trace(B)/s;  % compute modularity
+            end
+            
+            g.CS.VALUE = M';
+            g.CS.LAST_PARAMS = g.S.toString();
+            g.MS{g.MODULARITY}.VALUE = Q;
+            
+        end
+        function calculate_structure_newman(g)
+            % CALCULATE_STRUCTURE_NEWMAN community structures of a graph
+            %
+            % CALCULATE_STRUCTURE_NEWMAN(G) calculate the optimal community 
+            %   structure and maximized modularity in the graph G.
+            %   It uses the Newman algorithm and reads the gamma value of 
+            %   the structure object to calculate the optimized community structure.
+            %
+            %   The optimal community structure is a structure with maximum number of
+            %   edges connecting nodes within communities compared to the edges
+            %   connecting nodes between communities.
+            %
+            %   The modularity is a parameter that signifies the degree at which the
+            %   graph can be divided into distinct communities.
+            
+            gamma = g.S.getGamma();  % gamma from defined structure
+            
+            A = remove_diagonal(g.A);
+            N = length(A);  % number of vertices
+            n_perm = randperm(N);  % randomly permute order of nodes
+            A = A(n_perm,n_perm);  % DB: use permuted matrix for subsequent analysis
+            
+            if g.directed()
+                Ki = sum(A,1);  % in-degree
+                Ko = sum(A,2);  % out-degree
+                m = sum(Ki);  % number of edges
+                b = A-gamma*(Ko*Ki).'/m;
+                B = b+b.';  % directed modularity matrix
+                Ci = ones(N,1);  % community indices
+                cn = 1;  % number of communities
+                U = [1 0];  % array of unexamined communites
+                
+                ind = 1:N;
+                Bg = B;
+                Ng = N;
+                
+                while U(1)  % examine community U(1)
+                    [V D] = eig(Bg);
+                    [d1 i1] = max(real(diag(D)));  % most positive eigenvalue of Bg
+                    v1 = V(:,i1);  % corresponding eigenvector
+                    
+                    S = ones(Ng,1);
+                    S(v1<0) = -1;
+                    q = S.'*Bg*S;  % contribution to modularity
+                    
+                    if q > 1e-10  % contribution positive: U(1) is divisible
+                        qmax = q;  % maximal contribution to modularity
+                        Bg(logical(eye(Ng))) = 0;  % Bg is modified, to enable fine-tuning
+                        indg = ones(Ng,1);  % array of unmoved indices
+                        Sit = S;
+                        while any(indg);  % iterative fine-tuning
+                            Qit = qmax-4*Sit.*(Bg*Sit);  % this line is equivalent to:
+                            qmax = max(Qit.*indg);  % for i=1:Ng
+                            imax = (Qit==qmax);  % Sit(i)=-Sit(i);
+                            Sit(imax) = -Sit(imax);  % Qit(i)=Sit.'*Bg*Sit;
+                            indg(imax) = nan;  % Sit(i)=-Sit(i);
+                            if qmax > q;  % end
+                                q = qmax;
+                                S = Sit;
+                            end
+                        end
+                        
+                        if abs(sum(S)) == Ng  % unsuccessful splitting of U(1)
+                            U(1) = [];
+                        else
+                            cn = cn+1;
+                            Ci(ind(S==1)) = U(1);  % split old U(1) into new U(1) and into cn
+                            Ci(ind(S==-1)) = cn;
+                            U = [cn U];
+                        end
+                    else  % contribution nonpositive: U(1) is indivisible
+                        U(1) = [];
+                    end
+                    
+                    ind = find(Ci==U(1));  % indices of unexamined community U(1)
+                    bg = B(ind,ind);
+                    Bg = bg-diag(sum(bg));  % modularity matrix for U(1)
+                    Ng = length(ind);  % number of vertices in U(1)
+                end
+                
+                s = Ci(:,ones(1,N));  % compute modularity
+                Q =~ (s-s.').*B/(2*m);
+                
+            elseif g.undirected()
+                K = sum(A);  % degree
+                m = sum(K);  % number of edges (each undirected edge is counted twice)
+                B = A-gamma*(K.'*K)/m;  % modularity matrix
+                Ci = ones(N,1);  % community indices
+                cn = 1;  % number of communities
+                U = [1 0];  % array of unexamined communites
+                
+                ind = 1:N;
+                Bg = B;
+                Ng = N;
+                
+                while U(1)  % examine community U(1)
+                    [V D] = eig(Bg);
+                    [d1 i1] = max(real(diag(D)));  % maximal positive (real part of) eigenvalue of Bg
+                    v1 = V(:,i1);  % corresponding eigenvector
+                    
+                    S = ones(Ng,1);
+                    S(v1<0) = -1;
+                    q = S.'*Bg*S;  % contribution to modularity
+                    
+                    if q > 1e-10  % contribution positive: U(1) is divisible
+                        qmax = q;  % maximal contribution to modularity
+                        Bg(logical(eye(Ng))) = 0;  % Bg is modified, to enable fine-tuning
+                        indg = ones(Ng,1);  % array of unmoved indices
+                        Sit = S;
+                        while any(indg);  % iterative fine-tuning
+                            Qit = qmax-4*Sit.*(Bg*Sit);  % this line is equivalent to:
+                            qmax = max(Qit.*indg);  % for i=1:Ng
+                            imax = (Qit==qmax);  % Sit(i)=-Sit(i);
+                            Sit(imax) = -Sit(imax);  % Qit(i)=Sit.'*Bg*Sit;
+                            indg(imax) = nan;  % Sit(i)=-Sit(i);
+                            if qmax > q;  % end
+                                q = qmax;
+                                S = Sit;
+                            end
+                        end
+                        
+                        if abs(sum(S)) == Ng  % unsuccessful splitting of U(1)
+                            U(1) = [];
+                        else
+                            cn = cn+1;
+                            Ci(ind(S==1)) = U(1);  % split old U(1) into new U(1) and into cn
+                            Ci(ind(S==-1)) = cn;
+                            U = [cn U];
+                        end
+                    else  % contribution nonpositive: U(1) is indivisible
+                        U(1) = [];
+                    end
+                    
+                    ind = find(Ci==U(1));  % indices of unexamined community U(1)
+                    bg = B(ind,ind);
+                    Bg = bg-diag(sum(bg));  % modularity matrix for U(1)
+                    Ng = length(ind);  % number of vertices in U(1)
+                end
+                
+                s = Ci(:,ones(1,N));  % compute modularity
+                Q =~ (s-s.').*B/m;
+            end
+            
+            Q = sum(Q(:));
+            Ci_corrected = zeros(N,1);  % initialize Ci_corrected
+            Ci_corrected(n_perm) = Ci;  % return order of nodes to the order used at the input stage.
+            Ci = Ci_corrected;  % output corrected community assignments
+            
+            g.CS.VALUE = Ci';
+            g.CS.LAST_PARAMS = g.S.toString();
+            g.MS{g.MODULARITY}.VALUE = Q;
+        end
+        function calculate_structure_fixed(g)
+            % CALCULATE_STRUCTURE_FIXED community structures of a graph
+            %
+            % CALCULATE_STRUCTURE_FIXED(G) calculate the optimal community 
+            %   structure and maximized modularity in the graph G.
+            %   It uses the fixed algorithm and reads the gamma value of 
+            %   the structure object to calculate the optimized community structure.
+            %
+            %   The optimal community structure is a structure with maximum number of
+            %   edges connecting nodes within communities compared to the edges
+            %   connecting nodes between communities.
+            %
+            %   The modularity is a parameter that signifies the degree at which the
+            %   graph can be divided into distinct communities.
+            
+            if isempty(g.S.getCi())
+                g.S.setCi(ones(1, length(g.A)))
+            end
+            
+            Ci = g.S.getCi();
+            A = remove_diagonal(g.A);
+            Q = 0;
+            type = g.get_type();
+            
+            if g.undirected()
+                
+                L = sum(sum(A(:)))/2; % sum of link weights (divide by 2 for undirected)
+                deg = degree(g.A, type);
+                for i = 1:1:length(A)
+                    indices = find(Ci == Ci(i));
+                    indices = indices(indices~=i);
+                    for j = 1:1:length(indices)
+                        Q = Q + A(i,j) - deg(i)*deg(indices(j))./L;
+                    end
+                end
+                
+                
+            elseif g.directed()
+                
+                L = sum(sum(A(:))); % sum of link weights
+                indeg = degree_in(g.A, type);
+                outdeg = degree_out(g.A, type);
+                for i = 1:1:length(A)
+                    indices = find(Ci == Ci(i));
+                    indices = indices(indices~=i);
+                    for j = 1:1:length(indices)
+                        Q = Q + A(i,j) - outdeg(i)*indeg(indices(j))./L;
+                    end
+                end
+            end
+            
+            g.CS.VALUE = Ci;
+            g.CS.LAST_PARAMS = g.S.toString();
+            g.MS{g.MODULARITY}.VALUE = Q/L;
         end
         function [Ci m] = structure(g)
             % STRUCTURE community structures of a graph
@@ -1383,25 +1773,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             
             reset_structure_related_measures(g)
         end
-        function m = modularity(g)
-            % MODULARITY modularity of a graph
-            %
-            % M = MODULARITY(G) returns the maximized modularity M of the graph G.
-            %   Before the modularity can be calculated, a custom structure should be
-            %   provided as input to the graph, or alternatively the function
-            %   G.structure() should be called to calculate the optimized community structure.
-            %
-            %   The modularity is a parameter that signifies the degree at which the
-            %   graph can be divided into distinct communities.
-            %
-            % See also Graph, Structure.
-            
-            if isempty(g.m)
-                g.structure();
-            end
-            
-            m = g.m;
-        end
         function [z,zin,zout] = zscore(g)
             % ZSCORE within module degree z-score
             %
@@ -1550,6 +1921,41 @@ classdef Graph < handle & matlab.mixin.Copyable
             
             sw = g.sw;
         end
+        function calculate_measure(g,mi)
+            % CALCULATE_MEASURE calculates a given measure
+            %
+            % CALCULATE_MEASURE(G,MI) calculates the measure given by the
+            % index MI of the graph G.
+            
+            % Check if it's a valid measure
+            if mi <= 0
+                error('Negative measure input')
+            end
+            
+            if mi > length(g.MS)
+                error('Too large measure input')
+            end
+            
+            % Check if measure has already been calculated
+            if ~isempty(g.MS{mi}.VALUE)
+                return
+            end
+            
+            % Special case for modularity
+            if mi == Graph.MODULARITY
+                g.get_community_structure()
+                return
+            end
+            
+            % Evaluate the measure
+            if g.MS{mi}.AVERAGE
+                g.MS{mi}.VALUE = feval('calculate_average', g.MS{mi}.FUNCTION, g.get_adjacency_matrix(), g.get_type());
+            elseif g.MS{mi}.STRUCTURAL
+                g.MS{mi}.VALUE = feval(g.MS{mi}.FUNCTION, g.get_adjacency_matrix(), g.get_type(), g.get_community_structure());
+            else
+                g.MS{mi}.VALUE = feval(g.MS{mi}.FUNCTION, g.get_adjacency_matrix(), g.get_type());
+            end
+        end
     end
     methods (Static)
         function B = removediagonal(A,value)
@@ -1567,6 +1973,30 @@ classdef Graph < handle & matlab.mixin.Copyable
             
             B = A;
             B(1:length(A)+1:numel(A)) = value;
+        end
+        function B = positivize(A,varargin)
+            % POSITIVIZE sets negative entries of matrix to zero
+            %
+            % B = POSITIVIZE(A) sets all negative elements of A to zero
+            % 
+            % B = POSITIVIZE(A,'PropertyName',PropertyValue) sets all 
+            %   negative elements of A to zero or to their absolute value
+            %   depending on the value of the property 
+            %       absolute   -   false (default) | true
+            
+            absolute = false;
+            for n = 1:1:length(varargin)-1
+                if strcmpi(varargin{n},'absolute')
+                    absolute = varargin{n+1};
+                end
+            end
+            
+            if absolute
+                B = abs(A);
+            else
+                B = A;
+                B(A<0) = 0;
+            end
         end
         function B = symmetrize(A,varargin)
             % SYMMETRIZE symmetrizes a matrix
@@ -1670,10 +2100,7 @@ classdef Graph < handle & matlab.mixin.Copyable
             for n = 1:1:length(varargin)-1
                 if strcmpi(varargin{n},'threshold')
                     threshold = varargin{n+1};
-                end
-            end
-            for n = 1:1:length(varargin)-1
-                if strcmpi(varargin{n},'density')
+                elseif strcmpi(varargin{n},'density')
                     [~,bins,density] = Graph.histogram(A,varargin{:});
                     threshold = bins(density<varargin{n+1});
                     if isempty(threshold)
