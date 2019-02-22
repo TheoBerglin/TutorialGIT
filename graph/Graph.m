@@ -1452,16 +1452,16 @@ classdef Graph < handle & matlab.mixin.Copyable
             % B = SYMMETRIZE(A,'PropertyName',PropertyValue) symmetrizes the matrix
             %   A by the property PropertyName specified by the PropertyValue.
             %   Admissible properties are:
-            %       rule    -   'max' (default) | 'min' | 'av' | 'sum'
-            %                   'max' - maximum between inconnection and outconnection (default)
+            %       rule    -   'av' (default) | 'max' | 'min' | 'sum'
+            %                   'av'  - average of inconnection and outconnection (default)
+            %                   'max' - maximum between inconnection and outconnection
             %                   'min' - minimum between inconnection and outconnection
-            %                   'av'  - average of inconnection and outconnection
             %                   'sum' - sum of inconnection and outconnection
             %
             % See also Graph.
             
             % Rule
-            rule = 'max';
+            rule = 'av';
             for n = 1:1:length(varargin)-1
                 if strcmpi(varargin{n},'rule')
                     rule = varargin{n+1};

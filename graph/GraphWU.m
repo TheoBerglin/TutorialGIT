@@ -147,10 +147,10 @@ classdef GraphWU < GraphWD
             %   a weighted symmetric connection matrix A and initializes property
             %   Property1 to Value1, Property2 to Value2, ... .
             %   Admissible properties are:
-            %     rule      -   'max' (default) | 'min' | 'av' | 'sum'
-            %                   'max' - maximum between inconnection and outconnection (default)
+            %     rule      -   'av' (default) | 'min' | 'max' | 'sum'
+            %                   'av'  - average of inconnection and outconnection (default)
+            %                   'max' - maximum between inconnection and outconnection
             %                   'min' - minimum between inconnection and outconnection
-            %                   'av'  - average of inconnection and outconnection
             %                   'sum' - sum of inconnection and outconnection
             %     P         -   coefficient p-values
             %     structure -   community structure object
