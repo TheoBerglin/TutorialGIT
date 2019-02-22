@@ -447,18 +447,18 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_LEFFNODE_STRUCTURAL = false;
         
         CLUSTER = 32;
-        CLUSTER_NAME = 'clustering';
+        CLUSTER_NAME = 'clustering graph';
         CLUSTER_NODAL = false;
         CLUSTER_DESCRIPTION = 'The clustering coefficient of a graph is the average of the clustering coefficients of its nodes.';
-        CLUSTER_FUNCTION = 'clustering_global';
-        CLUSTER_AVERAGE = false;
+        CLUSTER_FUNCTION = 'clustering';
+        CLUSTER_AVERAGE = true;
         CLUSTER_STRUCTURAL = false;
         
         CLUSTERNODE = 33;
         CLUSTERNODE_NAME = 'clustering nodes';
         CLUSTERNODE_NODAL = true;
         CLUSTERNODE_DESCRIPTION = 'The clustering coefficient is the fraction of triangles around a node. It is equivalent to the fraction of a node''s neighbors that are neighbors of each other.';
-        CLUSTERNODE_FUNCTION = 'clustering_nodal';
+        CLUSTERNODE_FUNCTION = 'clustering';
         CLUSTERNODE_AVERAGE = false;
         CLUSTERNODE_STRUCTURAL = false;
         
