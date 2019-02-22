@@ -351,11 +351,11 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_PL_STRUCTURAL = false;
         
         GEFF = 20;
-        GEFF_NAME = 'global efficiency';
+        GEFF_NAME = 'global efficiency graph';
         GEFF_NODAL = false;
         GEFF_DESCRIPTION = 'The global efficiency is the average inverse shortest path length in the graph. It is inversely related to the characteristic path length.';
         GEFF_FUNCTION = 'global_efficiency';
-        GEFF_AVERAGE = false;
+        GEFF_AVERAGE = true;
         GEFF_STRUCTURAL = false;
         
         GEFFNODE = 21;
@@ -367,7 +367,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         GEFFNODE_STRUCTURAL = false;
         
         IN_GEFF = 22;
-        IN_GEFF_NAME = 'global efficiency (in)';
+        IN_GEFF_NAME = 'global efficiency graph (in)';
         IN_GEFF_NODAL = false;
         IN_GEFF_DESCRIPTION = 'The characteristic in-global efficiency of a graph is the average of the in-global efficiency of all nodes in the graph.';
         IN_GEFF_FUNCTION = 'global_efficiency_in';
@@ -383,7 +383,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_GEFFNODE_STRUCTURAL = false;
         
         OUT_GEFF = 24;
-        OUT_GEFF_NAME = 'global efficiency (out)';
+        OUT_GEFF_NAME = 'global efficiency graph (out)';
         OUT_GEFF_NODAL = false;
         OUT_GEFF_DESCRIPTION = 'The characteristic out-global efficiency of a graph is the average of the out-global efficiency of all nodes in the graph.';
         OUT_GEFF_FUNCTION = 'global_efficiency_out';
@@ -399,18 +399,18 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_GEFFNODE_STRUCTURAL = false;
         
         LEFF = 26;
-        LEFF_NAME = 'local efficiency';
+        LEFF_NAME = 'local efficiency graph';
         LEFF_NODAL = false;
         LEFF_DESCRIPTION = 'The local efficiency of a graph is the average of the local efficiencies of its nodes. It is related to clustering coefficient.';
-        LEFF_FUNCTION = 'local_efficiency_graph';
-        LEFF_AVERAGE = false;
+        LEFF_FUNCTION = 'local_efficiency';
+        LEFF_AVERAGE = true;
         LEFF_STRUCTURAL = false;
         
         LEFFNODE = 27;
         LEFFNODE_NAME = 'local efficiency nodes';
         LEFFNODE_NODAL = true;
         LEFFNODE_DESCRIPTION = 'The local efficiency of a node is the global efficiency of the node computed on the node''s neighborhood';
-        LEFFNODE_FUNCTION = 'local_efficiency_nodal';
+        LEFFNODE_FUNCTION = 'local_efficiency';
         LEFFNODE_AVERAGE = false;
         LEFFNODE_STRUCTURAL = false;
         
@@ -447,18 +447,18 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_LEFFNODE_STRUCTURAL = false;
         
         CLUSTER = 32;
-        CLUSTER_NAME = 'clustering';
+        CLUSTER_NAME = 'clustering graph';
         CLUSTER_NODAL = false;
         CLUSTER_DESCRIPTION = 'The clustering coefficient of a graph is the average of the clustering coefficients of its nodes.';
-        CLUSTER_FUNCTION = 'clustering_global';
-        CLUSTER_AVERAGE = false;
+        CLUSTER_FUNCTION = 'clustering';
+        CLUSTER_AVERAGE = true;
         CLUSTER_STRUCTURAL = false;
         
         CLUSTERNODE = 33;
         CLUSTERNODE_NAME = 'clustering nodes';
         CLUSTERNODE_NODAL = true;
         CLUSTERNODE_DESCRIPTION = 'The clustering coefficient is the fraction of triangles around a node. It is equivalent to the fraction of a node''s neighbors that are neighbors of each other.';
-        CLUSTERNODE_FUNCTION = 'clustering_nodal';
+        CLUSTERNODE_FUNCTION = 'clustering';
         CLUSTERNODE_AVERAGE = false;
         CLUSTERNODE_STRUCTURAL = false;
         
@@ -710,6 +710,72 @@ classdef Graph < handle & matlab.mixin.Copyable
         DENSITY_AVERAGE = false;
         DENSITY_STRUCTURAL = false;
         
+        % List of all measures
+        MEASURES = {'DEGREE',...
+            'DEGREEAV',...
+            'IN_DEGREE',...
+            'IN_DEGREEAV',...
+            'OUT_DEGREE',...
+            'OUT_DEGREEAV',...
+            'STRENGTH',...
+            'STRENGTHAV',...
+            'IN_STRENGTH',...
+            'IN_STRENGTHAV',...
+            'OUT_STRENGTH',...
+            'OUT_STRENGTHAV',...
+            'TRIANGLES',...
+            'CPL',...
+            'PL',...
+            'IN_CPL',...
+            'IN_PL',...
+            'OUT_CPL',...
+            'OUT_PL',...
+            'GEFF',...
+            'GEFFNODE',...
+            'IN_GEFF',...
+            'IN_GEFFNODE',...
+            'OUT_GEFF',...
+            'OUT_GEFFNODE',...
+            'LEFF',...
+            'LEFFNODE',...
+            'IN_LEFF',...
+            'IN_LEFFNODE',...
+            'OUT_LEFF',...
+            'OUT_LEFFNODE',...
+            'CLUSTER',...
+            'CLUSTERNODE',...
+            'MODULARITY',...
+            'BETWEENNESS',...
+            'CLOSENESS',...
+            'IN_CLOSENESS',...
+            'OUT_CLOSENESS',...
+            'ZSCORE',...
+            'IN_ZSCORE',...
+            'OUT_ZSCORE',...
+            'PARTICIPATION',...
+            'TRANSITIVITY',...
+            'ECCENTRICITY',...
+            'ECCENTRICITYAV',...
+            'IN_ECCENTRICITY',...
+            'IN_ECCENTRICITYAV',...
+            'OUT_ECCENTRICITY',...
+            'OUT_ECCENTRICITYAV',...
+            'RADIUS',...
+            'IN_RADIUS',...
+            'OUT_RADIUS',...
+            'DIAMETER',...
+            'IN_DIAMETER',...
+            'OUT_DIAMETER',...
+            'CPL_WSG',...
+            'IN_IN_ASSORTATIVITY',...
+            'IN_OUT_ASSORTATIVITY',...
+            'OUT_IN_ASSORTATIVITY',...
+            'OUT_OUT_ASSORTATIVITY',...
+            'SW',...
+            'SW_WSG',...
+            'DISTANCE',...
+            'DENSITY'};
+        
     end
     properties (GetAccess = public, SetAccess = protected)
         A  % connection matrix
@@ -724,6 +790,17 @@ classdef Graph < handle & matlab.mixin.Copyable
         
         % N = nodenumber(g)
         N
+        
+        % Graph properties
+        % Weighted
+        weight
+        % Binary
+        bin
+        % Directed
+        dir
+        % Undirected
+        undir
+        
     end
     methods (Access = protected)
         function g = Graph(A,varargin)
@@ -757,71 +834,10 @@ classdef Graph < handle & matlab.mixin.Copyable
             g.S = S;
             g.N = length(g.A);
             
-            g.MS{Graph.DEGREE} = struct('NAME', Graph.DEGREE_NAME, 'NODAL', Graph.DEGREE_NODAL, 'DESCRIPTION', Graph.DEGREE_DESCRIPTION, 'FUNCTION', Graph.DEGREE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.DEGREE_AVERAGE, 'STRUCTURAL', Graph.DEGREE_STRUCTURAL);
-            g.MS{Graph.DEGREEAV} = struct('NAME', Graph.DEGREEAV_NAME, 'NODAL', Graph.DEGREEAV_NODAL, 'DESCRIPTION', Graph.DEGREEAV_DESCRIPTION, 'FUNCTION', Graph.DEGREEAV_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.DEGREEAV_AVERAGE, 'STRUCTURAL', Graph.DEGREEAV_STRUCTURAL);
-            g.MS{Graph.IN_DEGREE} = struct('NAME', Graph.IN_DEGREE_NAME, 'NODAL', Graph.IN_DEGREE_NODAL, 'DESCRIPTION', Graph.IN_DEGREE_DESCRIPTION, 'FUNCTION', Graph.IN_DEGREE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_DEGREE_AVERAGE, 'STRUCTURAL', Graph.IN_DEGREE_STRUCTURAL);
-            g.MS{Graph.IN_DEGREEAV} = struct('NAME', Graph.IN_DEGREEAV_NAME, 'NODAL', Graph.IN_DEGREEAV_NODAL, 'DESCRIPTION', Graph.IN_DEGREEAV_DESCRIPTION, 'FUNCTION', Graph.IN_DEGREEAV_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_DEGREEAV_AVERAGE, 'STRUCTURAL', Graph.IN_DEGREEAV_STRUCTURAL);
-            g.MS{Graph.OUT_DEGREE} = struct('NAME', Graph.OUT_DEGREE_NAME, 'NODAL', Graph.OUT_DEGREE_NODAL, 'DESCRIPTION', Graph.OUT_DEGREE_DESCRIPTION, 'FUNCTION', Graph.OUT_DEGREE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_DEGREE_AVERAGE, 'STRUCTURAL', Graph.OUT_DEGREE_STRUCTURAL);
-            g.MS{Graph.OUT_DEGREEAV} = struct('NAME', Graph.OUT_DEGREEAV_NAME, 'NODAL', Graph.OUT_DEGREEAV_NODAL, 'DESCRIPTION', Graph.OUT_DEGREEAV_DESCRIPTION, 'FUNCTION', Graph.OUT_DEGREEAV_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_DEGREEAV_AVERAGE, 'STRUCTURAL', Graph.OUT_DEGREEAV_STRUCTURAL);
-            g.MS{Graph.STRENGTH} = struct('NAME', Graph.STRENGTH_NAME, 'NODAL', Graph.STRENGTH_NODAL, 'DESCRIPTION', Graph.STRENGTH_DESCRIPTION, 'FUNCTION', Graph.STRENGTH_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.STRENGTH_AVERAGE, 'STRUCTURAL', Graph.STRENGTH_STRUCTURAL);
-            g.MS{Graph.STRENGTHAV} = struct('NAME', Graph.STRENGTHAV_NAME, 'NODAL', Graph.STRENGTHAV_NODAL, 'DESCRIPTION', Graph.STRENGTHAV_DESCRIPTION, 'FUNCTION', Graph.STRENGTHAV_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.STRENGTHAV_AVERAGE, 'STRUCTURAL', Graph.STRENGTHAV_STRUCTURAL);
-            g.MS{Graph.IN_STRENGTH} = struct('NAME', Graph.IN_STRENGTH_NAME, 'NODAL', Graph.IN_STRENGTH_NODAL, 'DESCRIPTION', Graph.IN_STRENGTH_DESCRIPTION, 'FUNCTION', Graph.IN_STRENGTH_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_STRENGTH_AVERAGE, 'STRUCTURAL', Graph.IN_STRENGTH_STRUCTURAL);
-            g.MS{Graph.IN_STRENGTHAV} = struct('NAME', Graph.IN_STRENGTHAV_NAME, 'NODAL', Graph.IN_STRENGTHAV_NODAL, 'DESCRIPTION', Graph.IN_STRENGTHAV_DESCRIPTION, 'FUNCTION', Graph.IN_STRENGTHAV_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_STRENGTHAV_AVERAGE, 'STRUCTURAL', Graph.IN_STRENGTHAV_STRUCTURAL);
-            g.MS{Graph.OUT_STRENGTH} = struct('NAME', Graph.OUT_STRENGTH_NAME, 'NODAL', Graph.OUT_STRENGTH_NODAL, 'DESCRIPTION', Graph.OUT_STRENGTH_DESCRIPTION, 'FUNCTION', Graph.OUT_STRENGTH_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_STRENGTH_AVERAGE, 'STRUCTURAL', Graph.OUT_STRENGTH_STRUCTURAL);
-            g.MS{Graph.OUT_STRENGTHAV} = struct('NAME', Graph.OUT_STRENGTHAV_NAME, 'NODAL', Graph.OUT_STRENGTHAV_NODAL, 'DESCRIPTION', Graph.OUT_STRENGTHAV_DESCRIPTION, 'FUNCTION', Graph.OUT_STRENGTHAV_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_STRENGTHAV_AVERAGE, 'STRUCTURAL', Graph.OUT_STRENGTHAV_STRUCTURAL);
-            g.MS{Graph.TRIANGLES} = struct('NAME', Graph.TRIANGLES_NAME, 'NODAL', Graph.TRIANGLES_NODAL, 'DESCRIPTION', Graph.TRIANGLES_DESCRIPTION, 'FUNCTION', Graph.TRIANGLES_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.TRIANGLES_AVERAGE, 'STRUCTURAL', Graph.TRIANGLES_STRUCTURAL);
-            g.MS{Graph.CPL} = struct('NAME', Graph.CPL_NAME, 'NODAL', Graph.CPL_NODAL, 'DESCRIPTION', Graph.CPL_DESCRIPTION, 'FUNCTION', Graph.CPL_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.CPL_AVERAGE, 'STRUCTURAL', Graph.CPL_STRUCTURAL);
-            g.MS{Graph.PL} = struct('NAME', Graph.PL_NAME, 'NODAL', Graph.PL_NODAL, 'DESCRIPTION', Graph.PL_DESCRIPTION, 'FUNCTION', Graph.PL_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.PL_AVERAGE, 'STRUCTURAL', Graph.PL_STRUCTURAL);
-            g.MS{Graph.IN_CPL} = struct('NAME', Graph.IN_CPL_NAME, 'NODAL', Graph.IN_CPL_NODAL, 'DESCRIPTION', Graph.IN_CPL_DESCRIPTION, 'FUNCTION', Graph.IN_CPL_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_CPL_AVERAGE, 'STRUCTURAL', Graph.IN_CPL_STRUCTURAL);
-            g.MS{Graph.IN_PL} = struct('NAME', Graph.IN_PL_NAME, 'NODAL', Graph.IN_PL_NODAL, 'DESCRIPTION', Graph.IN_PL_DESCRIPTION, 'FUNCTION', Graph.IN_PL_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_PL_AVERAGE, 'STRUCTURAL', Graph.IN_PL_STRUCTURAL);
-            g.MS{Graph.OUT_CPL} = struct('NAME', Graph.OUT_CPL_NAME, 'NODAL', Graph.OUT_CPL_NODAL, 'DESCRIPTION', Graph.OUT_CPL_DESCRIPTION, 'FUNCTION', Graph.OUT_CPL_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_CPL_AVERAGE, 'STRUCTURAL', Graph.OUT_CPL_STRUCTURAL);
-            g.MS{Graph.OUT_PL} = struct('NAME', Graph.OUT_PL_NAME, 'NODAL', Graph.OUT_PL_NODAL, 'DESCRIPTION', Graph.OUT_PL_DESCRIPTION, 'FUNCTION', Graph.OUT_PL_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_PL_AVERAGE, 'STRUCTURAL', Graph.OUT_PL_STRUCTURAL);
-            g.MS{Graph.GEFF} = struct('NAME', Graph.GEFF_NAME, 'NODAL', Graph.GEFF_NODAL, 'DESCRIPTION', Graph.GEFF_DESCRIPTION, 'FUNCTION', Graph.GEFF_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.GEFF_AVERAGE, 'STRUCTURAL', Graph.GEFF_STRUCTURAL);
-            g.MS{Graph.GEFFNODE} = struct('NAME', Graph.GEFFNODE_NAME, 'NODAL', Graph.GEFFNODE_NODAL, 'DESCRIPTION', Graph.GEFFNODE_DESCRIPTION, 'FUNCTION', Graph.GEFFNODE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.GEFFNODE_AVERAGE, 'STRUCTURAL', Graph.GEFFNODE_STRUCTURAL);
-            g.MS{Graph.IN_GEFF} = struct('NAME', Graph.IN_GEFF_NAME, 'NODAL', Graph.IN_GEFF_NODAL, 'DESCRIPTION', Graph.IN_GEFF_DESCRIPTION, 'FUNCTION', Graph.IN_GEFF_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_GEFF_AVERAGE, 'STRUCTURAL', Graph.IN_GEFF_STRUCTURAL);
-            g.MS{Graph.IN_GEFFNODE} = struct('NAME', Graph.IN_GEFFNODE_NAME, 'NODAL', Graph.IN_GEFFNODE_NODAL, 'DESCRIPTION', Graph.IN_GEFFNODE_DESCRIPTION, 'FUNCTION', Graph.IN_GEFFNODE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_GEFFNODE_AVERAGE, 'STRUCTURAL', Graph.IN_GEFFNODE_STRUCTURAL);
-            g.MS{Graph.OUT_GEFF} = struct('NAME', Graph.OUT_GEFF_NAME, 'NODAL', Graph.OUT_GEFF_NODAL, 'DESCRIPTION', Graph.OUT_GEFF_DESCRIPTION, 'FUNCTION', Graph.OUT_GEFF_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_GEFF_AVERAGE, 'STRUCTURAL', Graph.OUT_GEFF_STRUCTURAL);
-            g.MS{Graph.OUT_GEFFNODE} = struct('NAME', Graph.OUT_GEFFNODE_NAME, 'NODAL', Graph.OUT_GEFFNODE_NODAL, 'DESCRIPTION', Graph.OUT_GEFFNODE_DESCRIPTION, 'FUNCTION', Graph.OUT_GEFFNODE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_GEFFNODE_AVERAGE, 'STRUCTURAL', Graph.OUT_GEFFNODE_STRUCTURAL);
-            g.MS{Graph.LEFF} = struct('NAME', Graph.LEFF_NAME, 'NODAL', Graph.LEFF_NODAL, 'DESCRIPTION', Graph.LEFF_DESCRIPTION, 'FUNCTION', Graph.LEFF_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.LEFF_AVERAGE, 'STRUCTURAL', Graph.LEFF_STRUCTURAL);
-            g.MS{Graph.LEFFNODE} = struct('NAME', Graph.LEFFNODE_NAME, 'NODAL', Graph.LEFFNODE_NODAL, 'DESCRIPTION', Graph.LEFFNODE_DESCRIPTION, 'FUNCTION', Graph.LEFFNODE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.LEFFNODE_AVERAGE, 'STRUCTURAL', Graph.LEFFNODE_STRUCTURAL);
-            g.MS{Graph.IN_LEFF} = struct('NAME', Graph.IN_LEFF_NAME, 'NODAL', Graph.IN_LEFF_NODAL, 'DESCRIPTION', Graph.IN_LEFF_DESCRIPTION, 'FUNCTION', Graph.IN_LEFF_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_LEFF_AVERAGE, 'STRUCTURAL', Graph.IN_LEFF_STRUCTURAL);
-            g.MS{Graph.IN_LEFFNODE} = struct('NAME', Graph.IN_LEFFNODE_NAME, 'NODAL', Graph.IN_LEFFNODE_NODAL, 'DESCRIPTION', Graph.IN_LEFFNODE_DESCRIPTION, 'FUNCTION', Graph.IN_LEFFNODE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_LEFFNODE_AVERAGE, 'STRUCTURAL', Graph.IN_LEFFNODE_STRUCTURAL);
-            g.MS{Graph.OUT_LEFF} = struct('NAME', Graph.OUT_LEFF_NAME, 'NODAL', Graph.OUT_LEFF_NODAL, 'DESCRIPTION', Graph.OUT_LEFF_DESCRIPTION, 'FUNCTION', Graph.OUT_LEFF_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_LEFF_AVERAGE, 'STRUCTURAL', Graph.OUT_LEFF_STRUCTURAL);
-            g.MS{Graph.OUT_LEFFNODE} = struct('NAME', Graph.OUT_LEFFNODE_NAME, 'NODAL', Graph.OUT_LEFFNODE_NODAL, 'DESCRIPTION', Graph.OUT_LEFFNODE_DESCRIPTION, 'FUNCTION', Graph.OUT_LEFFNODE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_LEFFNODE_AVERAGE, 'STRUCTURAL', Graph.OUT_LEFFNODE_STRUCTURAL);
-            g.MS{Graph.CLUSTER} = struct('NAME', Graph.CLUSTER_NAME, 'NODAL', Graph.CLUSTER_NODAL, 'DESCRIPTION', Graph.CLUSTER_DESCRIPTION, 'FUNCTION', Graph.CLUSTER_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.CLUSTER_AVERAGE, 'STRUCTURAL', Graph.CLUSTER_STRUCTURAL);
-            g.MS{Graph.CLUSTERNODE} = struct('NAME', Graph.CLUSTERNODE_NAME, 'NODAL', Graph.CLUSTERNODE_NODAL, 'DESCRIPTION', Graph.CLUSTERNODE_DESCRIPTION, 'FUNCTION', Graph.CLUSTERNODE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.CLUSTERNODE_AVERAGE, 'STRUCTURAL', Graph.CLUSTERNODE_STRUCTURAL);
-            g.MS{Graph.MODULARITY} = struct('NAME', Graph.MODULARITY_NAME, 'NODAL', Graph.MODULARITY_NODAL, 'DESCRIPTION', Graph.MODULARITY_DESCRIPTION, 'FUNCTION', Graph.MODULARITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.MODULARITY_AVERAGE, 'STRUCTURAL', Graph.MODULARITY_STRUCTURAL);
-            g.MS{Graph.BETWEENNESS} = struct('NAME', Graph.BETWEENNESS_NAME, 'NODAL', Graph.BETWEENNESS_NODAL, 'DESCRIPTION', Graph.BETWEENNESS_DESCRIPTION, 'FUNCTION', Graph.BETWEENNESS_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.BETWEENNESS_AVERAGE, 'STRUCTURAL', Graph.BETWEENNESS_STRUCTURAL);
-            g.MS{Graph.CLOSENESS} = struct('NAME', Graph.CLOSENESS_NAME, 'NODAL', Graph.CLOSENESS_NODAL, 'DESCRIPTION', Graph.CLOSENESS_DESCRIPTION, 'FUNCTION', Graph.CLOSENESS_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.CLOSENESS_AVERAGE, 'STRUCTURAL', Graph.CLOSENESS_STRUCTURAL);
-            g.MS{Graph.IN_CLOSENESS} = struct('NAME', Graph.IN_CLOSENESS_NAME, 'NODAL', Graph.IN_CLOSENESS_NODAL, 'DESCRIPTION', Graph.IN_CLOSENESS_DESCRIPTION, 'FUNCTION', Graph.IN_CLOSENESS_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_CLOSENESS_AVERAGE, 'STRUCTURAL', Graph.IN_CLOSENESS_STRUCTURAL);
-            g.MS{Graph.OUT_CLOSENESS} = struct('NAME', Graph.OUT_CLOSENESS_NAME, 'NODAL', Graph.OUT_CLOSENESS_NODAL, 'DESCRIPTION', Graph.OUT_CLOSENESS_DESCRIPTION, 'FUNCTION', Graph.OUT_CLOSENESS_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_CLOSENESS_AVERAGE, 'STRUCTURAL', Graph.OUT_CLOSENESS_STRUCTURAL);
-            g.MS{Graph.ZSCORE} = struct('NAME', Graph.ZSCORE_NAME, 'NODAL', Graph.ZSCORE_NODAL, 'DESCRIPTION', Graph.ZSCORE_DESCRIPTION, 'FUNCTION', Graph.ZSCORE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.ZSCORE_AVERAGE, 'STRUCTURAL', Graph.ZSCORE_STRUCTURAL);
-            g.MS{Graph.IN_ZSCORE} = struct('NAME', Graph.IN_ZSCORE_NAME, 'NODAL', Graph.IN_ZSCORE_NODAL, 'DESCRIPTION', Graph.IN_ZSCORE_DESCRIPTION, 'FUNCTION', Graph.IN_ZSCORE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_ZSCORE_AVERAGE, 'STRUCTURAL', Graph.IN_ZSCORE_STRUCTURAL);
-            g.MS{Graph.OUT_ZSCORE} = struct('NAME', Graph.OUT_ZSCORE_NAME, 'NODAL', Graph.OUT_ZSCORE_NODAL, 'DESCRIPTION', Graph.OUT_ZSCORE_DESCRIPTION, 'FUNCTION', Graph.OUT_ZSCORE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_ZSCORE_AVERAGE, 'STRUCTURAL', Graph.OUT_ZSCORE_STRUCTURAL);
-            g.MS{Graph.PARTICIPATION} = struct('NAME', Graph.PARTICIPATION_NAME, 'NODAL', Graph.PARTICIPATION_NODAL, 'DESCRIPTION', Graph.PARTICIPATION_DESCRIPTION, 'FUNCTION', Graph.PARTICIPATION_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.PARTICIPATION_AVERAGE, 'STRUCTURAL', Graph.PARTICIPATION_STRUCTURAL);
-            g.MS{Graph.TRANSITIVITY} = struct('NAME', Graph.TRANSITIVITY_NAME, 'NODAL', Graph.TRANSITIVITY_NODAL, 'DESCRIPTION', Graph.TRANSITIVITY_DESCRIPTION, 'FUNCTION', Graph.TRANSITIVITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.TRANSITIVITY_AVERAGE, 'STRUCTURAL', Graph.TRANSITIVITY_STRUCTURAL);
-            g.MS{Graph.ECCENTRICITY} = struct('NAME', Graph.ECCENTRICITY_NAME, 'NODAL', Graph.ECCENTRICITY_NODAL, 'DESCRIPTION', Graph.ECCENTRICITY_DESCRIPTION, 'FUNCTION', Graph.ECCENTRICITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.ECCENTRICITY_AVERAGE, 'STRUCTURAL', Graph.ECCENTRICITY_STRUCTURAL);
-            g.MS{Graph.ECCENTRICITYAV} = struct('NAME', Graph.ECCENTRICITYAV_NAME, 'NODAL', Graph.ECCENTRICITYAV_NODAL, 'DESCRIPTION', Graph.ECCENTRICITYAV_DESCRIPTION, 'FUNCTION', Graph.ECCENTRICITYAV_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.ECCENTRICITYAV_AVERAGE, 'STRUCTURAL', Graph.ECCENTRICITYAV_STRUCTURAL);
-            g.MS{Graph.IN_ECCENTRICITY} = struct('NAME', Graph.IN_ECCENTRICITY_NAME, 'NODAL', Graph.IN_ECCENTRICITY_NODAL, 'DESCRIPTION', Graph.IN_ECCENTRICITY_DESCRIPTION, 'FUNCTION', Graph.IN_ECCENTRICITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_ECCENTRICITY_AVERAGE, 'STRUCTURAL', Graph.IN_ECCENTRICITY_STRUCTURAL);
-            g.MS{Graph.IN_ECCENTRICITYAV} = struct('NAME', Graph.IN_ECCENTRICITYAV_NAME, 'NODAL', Graph.IN_ECCENTRICITYAV_NODAL, 'DESCRIPTION', Graph.IN_ECCENTRICITYAV_DESCRIPTION, 'FUNCTION', Graph.IN_ECCENTRICITYAV_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_ECCENTRICITYAV_AVERAGE, 'STRUCTURAL', Graph.IN_ECCENTRICITYAV_STRUCTURAL);
-            g.MS{Graph.OUT_ECCENTRICITY} = struct('NAME', Graph.OUT_ECCENTRICITY_NAME, 'NODAL', Graph.OUT_ECCENTRICITY_NODAL, 'DESCRIPTION', Graph.OUT_ECCENTRICITY_DESCRIPTION, 'FUNCTION', Graph.OUT_ECCENTRICITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_ECCENTRICITY_AVERAGE, 'STRUCTURAL', Graph.OUT_ECCENTRICITY_STRUCTURAL);
-            g.MS{Graph.OUT_ECCENTRICITYAV} = struct('NAME', Graph.OUT_ECCENTRICITYAV_NAME, 'NODAL', Graph.OUT_ECCENTRICITYAV_NODAL, 'DESCRIPTION', Graph.OUT_ECCENTRICITYAV_DESCRIPTION, 'FUNCTION', Graph.OUT_ECCENTRICITYAV_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_ECCENTRICITYAV_AVERAGE, 'STRUCTURAL', Graph.OUT_ECCENTRICITYAV_STRUCTURAL);
-            g.MS{Graph.RADIUS} = struct('NAME', Graph.RADIUS_NAME, 'NODAL', Graph.RADIUS_NODAL, 'DESCRIPTION', Graph.RADIUS_DESCRIPTION, 'FUNCTION', Graph.RADIUS_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.RADIUS_AVERAGE, 'STRUCTURAL', Graph.RADIUS_STRUCTURAL);
-            g.MS{Graph.IN_RADIUS} = struct('NAME', Graph.IN_RADIUS_NAME, 'NODAL', Graph.IN_RADIUS_NODAL, 'DESCRIPTION', Graph.IN_RADIUS_DESCRIPTION, 'FUNCTION', Graph.IN_RADIUS_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_RADIUS_AVERAGE, 'STRUCTURAL', Graph.IN_RADIUS_STRUCTURAL);
-            g.MS{Graph.OUT_RADIUS} = struct('NAME', Graph.OUT_RADIUS_NAME, 'NODAL', Graph.OUT_RADIUS_NODAL, 'DESCRIPTION', Graph.OUT_RADIUS_DESCRIPTION, 'FUNCTION', Graph.OUT_RADIUS_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_RADIUS_AVERAGE, 'STRUCTURAL', Graph.OUT_RADIUS_STRUCTURAL);
-            g.MS{Graph.DIAMETER} = struct('NAME', Graph.DIAMETER_NAME, 'NODAL', Graph.DIAMETER_NODAL, 'DESCRIPTION', Graph.DIAMETER_DESCRIPTION, 'FUNCTION', Graph.DIAMETER_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.DIAMETER_AVERAGE, 'STRUCTURAL', Graph.DIAMETER_STRUCTURAL);
-            g.MS{Graph.IN_DIAMETER} = struct('NAME', Graph.IN_DIAMETER_NAME, 'NODAL', Graph.IN_DIAMETER_NODAL, 'DESCRIPTION', Graph.IN_DIAMETER_DESCRIPTION, 'FUNCTION', Graph.IN_DIAMETER_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_DIAMETER_AVERAGE, 'STRUCTURAL', Graph.IN_DIAMETER_STRUCTURAL);
-            g.MS{Graph.OUT_DIAMETER} = struct('NAME', Graph.OUT_DIAMETER_NAME, 'NODAL', Graph.OUT_DIAMETER_NODAL, 'DESCRIPTION', Graph.OUT_DIAMETER_DESCRIPTION, 'FUNCTION', Graph.OUT_DIAMETER_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_DIAMETER_AVERAGE, 'STRUCTURAL', Graph.OUT_DIAMETER_STRUCTURAL);
-            g.MS{Graph.CPL_WSG} = struct('NAME', Graph.CPL_WSG_NAME, 'NODAL', Graph.CPL_WSG_NODAL, 'DESCRIPTION', Graph.CPL_WSG_DESCRIPTION, 'FUNCTION', Graph.CPL_WSG_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.CPL_WSG_AVERAGE, 'STRUCTURAL', Graph.CPL_WSG_STRUCTURAL);
-            g.MS{Graph.IN_IN_ASSORTATIVITY} = struct('NAME', Graph.IN_IN_ASSORTATIVITY_NAME, 'NODAL', Graph.IN_IN_ASSORTATIVITY_NODAL, 'DESCRIPTION', Graph.IN_IN_ASSORTATIVITY_DESCRIPTION, 'FUNCTION', Graph.IN_IN_ASSORTATIVITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_IN_ASSORTATIVITY_AVERAGE, 'STRUCTURAL', Graph.IN_IN_ASSORTATIVITY_STRUCTURAL);
-            g.MS{Graph.IN_OUT_ASSORTATIVITY} = struct('NAME', Graph.IN_OUT_ASSORTATIVITY_NAME, 'NODAL', Graph.IN_OUT_ASSORTATIVITY_NODAL, 'DESCRIPTION', Graph.IN_OUT_ASSORTATIVITY_DESCRIPTION, 'FUNCTION', Graph.IN_OUT_ASSORTATIVITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.IN_OUT_ASSORTATIVITY_AVERAGE, 'STRUCTURAL', Graph.IN_OUT_ASSORTATIVITY_STRUCTURAL);
-            g.MS{Graph.OUT_IN_ASSORTATIVITY} = struct('NAME', Graph.OUT_IN_ASSORTATIVITY_NAME, 'NODAL', Graph.OUT_IN_ASSORTATIVITY_NODAL, 'DESCRIPTION', Graph.OUT_IN_ASSORTATIVITY_DESCRIPTION, 'FUNCTION', Graph.OUT_IN_ASSORTATIVITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_IN_ASSORTATIVITY_AVERAGE, 'STRUCTURAL', Graph.OUT_IN_ASSORTATIVITY_STRUCTURAL);
-            g.MS{Graph.OUT_OUT_ASSORTATIVITY} = struct('NAME', Graph.OUT_OUT_ASSORTATIVITY_NAME, 'NODAL', Graph.OUT_OUT_ASSORTATIVITY_NODAL, 'DESCRIPTION', Graph.OUT_OUT_ASSORTATIVITY_DESCRIPTION, 'FUNCTION', Graph.OUT_OUT_ASSORTATIVITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.OUT_OUT_ASSORTATIVITY_AVERAGE, 'STRUCTURAL', Graph.OUT_OUT_ASSORTATIVITY_STRUCTURAL);
-            g.MS{Graph.SW} = struct('NAME', Graph.SW_NAME, 'NODAL', Graph.SW_NODAL, 'DESCRIPTION', Graph.SW_DESCRIPTION, 'FUNCTION', Graph.SW_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.SW_AVERAGE, 'STRUCTURAL', Graph.SW_STRUCTURAL);
-            g.MS{Graph.SW_WSG} = struct('NAME', Graph.SW_WSG_NAME, 'NODAL', Graph.SW_WSG_NODAL, 'DESCRIPTION', Graph.SW_WSG_DESCRIPTION, 'FUNCTION', Graph.SW_WSG_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.SW_WSG_AVERAGE, 'STRUCTURAL', Graph.SW_WSG_STRUCTURAL);
-            g.MS{Graph.DISTANCE} = struct('NAME', Graph.DISTANCE_NAME, 'NODAL', Graph.DISTANCE_NODAL, 'DESCRIPTION', Graph.DISTANCE_DESCRIPTION, 'FUNCTION', Graph.DISTANCE_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.DISTANCE_AVERAGE, 'STRUCTURAL', Graph.DISTANCE_STRUCTURAL);
-            g.MS{Graph.DENSITY} = struct('NAME', Graph.DENSITY_NAME, 'NODAL', Graph.DENSITY_NODAL, 'DESCRIPTION', Graph.DENSITY_DESCRIPTION, 'FUNCTION', Graph.DENSITY_FUNCTION, 'VALUE', Graph.DEFAULT_MEASURE_VALUE, 'AVERAGE', Graph.DENSITY_AVERAGE, 'STRUCTURAL', Graph.DENSITY_STRUCTURAL);
-            
+            g.MS = {};
+            for i=1:length(Graph.MEASURES)
+                g.add_measure_to_struct(Graph.MEASURES{i});
+            end
         end
         function reset_structure_related_measures(g)
             % RESET_STRUCTURE_RELATED_MEASURES resets z-score and participation
@@ -853,14 +869,64 @@ classdef Graph < handle & matlab.mixin.Copyable
         end
     end
     methods (Abstract)
-        weighted(g)  % weighted graph
-        binary(g)  % binary graph
-        directed(g)  % direced graph
-        undirected(g)  % undirected graph
-        distance(g)  % distance between nodes (shortest path length)
         randomize(g)  % randomize graph while preserving degree distribution
     end
     methods
+        function bool = weighted(g)
+            % WEIGHTED check if graph is weighted
+            %
+            % BOOL = WEIGHTED(G) checks if the graph G is weighted. If it's
+            % weighted the value of BOOL is true, otherwise false.
+            bool = g.weight;
+        end
+        function bool = binary(g)
+            % BINARY check if graph is binary
+            %
+            % BOOL = BINARY(G) checks if the graph G is binary. If it's
+            % binary the value of BOOL is true, otherwise false.
+            bool = g.bin;
+        end
+        function bool = directed(g)
+            % DIRECTED check if graph is directed
+            %
+            % BOOL = DIRECTED(G) checks if the graph G is directed. If it's
+            % directed the value of BOOL is true, otherwise false.
+            bool = g.dir;
+        end
+        function bool = undirected(g)
+            % UNDIRECTED check if graph is undirected
+            %
+            % BOOL = UNDIRECTED(G) checks if the graph G is undirected. If
+            % it's undirected the value of BOOL is true, otherwise false.
+            bool = g.undir;
+        end
+        function add_measure_to_struct(g, m)
+            % ADD_MEASURE_TO_STRUCT adds a measure to the measure struct of
+            % a graph object
+            %
+            % ADD_MEASURE_TO_STRUCT(G, M) adds the measure M to the cell 
+            % array MS of the graph object G
+            
+            appstr = ''''; % apostrophe is a special sign in matlab
+            
+            % Fields of the struct
+            name_field = sprintf('%sName%s, Graph.%s_NAME', appstr, appstr, m);
+            nodal_field = sprintf('%sNODAL%s, Graph.%s_NODAL', appstr, appstr, m);
+            description_field = sprintf('%sDESCRIPTION%s, Graph.%s_DESCRIPTION', appstr, appstr, m);
+            function_field = sprintf('%sFUNCTION%s, Graph.%s_FUNCTION', appstr, appstr, m);
+            value_field = sprintf('%sVALUE%s, Graph.DEFAULT_MEASURE_VALUE', appstr, appstr);
+            average_field = sprintf('%sAVERAGE%s, Graph.%s_AVERAGE', appstr, appstr, m);
+            structural_field = sprintf('%sSTRUCTURAL%s, Graph.%s_STRUCTURAL', appstr, appstr, m);
+           
+            struct_str = sprintf('struct(%s, %s, %s, %s, %s, %s, %s);', name_field,...
+                nodal_field, description_field, function_field, value_field,...
+                average_field, structural_field); % Struct str for eval
+            location_str = sprintf('g.MS{Graph.%s}', m); % Location str for eval
+            
+            % Evaluate full expression
+            eval(sprintf('%s = %s', location_str, struct_str));
+            
+        end
         function community_structure = get_community_structure(g)
             % GET_COMMUNITY_STRUCTURE returns the current community
             %   structure
@@ -874,21 +940,21 @@ classdef Graph < handle & matlab.mixin.Copyable
             
         end
         function set_community_structure(g)
-            % SET_COMMUNITY_STRUCTURE calls the method for resetting the 
-            %   current values for the structure related measures and 
-            %   calls the appropriate method for calculating a new 
+            % SET_COMMUNITY_STRUCTURE calls the method for resetting the
+            %   current values for the structure related measures and
+            %   calls the appropriate method for calculating a new
             %   community structure.
             
-           g.reset_structure_related_measures();
-           algorithm = g.S.getAlgorithm();
-           switch algorithm
-               case Structure.ALGORITHM_LOUVAIN
-                   g.calculate_structure_louvain();
-               case Structure.ALGORITHM_NEWMAN
-                   g.calculate_structure_newman();
-               case Structure.ALGORITHM_FIXED
-                   g.calculate_structure_fixed();
-           end
+            g.reset_structure_related_measures();
+            algorithm = g.S.getAlgorithm();
+            switch algorithm
+                case Structure.ALGORITHM_LOUVAIN
+                    g.calculate_structure_louvain();
+                case Structure.ALGORITHM_NEWMAN
+                    g.calculate_structure_newman();
+                case Structure.ALGORITHM_FIXED
+                    g.calculate_structure_fixed();
+            end
         end
         function type = get_type(g)
             % GET_TYPE returns the type of the graph G.
@@ -911,16 +977,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             % A = GET_ADJACENCY_MATRIX returns the adjacency matrix A
             % representing the graph.
             A = g.A;
-        end
-        function sg = subgraph(g,nodes)
-            % SUBGRAPH creates subgraph from given nodes
-            %
-            % SG = SUBGRAPH(G,NODES) creates the graph SG as a subgraph of G
-            %   containing only the nodes specified by NODES.
-            %
-            % See also Graph, eval.
-            
-            eval(['sg = ' class(g) '(g.A(nodes,nodes));'])
         end
         function ga = nodeattack(g,nodes)
             % NODEATTACK removes given nodes from a graph
@@ -975,140 +1031,12 @@ classdef Graph < handle & matlab.mixin.Copyable
             
             N = g.N;
         end
-        function r = radius(g)
-            % RADIUS radius of a graph
-            %
-            % R = RADIUS(G) calculates the radius R of the graph G.
-            %
-            % Radius is calculated as the minimum eccentricity.
-            %
-            % Reference: "Combinatorics and Graph theory", J.M. Harris, J.L.Hirst
-            %            and M.J. Mossinghoff
-            %
-            % See also Graph, diameter, eccentricity.
-            
-            r = min(g.eccentricity());
-        end
-        function r = diameter(g)
-            % DIAMETER diameter of a graph
-            %
-            % R = DIAMETER(G) calculates the diameter R of the graph G.
-            %
-            % Diameter is calculated as the maximum eccentricity.
-            %
-            % Reference: "Combinatorics and Graph theory", J.M. Harris, J.L.Hirst
-            %            and M.J. Mossinghoff
-            %
-            % See also Graph, radius, eccentricity.
-            
-            r = max(g.eccentricity());
-        end
-        function [ecc,eccin,eccout] = eccentricity(g)
-            % ECCENTRICITY eccentricity of nodes
-            %
-            % [ECC,ECCIN,ECCOUT] = ECCENTRICITY(G) calculates the eccentricity ECC,
-            %   in-eccentricity ECCIN and out-eccentricity ECCOUT of all nodes in
-            %   the graph G.
-            %
-            % The node eccentricity is the maximal shortest path length between a
-            %   node and any other node. The eccentricity of a node is the maximum
-            %   of the in and out-eccentricity of that node.
-            %
-            % Reference: "Combinatorics and Graph theory", J.M. Harris, J.L.Hirst
-            %            and M.J. Mossinghoff
-            %
-            % See also Graph, distance, pl.
-            
-            if isempty(g.ecc) || isempty(g.eccin) || isempty(g.eccout)
-                D = g.distance();
-                D = Graph.removediagonal(D,Inf);
-                
-                g.eccin = max(D.*(D~=Inf),[],1);  % in-eccentricy = max of distance along column
-                g.eccout = max(D.*(D~=Inf),[],2)';  % out-eccentricy = max of distance along column
-                g.ecc = max(g.eccin,g.eccout);
-            end
-            
-            ecc = g.ecc;
-            eccin = g.eccin;
-            eccout = g.eccout;
-        end
-        function [c,cin,cout] = pl(g)
-            % PL path length of nodes
-            %
-            % [C,CIN,COUT] = PL(G) calculates the path length C, in-path length CIN
-            %   and out-path length COUT of all nodes in the graph G.
-            %
-            % The path length is the average shortest path lengths of one node to all
-            %   other nodes. The path length of a node is the average of the in-path
-            %   and out-path length of that node.
-            %
-            % Reference: "Complex network measures of brain connectivity: Uses and
-            %            iterpretations", M. Rubinov, O. Sporns
-            %
-            % See also Graph, distance.
-            
-            if isempty(g.c) || isempty(g.cin) || isempty(g.cout)
-                D = g.distance();
-                D = Graph.removediagonal(D,Inf);
-                
-                N = g.nodenumber();
-                
-                g.cin = zeros(1,N);
-                for u = 1:1:N
-                    Du = D(:,u);
-                    g.cin(u) = sum(Du(Du~=Inf))/length(nonzeros(Du~=Inf));
-                end
-                
-                g.cout = zeros(1,N);
-                for u = 1:1:N
-                    Du = D(u,:);
-                    g.cout(u) = sum(Du(Du~=Inf))/length(nonzeros(Du~=Inf));
-                end
-                
-                g.c = mean([g.cin; g.cout],1);
-            end
-            
-            c = g.c;
-            cin = g.cin;
-            cout = g.cout;
-        end
-        function [clo,cloin,cloout] = closeness(g)
-            % CLOSENESS closeness centrality of nodes
-            %
-            % [CLO,CLOIN,CLOOUT] = CLOSENESS(G) calculates the closeness centrality CLO,
-            %   in-closeness centrality CLOIN and out-closeness centrality CLOOUT of all
-            %   nodes in the graph G.
-            %
-            % The closeness centrality is the inverse of the average shortest path lengths
-            %   of one node to all other nodes.
-            %
-            % See also Graph, pl.
-            
-            if isempty(g.clo)
-                c = g.pl();
-                g.clo = c.^-1;
-            end
-            
-            if isempty(g.cloin)
-                [~,cin] = g.pl();
-                g.cloin = cin.^-1;
-            end
-            
-            if isempty(g.cloout)
-                [~,~,cout] = g.pl();
-                g.cloout = cout.^-1;
-            end
-            
-            clo = g.clo;
-            cloin = g.cloin;
-            cloout = g.cloout;
-        end
         function calculate_structure_louvain(g)
             % CALCULATE_STRUCTURE_LOUVAIN community structures of a graph
             %
-            % CALCULATE_STRUCTURE_LOUVAIN(G) calculate the optimal community 
+            % CALCULATE_STRUCTURE_LOUVAIN(G) calculate the optimal community
             %   structure and maximized modularity in the graph G.
-            %   It uses the Louvain algorithm and reads the gamma value of 
+            %   It uses the Louvain algorithm and reads the gamma value of
             %   the structure object to calculate the optimized community structure.
             %
             %   The optimal community structure is a structure with maximum number of
@@ -1238,9 +1166,9 @@ classdef Graph < handle & matlab.mixin.Copyable
         function calculate_structure_newman(g)
             % CALCULATE_STRUCTURE_NEWMAN community structures of a graph
             %
-            % CALCULATE_STRUCTURE_NEWMAN(G) calculate the optimal community 
+            % CALCULATE_STRUCTURE_NEWMAN(G) calculate the optimal community
             %   structure and maximized modularity in the graph G.
-            %   It uses the Newman algorithm and reads the gamma value of 
+            %   It uses the Newman algorithm and reads the gamma value of
             %   the structure object to calculate the optimized community structure.
             %
             %   The optimal community structure is a structure with maximum number of
@@ -1390,9 +1318,9 @@ classdef Graph < handle & matlab.mixin.Copyable
         function calculate_structure_fixed(g)
             % CALCULATE_STRUCTURE_FIXED community structures of a graph
             %
-            % CALCULATE_STRUCTURE_FIXED(G) calculate the optimal community 
+            % CALCULATE_STRUCTURE_FIXED(G) calculate the optimal community
             %   structure and maximized modularity in the graph G.
-            %   It uses the fixed algorithm and reads the gamma value of 
+            %   It uses the fixed algorithm and reads the gamma value of
             %   the structure object to calculate the optimized community structure.
             %
             %   The optimal community structure is a structure with maximum number of
@@ -1441,441 +1369,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             g.CS.VALUE = Ci;
             g.CS.LAST_PARAMS = g.S.toString();
             g.MS{g.MODULARITY}.VALUE = Q/L;
-        end
-        function [Ci m] = structure(g)
-            % STRUCTURE community structures of a graph
-            %
-            % [CI M] = STRUCTURE(G) calculate the optimal community structure CI in
-            %   the graph G also returning the maximized modularity M.
-            %   It reads the properties of the community structure provided as an
-            %   input to the graph to calculate the optimized community structure.
-            %
-            %   The optimal community structure is a structure with maximum number of
-            %   edges connecting nodes within communities compared to the edges
-            %   connecting nodes between communities.
-            %
-            %   The modularity is a parameter that signifies the degree at which the
-            %   graph can be divided into distinct communities.
-            %
-            % See also Graph, modularity.
-            
-            if g.S.isFixed()
-                
-                if isempty(g.S.getCi())
-                    g.S.setCi(1,ones(length(g.A)))
-                end
-                
-                Ci = g.S.getCi();
-                
-                A = Graph.removediagonal(g.A,0);
-                Q = 0;
-                
-                if g.undirected()
-                    
-                    L = sum(sum(A(:)))/2; % sum of link weights (divide by 2 for undirected)
-                    degree = g.degree();
-                    for i = 1:1:length(A)
-                        indices = find(Ci == Ci(i));
-                        indices = indices(indices~=i);
-                        for j = 1:1:length(indices)
-                            Q = Q + A(i,j) - degree(i)*degree(indices(j))./L;
-                        end
-                    end
-                    
-                    
-                elseif g.directed()
-                    
-                    L = sum(sum(A(:))); % sum of link weights
-                    [~,ind,outd] = g.degree();
-                    for i = 1:1:length(A)
-                        indices = find(Ci == Ci(i));
-                        indices = indices(indices~=i);
-                        for j = 1:1:length(indices)
-                            Q = Q + A(i,j) - outd(i)*ind(indices(j))./L;
-                        end
-                    end
-                end
-                
-                
-                g.m = Q/L;
-                m = g.m;
-                
-            else
-                algorithm = g.S.getAlgorithm();  % algorithm from defined structure
-                gamma = g.S.getGamma();  % gamma from defined structure
-                
-                switch algorithm
-                    
-                    case Structure.ALGORITHM_LOUVAIN
-                        
-                        A = Graph.removediagonal(g.A,0);
-                        W = double(A);  % convert from logical
-                        n = length(W);
-                        s = sum(W(:));  % sum of edges (each undirected edge is counted twice)
-                        
-                        if min(W(:)) < -1e-10
-                            error('W must not contain negative weights.')
-                        end
-                        
-                        if ~exist('B','var') || isempty(B)
-                            B = 'modularity';
-                        end
-                        if ( ~exist('gamma','var') || isempty(gamma)) && ischar(B)
-                            gamma = 1;
-                        end
-                        if ~exist('M0','var') || isempty(M0)
-                            M0 = 1:n;
-                        elseif numel(M0) ~= n
-                            error('M0 must contain n elements.')
-                        end
-                        
-                        [~,~,Mb] = unique(M0);
-                        M = Mb;
-                        
-                        if ischar(B)
-                            switch B
-                                case 'modularity';
-                                    B = W-gamma*(sum(W,2)*sum(W,1))/s;
-                                case 'potts';
-                                    B = W-gamma*(~W);
-                                otherwise;
-                                    error('Unknown objective function.');
-                            end
-                        else
-                            B = double(B);
-                            if ~isequal(size(W),size(B))
-                                error('W and B must have the same size.')
-                            end
-                            if max(max(abs(B-B.'))) > 1e-10
-                                warning('B is not symmetric, enforcing symmetry.')
-                            end
-                            if exist('gamma','var')
-                                warning('Value of gamma is ignored in generalized mode.')
-                            end
-                        end
-                        
-                        B = (B+B.')/2;  % symmetrize modularity matrix
-                        Hnm = zeros(n,n);  % node-to-module degree
-                        for m = 1:max(Mb)  % loop over modules
-                            Hnm(:,m) = sum(B(:,Mb==m),2);
-                        end
-                        H = sum(Hnm,2);  % node degree
-                        Hm = sum(Hnm,1);  % module degree
-                        
-                        Q0 = -inf;
-                        Q = sum(B(bsxfun(@eq,M0,M0.')))/s;  % compute modularity
-                        first_iteration = true;
-                        while Q-Q0 > 1e-10
-                            flag = true;  % flag for within-hierarchy search
-                            while flag;
-                                flag = false;
-                                for u=randperm(n)  % loop over all nodes in random order
-                                    ma = Mb(u);  % current module of u
-                                    dQ = Hnm(u,:)-Hnm(u,ma)+B(u,u);
-                                    dQ(ma) = 0;  % (line above) algorithm condition
-                                    
-                                    [max_dQ mb] = max(dQ);  % maximal increase in modularity and corresponding module
-                                    if max_dQ > 1e-10;  % if maximal increase is positive
-                                        flag = true;
-                                        Mb(u) = mb;  % reassign module
-                                        
-                                        Hnm(:,mb) = Hnm(:,mb)+B(:,u);  % change node-to-module strengths
-                                        Hnm(:,ma) = Hnm(:,ma)-B(:,u);
-                                        Hm(mb) = Hm(mb)+H(u);  % change module strengths
-                                        Hm(ma) = Hm(ma)-H(u);
-                                    end
-                                end
-                            end
-                            [~,~,Mb] = unique(Mb);  % new module assignments
-                            
-                            M0 = M;
-                            if first_iteration
-                                M = Mb;
-                                first_iteration = false;
-                            else
-                                for u=1:n  % loop through initial module assignments
-                                    M(M0==u) = Mb(u);  % assign new modules
-                                end
-                            end
-                            
-                            n = max(Mb);  % new number of modules
-                            B1 = zeros(n);  % new weighted matrix
-                            for u = 1:n
-                                for v = u:n
-                                    bm = sum(sum(B(Mb==u,Mb==v)));  % pool weights of nodes in same module
-                                    B1(u,v) = bm;
-                                    B1(v,u) = bm;
-                                end
-                            end
-                            B = B1;
-                            
-                            Mb = 1:n;  % initial module assignments
-                            Hnm = B;  % node-to-module strength
-                            H = sum(B);  % node strength
-                            Hm = H;  % module strength
-                            
-                            Q0 = Q;
-                            Q = trace(B)/s;  % compute modularity
-                        end
-                        
-                        g.Ci = M';
-                        g.m = Q;
-                        
-                    case Structure.ALGORITHM_NEWMAN
-                        
-                        if g.directed()
-                            A = Graph.removediagonal(g.A,0);
-                            N = length(A);  % number of vertices
-                            n_perm = randperm(N);  % randomly permute order of nodes
-                            A = A(n_perm,n_perm);  % DB: use permuted matrix for subsequent analysis
-                            Ki = sum(A,1);  % in-degree
-                            Ko = sum(A,2);  % out-degree
-                            m = sum(Ki);  % number of edges
-                            b = A-gamma*(Ko*Ki).'/m;
-                            B = b+b.';  % directed modularity matrix
-                            Ci = ones(N,1);  % community indices
-                            cn = 1;  % number of communities
-                            U = [1 0];  % array of unexamined communites
-                            
-                            ind = 1:N;
-                            Bg = B;
-                            Ng = N;
-                            
-                            while U(1)  % examine community U(1)
-                                [V D] = eig(Bg);
-                                [d1 i1] = max(real(diag(D)));  % most positive eigenvalue of Bg
-                                v1 = V(:,i1);  % corresponding eigenvector
-                                
-                                S = ones(Ng,1);
-                                S(v1<0) = -1;
-                                q = S.'*Bg*S;  % contribution to modularity
-                                
-                                if q > 1e-10  % contribution positive: U(1) is divisible
-                                    qmax = q;  % maximal contribution to modularity
-                                    Bg(logical(eye(Ng))) = 0;  % Bg is modified, to enable fine-tuning
-                                    indg = ones(Ng,1);  % array of unmoved indices
-                                    Sit = S;
-                                    while any(indg);  % iterative fine-tuning
-                                        Qit = qmax-4*Sit.*(Bg*Sit);  % this line is equivalent to:
-                                        qmax = max(Qit.*indg);  % for i=1:Ng
-                                        imax = (Qit==qmax);  % Sit(i)=-Sit(i);
-                                        Sit(imax) = -Sit(imax);  % Qit(i)=Sit.'*Bg*Sit;
-                                        indg(imax) = nan;  % Sit(i)=-Sit(i);
-                                        if qmax > q;  % end
-                                            q = qmax;
-                                            S = Sit;
-                                        end
-                                    end
-                                    
-                                    if abs(sum(S)) == Ng  % unsuccessful splitting of U(1)
-                                        U(1) = [];
-                                    else
-                                        cn = cn+1;
-                                        Ci(ind(S==1)) = U(1);  % split old U(1) into new U(1) and into cn
-                                        Ci(ind(S==-1)) = cn;
-                                        U = [cn U];
-                                    end
-                                else  % contribution nonpositive: U(1) is indivisible
-                                    U(1) = [];
-                                end
-                                
-                                ind = find(Ci==U(1));  % indices of unexamined community U(1)
-                                bg = B(ind,ind);
-                                Bg = bg-diag(sum(bg));  % modularity matrix for U(1)
-                                Ng = length(ind);  % number of vertices in U(1)
-                            end
-                            
-                            s = Ci(:,ones(1,N));  % compute modularity
-                            Q =~ (s-s.').*B/(2*m);
-                            Q = sum(Q(:));
-                            Ci_corrected = zeros(N,1);  % initialize Ci_corrected
-                            Ci_corrected(n_perm) = Ci;  % return order of nodes to the order used at the input stage.
-                            Ci = Ci_corrected;  % output corrected community assignments
-                            
-                            g.Ci = Ci';
-                            g.m = Q;
-                            
-                        elseif g.undirected()
-                            A = Graph.removediagonal(g.A,0);
-                            N = length(A);  % number of vertices
-                            n_perm = randperm(N);  % randomly permute order of nodes
-                            A = A(n_perm,n_perm);  % DB: use permuted matrix for subsequent analysis
-                            K = sum(A);  % degree
-                            m = sum(K);  % number of edges (each undirected edge is counted twice)
-                            B = A-gamma*(K.'*K)/m;  % modularity matrix
-                            Ci = ones(N,1);  % community indices
-                            cn = 1;  % number of communities
-                            U = [1 0];  % array of unexamined communites
-                            
-                            ind = 1:N;
-                            Bg = B;
-                            Ng = N;
-                            
-                            while U(1)  % examine community U(1)
-                                [V D] = eig(Bg);
-                                [d1 i1] = max(real(diag(D)));  % maximal positive (real part of) eigenvalue of Bg
-                                v1 = V(:,i1);  % corresponding eigenvector
-                                
-                                S = ones(Ng,1);
-                                S(v1<0) = -1;
-                                q = S.'*Bg*S;  % contribution to modularity
-                                
-                                if q > 1e-10  % contribution positive: U(1) is divisible
-                                    qmax = q;  % maximal contribution to modularity
-                                    Bg(logical(eye(Ng))) = 0;  % Bg is modified, to enable fine-tuning
-                                    indg = ones(Ng,1);  % array of unmoved indices
-                                    Sit = S;
-                                    while any(indg);  % iterative fine-tuning
-                                        Qit = qmax-4*Sit.*(Bg*Sit);  % this line is equivalent to:
-                                        qmax = max(Qit.*indg);  % for i=1:Ng
-                                        imax = (Qit==qmax);  % Sit(i)=-Sit(i);
-                                        Sit(imax) = -Sit(imax);  % Qit(i)=Sit.'*Bg*Sit;
-                                        indg(imax) = nan;  % Sit(i)=-Sit(i);
-                                        if qmax > q;  % end
-                                            q = qmax;
-                                            S = Sit;
-                                        end
-                                    end
-                                    
-                                    if abs(sum(S)) == Ng  % unsuccessful splitting of U(1)
-                                        U(1) = [];
-                                    else
-                                        cn = cn+1;
-                                        Ci(ind(S==1)) = U(1);  % split old U(1) into new U(1) and into cn
-                                        Ci(ind(S==-1)) = cn;
-                                        U = [cn U];
-                                    end
-                                else  % contribution nonpositive: U(1) is indivisible
-                                    U(1) = [];
-                                end
-                                
-                                ind = find(Ci==U(1));  % indices of unexamined community U(1)
-                                bg = B(ind,ind);
-                                Bg = bg-diag(sum(bg));  % modularity matrix for U(1)
-                                Ng = length(ind);  % number of vertices in U(1)
-                            end
-                            
-                            s = Ci(:,ones(1,N));  % compute modularity
-                            Q =~ (s-s.').*B/m;
-                            Q = sum(Q(:));
-                            Ci_corrected = zeros(N,1);  % initialize Ci_corrected
-                            Ci_corrected(n_perm) = Ci;  % return order of nodes to the order used at the input stage.
-                            Ci = Ci_corrected;  % output corrected community assignments
-                            
-                            g.Ci = Ci';
-                            g.m = Q;
-                        end
-                end
-                
-                Ci = g.Ci;
-                m = g.m;
-            end
-            
-            reset_structure_related_measures(g)
-        end
-        function [z,zin,zout] = zscore(g)
-            % ZSCORE within module degree z-score
-            %
-            % [Z, ZIN, ZOUT] = ZSCORE(G) calculates the within-module degree z-score Z,
-            %   in-z-score ZIN and out-z-score ZOUT of nodes included in graph G.
-            %   Before the z-score can be calculated, a custom structure should be provided
-            %   as input to the graph, or alternatively the function G.structure() should be
-            %   called to calculate the optimized community structure.
-            %
-            % The within-module degree z-score is a within-module version of degree
-            %   centrality. It measures how well a node is connected to the other
-            %   nodes in the same community.
-            %
-            % See also Graph, Structure.
-            
-            if isempty(g.z)
-                W = g.A+g.A.';
-                
-                N = length(W);
-                Ci = g.structure();
-                Z = zeros(1,N);
-                for i = 1:1:max(Ci)
-                    Koi = sum(W(Ci==i,Ci==i),2);
-                    Z(Ci==i) = (Koi-mean(Koi))./std(Koi);
-                end
-                
-                Z(isnan(Z)) = 0;
-                
-                g.z = Z;
-            end
-            
-            if nargout>1 && isempty(g.zin)
-                W = g.A;
-                
-                N = length(W);
-                Ci = g.structure();
-                Z = zeros(1,N);
-                for i = 1:1:max(Ci)
-                    Koi = sum(W(Ci==i,Ci==i),2);
-                    Z(Ci==i) = (Koi-mean(Koi))./std(Koi);
-                end
-                
-                Z(isnan(Z)) = 0;
-                
-                g.zin = Z;
-            end
-            
-            if nargout>2 && isempty(g.zout)
-                W = g.A.';
-                
-                N = length(W);
-                Ci = g.structure();
-                Z = zeros(1,N);
-                for i = 1:1:max(Ci)
-                    Koi = sum(W(Ci==i,Ci==i),2);
-                    Z(Ci==i) = (Koi-mean(Koi))./std(Koi);
-                end
-                
-                Z(isnan(Z)) = 0;
-                
-                g.zout = Z;
-            end
-            
-            z = g.z;
-            zin = g.zin;
-            zout = g.zout;
-        end
-        function p = participation(g)
-            % PARTICIPATION participation coefficient of nodes
-            %
-            % P = PARTICIPATION(G) calculates the participation coefficient of
-            %   a node from the graph G in a given community.
-            %   Before the participation coefficient can be calculated, a custom structure
-            %   should be provided as input to the graph, or alternatively the function
-            %   g.structure() should be called to calculate the optimized community structure.
-            %
-            % The participation coefficient shows the node connectivity through the
-            %   availible communities. It is expressed by the ratio of the edges that
-            %   a node forms within a community to the total number of edges the node
-            %   forms whithin the whole graph.
-            %
-            % See also Graph, Structure.
-            
-            if isempty(g.p)
-                W = g.A;
-                Ci = g.structure();
-                
-                n = length(W);  % number of vertices
-                Ko = sum(W,2);  % (out)degree
-                Gc = (W~=0)*diag(Ci);  % neighbor community affiliation
-                Kc2 = zeros(n,1);  % community-specific neighbors
-                
-                for i = 1:1:max(Ci)
-                    Kc2 = Kc2+(sum(W.*(Gc==i),2).^2);
-                end
-                
-                P = ones(n,1)-Kc2./(Ko.^2);
-                P(~Ko) = 0;  % P=0 if for nodes with no (out)neighbors
-                
-                g.p = P';
-            end
-            
-            p = g.p;
         end
         function sw = smallworldness(g,wsg)
             % SMALLWORLDNESS small-worldness of the graph
@@ -1958,30 +1451,14 @@ classdef Graph < handle & matlab.mixin.Copyable
         end
     end
     methods (Static)
-        function B = removediagonal(A,value)
-            % REMOVEDIAGONAL replaces matrix diagonal with given value
-            %
-            % B = REMOVEDIAGONAL(A,VALUE) sets the values in the diagonal of any
-            %   matrix A to VALUE and returns the resulting matrix B.
-            %   If VALUE is not inputted, the default is 0.
-            %
-            % See also Graph.
-            
-            if nargin < 2
-                value = 0;
-            end
-            
-            B = A;
-            B(1:length(A)+1:numel(A)) = value;
-        end
         function B = positivize(A,varargin)
             % POSITIVIZE sets negative entries of matrix to zero
             %
             % B = POSITIVIZE(A) sets all negative elements of A to zero
-            % 
-            % B = POSITIVIZE(A,'PropertyName',PropertyValue) sets all 
+            %
+            % B = POSITIVIZE(A,'PropertyName',PropertyValue) sets all
             %   negative elements of A to zero or to their absolute value
-            %   depending on the value of the property 
+            %   depending on the value of the property
             %       absolute   -   false (default) | true
             
             absolute = false;
@@ -2007,16 +1484,16 @@ classdef Graph < handle & matlab.mixin.Copyable
             % B = SYMMETRIZE(A,'PropertyName',PropertyValue) symmetrizes the matrix
             %   A by the property PropertyName specified by the PropertyValue.
             %   Admissible properties are:
-            %       rule    -   'max' (default) | 'min' | 'av' | 'sum'
-            %                   'max' - maximum between inconnection and outconnection (default)
+            %       rule    -   'av' (default) | 'max' | 'min' | 'sum'
+            %                   'av'  - average of inconnection and outconnection (default)
+            %                   'max' - maximum between inconnection and outconnection
             %                   'min' - minimum between inconnection and outconnection
-            %                   'av'  - average of inconnection and outconnection
             %                   'sum' - sum of inconnection and outconnection
             %
             % See also Graph.
             
             % Rule
-            rule = 'max';
+            rule = 'av';
             for n = 1:1:length(varargin)-1
                 if strcmpi(varargin{n},'rule')
                     rule = varargin{n+1};

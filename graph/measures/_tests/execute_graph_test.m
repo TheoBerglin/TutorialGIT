@@ -1,4 +1,4 @@
-function [passed, test_struct] = ni_execute_graph_test(test_name)
+function [passed, test_struct] = execute_graph_test(test_name)
 %EXECUTER_MEASURE_TESTS This file should execute the test TEST_NAME for
 %graph object measures
 % This is not finished yet, Need to restructure graph objects first with
