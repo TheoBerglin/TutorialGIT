@@ -351,11 +351,11 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_PL_STRUCTURAL = false;
         
         GEFF = 20;
-        GEFF_NAME = 'global efficiency';
+        GEFF_NAME = 'global efficiency graph';
         GEFF_NODAL = false;
         GEFF_DESCRIPTION = 'The global efficiency is the average inverse shortest path length in the graph. It is inversely related to the characteristic path length.';
         GEFF_FUNCTION = 'global_efficiency';
-        GEFF_AVERAGE = false;
+        GEFF_AVERAGE = true;
         GEFF_STRUCTURAL = false;
         
         GEFFNODE = 21;
@@ -367,7 +367,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         GEFFNODE_STRUCTURAL = false;
         
         IN_GEFF = 22;
-        IN_GEFF_NAME = 'global efficiency (in)';
+        IN_GEFF_NAME = 'global efficiency graph (in)';
         IN_GEFF_NODAL = false;
         IN_GEFF_DESCRIPTION = 'The characteristic in-global efficiency of a graph is the average of the in-global efficiency of all nodes in the graph.';
         IN_GEFF_FUNCTION = 'global_efficiency_in';
@@ -383,7 +383,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_GEFFNODE_STRUCTURAL = false;
         
         OUT_GEFF = 24;
-        OUT_GEFF_NAME = 'global efficiency (out)';
+        OUT_GEFF_NAME = 'global efficiency graph (out)';
         OUT_GEFF_NODAL = false;
         OUT_GEFF_DESCRIPTION = 'The characteristic out-global efficiency of a graph is the average of the out-global efficiency of all nodes in the graph.';
         OUT_GEFF_FUNCTION = 'global_efficiency_out';
@@ -399,18 +399,18 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_GEFFNODE_STRUCTURAL = false;
         
         LEFF = 26;
-        LEFF_NAME = 'local efficiency';
+        LEFF_NAME = 'local efficiency graph';
         LEFF_NODAL = false;
         LEFF_DESCRIPTION = 'The local efficiency of a graph is the average of the local efficiencies of its nodes. It is related to clustering coefficient.';
-        LEFF_FUNCTION = 'local_efficiency_graph';
-        LEFF_AVERAGE = false;
+        LEFF_FUNCTION = 'local_efficiency';
+        LEFF_AVERAGE = true;
         LEFF_STRUCTURAL = false;
         
         LEFFNODE = 27;
         LEFFNODE_NAME = 'local efficiency nodes';
         LEFFNODE_NODAL = true;
         LEFFNODE_DESCRIPTION = 'The local efficiency of a node is the global efficiency of the node computed on the node''s neighborhood';
-        LEFFNODE_FUNCTION = 'local_efficiency_nodal';
+        LEFFNODE_FUNCTION = 'local_efficiency';
         LEFFNODE_AVERAGE = false;
         LEFFNODE_STRUCTURAL = false;
         

@@ -1,5 +1,5 @@
 function geout = global_efficiency_out( A, type )
-% GLOBAL_EFFICIENCY_OUT OUT-global efficiency
+% GLOBAL_EFFICIENCY_OUT OUT-global efficiency for each node
 %
 % GEOUT = GLOBAL_EFFICIENCY_OUT(A,type) calculates the out-global efficiency GEOUT 
 %   for all nodes in the graph represented by the adjacency matrix A.
