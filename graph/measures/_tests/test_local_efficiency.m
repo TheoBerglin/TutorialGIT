@@ -6,7 +6,7 @@ function [test_struct, test_func] = test_local_efficiency_nodal(  )
 % http://braph.org/
 
 %% Initializations
-test_func = 'local_efficiency_nodal';
+test_func = 'local_efficiency';
 N = 5; % number of nodes
 
 %% Diagonal adjacency matrix
