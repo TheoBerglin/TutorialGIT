@@ -1781,7 +1781,7 @@ classdef Graph < handle & matlab.mixin.Copyable
             %
             % See also Graph, isnodal.
             
-            bool = ~eval(sprintf('Graph.%s_NODAL', Graph.MEASURES{mi}));
+            bool = ~is_nodal(mi);
         end
         function bool = is_directed(arg)
             % IS_DIRECTED checks if the graph type is directed
