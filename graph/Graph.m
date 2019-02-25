@@ -790,17 +790,6 @@ classdef Graph < handle & matlab.mixin.Copyable
         
         % N = nodenumber(g)
         N
-        
-        % Graph properties
-        % Weighted
-        weight
-        % Binary
-        bin
-        % Directed
-        dir
-        % Undirected
-        undir
-        
     end
     methods (Access = protected)
         function g = Graph(A,varargin)
@@ -872,34 +861,6 @@ classdef Graph < handle & matlab.mixin.Copyable
         randomize(g)  % randomize graph while preserving degree distribution
     end
     methods
-        function bool = weighted(g)
-            % WEIGHTED check if graph is weighted
-            %
-            % BOOL = WEIGHTED(G) checks if the graph G is weighted. If it's
-            % weighted the value of BOOL is true, otherwise false.
-            bool = g.weight;
-        end
-        function bool = binary(g)
-            % BINARY check if graph is binary
-            %
-            % BOOL = BINARY(G) checks if the graph G is binary. If it's
-            % binary the value of BOOL is true, otherwise false.
-            bool = g.bin;
-        end
-        function bool = directed(g)
-            % DIRECTED check if graph is directed
-            %
-            % BOOL = DIRECTED(G) checks if the graph G is directed. If it's
-            % directed the value of BOOL is true, otherwise false.
-            bool = g.dir;
-        end
-        function bool = undirected(g)
-            % UNDIRECTED check if graph is undirected
-            %
-            % BOOL = UNDIRECTED(G) checks if the graph G is undirected. If
-            % it's undirected the value of BOOL is true, otherwise false.
-            bool = g.undir;
-        end
         function add_measure_to_struct(g, m)
             % ADD_MEASURE_TO_STRUCT adds a measure to the measure struct of
             % a graph object

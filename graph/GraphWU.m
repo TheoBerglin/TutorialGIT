@@ -166,10 +166,6 @@ classdef GraphWU < GraphWD
             g = g@GraphWD(A,varargin{:});
             
             g.TYPE = Graph.WU;
-            g.weight = true;
-            g.bin = false;
-            g.dir = false;
-            g.undir = true;
         end
         function [gr,R] = randomize(g,bin_swaps,wei_freq)
             % RANDOMIZE randomizes the graph

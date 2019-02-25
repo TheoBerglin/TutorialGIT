@@ -190,10 +190,6 @@ classdef GraphBD < Graph
             g.C = C;
             g.threshold = threshold;
             g.TYPE = Graph.BD;
-            g.weight = false;
-            g.bin = true;
-            g.dir = true;
-            g.undir = false;
         end
         function [gr,R] = randomize(g,bin_swaps,wei_freq)
             % RANDOMIZE randomizes the graph

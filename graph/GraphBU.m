@@ -174,10 +174,6 @@ classdef GraphBU < GraphBD
             g.C = C;
             
             g.TYPE = Graph.BU;
-            g.weight = false;
-            g.bin = true;
-            g.dir = false;
-            g.undir = true;
         end
         function [gr,R] = randomize(g,bin_swaps,wei_freq)
             % RANDOMIZE randomizes the graph
