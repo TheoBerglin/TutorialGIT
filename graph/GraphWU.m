@@ -1,4 +1,4 @@
-classdef GraphWU < GraphWD
+classdef GraphWU < Graph
     % GraphWU < GraphWD : Weighted undirected graph
     %   GraphWU represents a weighted undirected graph and set of respective measures
     %   that can be calculated on the graph.
@@ -130,7 +130,7 @@ classdef GraphWU < GraphWD
             A = Graph.positivize(A,varargin{:});
             A = Graph.symmetrize(A,varargin{:});  % symmetrized connection matrix
             
-            g = g@GraphWD(A,varargin{:});
+            g = g@Graph(A,varargin{:});
             
             g.TYPE = Graph.WU;
         end

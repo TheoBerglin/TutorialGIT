@@ -1,4 +1,4 @@
-classdef GraphBU < GraphBD
+classdef GraphBU < Graph
     % GraphBU < GraphBD : Binary undirected graph
     %   GraphBU represents a binary undirected graph and set of respective measures
     %   that can be calculated on the graph.
@@ -27,7 +27,7 @@ classdef GraphBU < GraphBD
     %   GraphBU                     -   constructor
     %   add_measure_to_struct       -   adds measure to MS struct < Graph
     %   get_community_structure     -   returns the community structure < Graph
-    %   set_community_structure     -   sets a community structure using the 
+    %   set_community_structure     -   sets a community structure using the
     %                                   structure S < Graph
     %   get_type                    -   returns the type of the graph < Graph
     %   get_adjacency_matrix        -   returns the adjacency matrix of the graph < Graph
@@ -49,7 +49,7 @@ classdef GraphBU < GraphBD
     %   measurenumber       -   number of measures valid for a binary undirected graph
     %   positivize          -   positivizes a matrix < Graph
     %   symmetrize          -   symmetrizes a matrix < Graph
-    %   binarize            -   binarizes a connection matrix < Graph    
+    %   binarize            -   binarizes a connection matrix < Graph
     %   histogram           -   calculates the histogram of a connection matrix < Graph
     %   plotw               -   plots a weighted matrix < Graph
     %   plotb               -   plots a binary matrix < Graph
@@ -68,7 +68,7 @@ classdef GraphBU < GraphBD
     % Version 1:
     %   - Authors: Mite Mijalkov, Ehsan Kakaei & Giovanni Volpe
     %   - Date: 2016/01/01
-    % Version 2: 
+    % Version 2:
     %   - Authors: Adam Liberda, Theo Berglin, Mite Mijalkov, Ehsan Kakaei & Giovanni Volpe
     %   - Date: 2019/02/25
     
@@ -105,6 +105,10 @@ classdef GraphBU < GraphBD
             Graph.DISTANCE ...
             Graph.DENSITY]
     end
+    properties (GetAccess = public, SetAccess = protected)
+        C  % weighted correlation matrix
+        threshold
+    end
     methods
         function g = GraphBU(A,varargin)
             % GRAPHBU(A) creates a binary undirected graph with default properties
@@ -131,13 +135,14 @@ classdef GraphBU < GraphBD
             % See also Graph, GraphBD.
             
             C = A;
+            
             A = Graph.positivize(A,varargin{:});
-            
             A = Graph.symmetrize(A,varargin{:});  % symmetrized connection matrix
-            
-            g = g@GraphBD(A,varargin{:});
+            [A,threshold] = Graph.binarize(A,varargin{:});  % binarized connection matrix
+
+            g = g@Graph(A,varargin{:});
             g.C = C;
-            
+            g.threshold = threshold;
             g.TYPE = Graph.BU;
         end
         function [gr,R] = randomize(g,bin_swaps,wei_freq)
