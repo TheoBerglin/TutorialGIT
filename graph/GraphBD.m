@@ -10,100 +10,67 @@ classdef GraphBD < Graph
     %   A               -   connection matrix < Graph
     %   P               -   coefficient p-values < Graph
     %   S               -   community structure < Graph
+    %   TYPE            -   graph type < Graph
+    %   MS              -   cell array containing the measure structs < Graph
     %   C               -   weighted connection matrix
     %   threshold       -   threshold to be applied for binarization
     %
     % GraphBD properties (Access = protected):
+    %   CS       -   a structure for the calculated community structure < Graph
     %   N        -   number of nodes < Graph
-    %   D        -   matrix of the shortest path lengths < Graph
-    %   deg      -   degree < Graph
-    %   indeg    -   in-degree < Graph
-    %   outdeg   -   out-degree < Graph
-    %   str      -   strength < Graph
-    %   instr    -   in-strength < Graph
-    %   outstr   -   out-strength < Graph
-    %   ecc      -   eccentricity < Graph
-    %   eccin    -   in-eccentricity < Graph
-    %   eccout   -   out-eccentricity < Graph
-    %   t        -   triangles < Graph
-    %   c        -   path length < Graph
-    %   cin      -   in-path length < Graph
-    %   cout     -   out-path length < Graph
-    %   ge       -   global efficiency < Graph
-    %   gein     -   in-global efficiency < Graph
-    %   geout    -   out-global efficiency < Graph
-    %   le       -   local efficiency < Graph
-    %   lenode   -   local efficiency of a node < Graph
-    %   cl       -   clustering coefficient < Graph
-    %   clnode   -   clustering coefficient of a node < Graph
-    %   b        -   betweenness (non-normalized)  < Graph
-    %   tr       -   transitivity < Graph
-    %   clo      -   closeness < Graph
-    %   cloin    -   in-closeness < Graph
-    %   cloout   -   out-closeness < Graph
-    %   Ci       -   structure < Graph
-    %   m        -   modularity < Graph
-    %   z        -   z-score < Graph
-    %   zin      -   in-z-score < Graph
-    %   zout     -   out-z-score < Graph
-    %   p        -   participation < Graph
-    %   a        -   assortativity < Graph
-    %   sw       -   small-worldness < Graph
-    %   sw_wsg   -   small-worldness < Graph
     %
     % GraphBD methods (Access = protected):
-    %   reset_structure_related_measures  -     resets z-score and participation < Graph
+    %   reset_structure_related_measures  -     resets z-score, participation and modularity < Graph
     %   copyElement         -   copy community structure < Graph
     %
     % GraphBD methods :
-    %   GraphBD             -   constructor
-    %   subgraph            -   creates subgraph from given nodes < Graph
-    %   nodeattack          -   removes given nodes from a graph < Graph
-    %   edgeattack          -   removes given edges from a graph < Graph
-    %   nodenumber          -   number of nodes in a graph < Graph
-    %   radius              -   radius of a network < Graph
-    %   diameter            -   diameter of a network < Graph
-    %   eccentricity        -   eccentricity of nodes < Graph
-    %   pl                  -   path length of nodes  < Graph
-    %   closeness           -   closeness of nodes  < Graph
-    %   structure           -   structure measures of a network < Graph
-    %   modularity          -   modularty of a network < Graph
-    %   zscore              -   z-score of a network < Graph
-    %   participation       -   participation of nodes < Graph
-    %   smallwordness       -   small-wordness of the graph < Graph
-    %   density             -   density of a graph
-    %   weighted            -   checks if graph is weighted
-    %   binary              -   checks if graph is binary
-    %   directed            -   checks if graph is directed
-    %   undirected          -   checks if graph is undirected
-    %   distance            -   shortest path length of nodes from each other
-    %   degree              -   degree of a node
-    %   triangles           -   number of triangles around a node
-    %   geff                -   global efficiency
-    %   leff                -   local efficiency
-    %   cluster             -   clustering coefficient
-    %   betweenness         -   betweenness centrality of a node
-    %   transitivity        -   transitivity of a graph
-    %   measure             -   calculates given measure
-    %   randomize           -   randomizes the graph
+    %   GraphBD                     -   constructor
+    %   add_measure_to_struct       -   adds measure to MS struct < Graph
+    %   get_community_structure     -   returns the community structure < Graph
+    %   set_community_structure     -   sets a community structure using the 
+    %                                   structure S < Graph
+    %   get_type                    -   returns the type of the graph < Graph
+    %   get_adjacency_matrix        -   returns the adjacency matrix of the graph < Graph
+    %   nodeattack                  -   removes given nodes from a graph < Graph
+    %   edgeattack                  -   removes given edges from a graph < Graph
+    %   nodenumber                  -   number of nodes in a graph < Graph
+    %   calculate_structure_louvain -   calculates a community structure
+    %                                   using the louvain algorithm < Graph
+    %   calculate_structure_newman  -   calculates a community structure
+    %                                   using the newman algorithm < Graph
+    %   calculate_structure_fixed   -   calculates a community structure
+    %                                   using the fixed algorithm < Graph
+    %   smallworldness              -   small-wordness of the graph < Graph
+    %   calculate_measure           -   calculates a specific measure < Graph
+    %   randomize                   -   randomizes the graph
     %
     % GraphBD methods (Static):
     %   measurelist         -   list of measures valid for a binary directed graph
     %   measurenumber       -   number of measures valid for a binary directed graph
-    %   removediagonal      -   replaces matrix diagonal with given value < Graph
+    %   positivize          -   positivizes a matrix < Graph
     %   symmetrize          -   symmetrizes a matrix < Graph
+    %   binarize            -   binarizes a connection matrix < Graph    
     %   histogram           -   calculates the histogram of a connection matrix < Graph
-    %   binarize            -   binarizes a connection matrix < Graph
     %   plotw               -   plots a weighted matrix < Graph
     %   plotb               -   plots a binary matrix < Graph
     %   hist                -   plots the histogram of a connection matrix < Graph
-    %   isnodal             -   checks if measure is nodal < Graph
-    %   isglobal            -   checks if measure is global < Graph
+    %   is_nodal            -   checks if measure is nodal < Graph
+    %   is_global           -   checks if measure is global < Graph
+    %   is_directed         -   checks if the graph type is directed < Graph
+    %   is_undirected       -   checks if the graph type is undirected < Graph
+    %   is_binary           -   checks if the graph type is binary < Graph
+    %   is_weighted         -   checks if the graph type is weighted < Graph
+    %   is_positive         -   checks if the graph type has only non-negative weights < Graph
+    %   is_negative         -   checks if the graph type has also negative weights < Graph
     %
     % See also Graph, GraphBU, Structure.
-    
-    % Author: Mite Mijalkov, Ehsan Kakaei & Giovanni Volpe
-    % Date: 2016/01/01
+
+    % Version 1:
+    %   - Authors: Mite Mijalkov, Ehsan Kakaei & Giovanni Volpe
+    %   - Date: 2016/01/01
+    % Version 2: 
+    %   - Authors: Adam Liberda, Theo Berglin, Mite Mijalkov, Ehsan Kakaei & Giovanni Volpe
+    %   - Date: 2019/02/25
     
     properties (Constant)
         
@@ -170,8 +137,6 @@ classdef GraphBD < Graph
     properties (GetAccess = public, SetAccess = protected)
         C  % weighted correlation matrix
         threshold
-    end
-    properties (Access = protected)
     end
     methods
         function g = GraphBD(A,varargin)
