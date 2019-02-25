@@ -351,20 +351,26 @@ classdef GraphBD < Graph
             % MEASURELIST list of measures valid for a binary directed graph
             %
             % MLIST = MEASURELIST(G) returns the list of measures MLIST valid
-            %   for a bindary directed graph G.
+            %   for a binary directed graph G.
             %
             % MLIST = MEASURELIST(G,NODAL) returns the list of nodal measures MLIST
-            %   valid for a bindary directed graph G if NODAL is a bolean true and
+            %   valid for a binary directed graph G if NODAL is a boolean true and
             %   the list of global measures if NODAL is a boolean false.
             %
             % See also GraphBD.
             
             mlist = GraphBD.MEASURES_BD;
             if exist('nodal','var')
+                nbr_of_ms = length(Graph.MEASURES);
+                nodal_idx = zeros(1, nbr_of_ms);
+                for i=1:nbr_of_ms
+                    nodal_idx(i) = eval(sprintf('Graph.%s_NODAL', Graph.MEASURES{i}));
+                end
+                nodal_ms = find(nodal_idx);  % find measure id (index)
                 if nodal
-                    mlist = mlist(Graph.NODAL(mlist));
+                    mlist = intersect(mlist, nodal_ms);
                 else
-                    mlist = mlist(~Graph.NODAL(mlist));
+                    mlist = setdiff(mlist, nodal_ms);
                 end
             end
         end
@@ -372,10 +378,10 @@ classdef GraphBD < Graph
             % MEASURENUMBER number of measures valid for a binary directed graph
             %
             % N = MEASURENUMBER(G) returns the number of measures N valid for a
-            %   bindary directed graph G.
+            %   binary directed graph G.
             %
             % N = MEASURELIST(G,NODAL) returns the number of nodal measures N
-            %   valid for a bindary directed graph G if NODAL is a bolean true and
+            %   valid for a binary directed graph G if NODAL is a boolean true and
             %   the number of global measures if NODAL is a boolean false.
             %
             % See also GraphBD, measurelist.

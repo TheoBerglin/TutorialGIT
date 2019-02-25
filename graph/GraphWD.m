@@ -344,17 +344,23 @@ classdef GraphWD < Graph
             %   for a weighted directed graph G.
             %
             % MLIST = MEASURELIST(G,NODAL) returns the list of nodal measures MLIST
-            %   valid for a weighted directed graph G if NODAL is a bolean true and
+            %   valid for a weighted directed graph G if NODAL is a boolean true and
             %   the list of global measures if NODAL is a boolean false.
             %
             % See also GraphWD.
             
             mlist = GraphWD.MEASURES_WD;
             if exist('nodal','var')
+                nbr_of_ms = length(Graph.MEASURES);
+                nodal_idx = zeros(1, nbr_of_ms);
+                for i=1:nbr_of_ms
+                    nodal_idx(i) = eval(sprintf('Graph.%s_NODAL', Graph.MEASURES{i}));
+                end
+                nodal_ms = find(nodal_idx);  % find measure id (index)
                 if nodal
-                    mlist = mlist(Graph.NODAL(mlist));
+                    mlist = intersect(mlist, nodal_ms);
                 else
-                    mlist = mlist(~Graph.NODAL(mlist));
+                    mlist = setdiff(mlist, nodal_ms);
                 end
             end
         end

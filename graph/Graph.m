@@ -1772,7 +1772,7 @@ classdef Graph < handle & matlab.mixin.Copyable
             %
             % See also Graph, isglobal.
             
-            bool = Graph.MS{mi}.NODAL;
+            bool = eval(sprintf('Graph.%s_NODAL', Graph.MEASURES{mi}));
         end
         function bool = is_global(mi)
             % IS_GLOBAL checks if measure is global
@@ -1781,7 +1781,7 @@ classdef Graph < handle & matlab.mixin.Copyable
             %
             % See also Graph, isnodal.
             
-            bool = ~Graph.MS{mi}.NODAL;
+            bool = ~eval(sprintf('Graph.%s_NODAL', Graph.MEASURES{mi}));
         end
         function bool = is_directed(arg)
             % IS_DIRECTED checks if the graph type is directed
