@@ -1,5 +1,5 @@
 function gein = global_efficiency_in( A, type )
-% GLOBAL_EFFICIENCY_IN in-global efficiency
+% GLOBAL_EFFICIENCY_IN in-global efficiency for each node
 %
 % GEIN = GLOBAL_EFFICIENCY_IN(A,type) calculates the in-global efficiency GEIN for
 %   all nodes in the graph represented by the adjacency matrix A.

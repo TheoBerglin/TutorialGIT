@@ -1,4 +1,4 @@
-function [test_struct, test_func] = test_clustering_nodal(  )
+function [test_struct, test_func] = test_clustering(  )
 %TEST_CLUSTERING_NODAL Test suite for the nodal clustering coefficient measure
 %
 % Authors: Adam Liberda, Theo Berglin
@@ -6,7 +6,7 @@ function [test_struct, test_func] = test_clustering_nodal(  )
 % http://braph.org/
 
 %% Initializations
-test_func = 'clustering_nodal';
+test_func = 'clustering';
 N = 5; % number of nodes
 
 %% Diagonal adjacency matrix

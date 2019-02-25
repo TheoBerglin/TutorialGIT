@@ -152,127 +152,32 @@ classdef GraphBU < GraphBD
             %     density   -   percent of connections
             %     bins      -   -1:.001:1 (default)
             %     diagonal  -   'exclude' (default) | 'include'
-            %     rule      -   'max' (default) | 'min' | 'av' | 'sum'
-            %                   'max' - maximum between inconnection and outconnection (default)
+            %     rule      -   'av' (default) | 'min' | 'max' | 'sum'
+            %                   'av'  - average of inconnection and outconnection (default)
+            %                   'max' - maximum between inconnection and outconnection
             %                   'min' - minimum between inconnection and outconnection
-            %                   'av'  - average of inconnection and outconnection
             %                   'sum' - sum of inconnection and outconnection
             %     P         -   coefficient p-values
             %     structure -   community structure object
-            %     absolute  -   whether to include negative values from 
-            %                   the adjacency matrix by taking the 
+            %     absolute  -   whether to include negative values from
+            %                   the adjacency matrix by taking the
             %                   absolute value, false (default) | true
             %
             % See also Graph, GraphBD.
             
             C = A;
             A = Graph.positivize(A,varargin{:});
-                        
+            
             A = Graph.symmetrize(A,varargin{:});  % symmetrized connection matrix
-
+            
             g = g@GraphBD(A,varargin{:});
             g.C = C;
             
             g.TYPE = Graph.BU;
-        end
-        function bool = directed(g)
-            % DIRECTED checks if graph is directed
-            %
-            % BOOL = DIRECTED(G) returns false for undirected graphs.
-            %
-            % See also GraphBU, undirected.
-            
-            bool = false;
-        end
-        function bool = undirected(g)
-            % UNDIRECTED checks if graph is undirected
-            %
-            % BOOL = UNDIRECTED(G) returns true for undirected graphs.
-            %
-            % See also GraphBU, directed.
-            
-            bool = true;
-        end
-        function deg = degree(g)
-            % DEGREE degree of a node
-            %
-            % DEG = DEGREE(G) calculates the degree DEG of all nodes in the graph G.
-            %
-            % The node degree is the number of edges connected to a node. In these
-            %   calculations, the diagonal of connection matrix is removed i.e.
-            %   self-connections are not considered.
-            %
-            % See also GraphBU.
-            
-            deg = degree@GraphBD(g)/2;
-        end
-        function t = triangles(g)
-            % TRIANGLES number of triangles around a node
-            %
-            % T = TRIANGLES(G) calculates the number of triangles T around all nodes
-            %   in the graph G.
-            %
-            % Triangles are the number of pairs of neighbours of a node that are
-            %   connected with each other.
-            %
-            % See also GraphBU.
-            
-            if isempty(g.t)
-                A = Graph.removediagonal(g.A);
-                A3 = A^3;
-                g.t = 0.5*A3([1:g.nodenumber()+1:numel(A3)]);
-            end
-            
-            t = g.t;
-        end
-        function [cl,clnode] = cluster(g)
-            % CLUSTER clustering coefficient
-            %
-            % [CL,CLNODE] = CLUSTER(G) calculates the clustering coefficient of all
-            %   nodes CLNODE and the average clustering coefficient CL of the graph G.
-            %
-            % Clustering coefficient of a node is defined as the fraction of triangles
-            %   around the node (the fraction of node's neighbors that are neighbors of
-            %   each other). Clustering coefficient of the graph is defined as the
-            %   average of the clustering coefficients of all nodes in the graph.
-            %
-            %   Reference: "Collective dynamics of small-world networks", D.J. Watts and S.H. Strogatz
-            %              (generalization to directed and disconnected graphs)
-            %
-            % See also GraphBU.
-            
-            if isempty(g.cl) || isempty(g.clnode)
-                deg = g.degree();
-                t = g.triangles();
-                
-                g.clnode = zeros(size(t));
-                indices = find(t~=0 & deg>1);
-                g.clnode(indices) = 2*t(indices)./(deg(indices).*(deg(indices)-1));
-                
-                g.cl = mean(g.clnode);
-            end
-            
-            cl = g.cl;
-            clnode = g.clnode;
-        end
-        function tr = transitivity(g)
-            % TRANSITIVITY transitivity of a graph
-            %
-            % TR = TRANSITIVITY(G) calculates the transitivity of the graph G.
-            %
-            % Transitivity of a graph is defined as the fraction of triangles to
-            %   triplets in a graph.
-            %
-            % Reference: "Ego-centered networks and the ripple effect", M.E.J. Newman
-            %
-            % See also GraphBU, triangles, cluster.
-            
-            if isempty(g.tr)
-                A = Graph.removediagonal(g.A);
-                g.tr = trace(A^3) / (sum(sum(A^2)) - trace(A^2));
-            end
-            
-            tr = g.tr;
+            g.weight = false;
+            g.bin = true;
+            g.dir = false;
+            g.undir = true;
         end
         function [gr,R] = randomize(g,bin_swaps,wei_freq)
             % RANDOMIZE randomizes the graph

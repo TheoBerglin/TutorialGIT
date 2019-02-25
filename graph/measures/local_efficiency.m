@@ -1,4 +1,4 @@
-function lenode = local_efficiency_nodal( A, type )
+function lenode = local_efficiency( A, type )
 % LENODE local efficiency of each node
 %
 % LENODE = LOCAL_EFFICIENCY_NODAL(A,TYPE) calculates the local efficiency

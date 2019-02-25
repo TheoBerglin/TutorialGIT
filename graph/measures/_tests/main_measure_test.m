@@ -1,8 +1,8 @@
 %Main file for all tests
 
 clc,clear all, close all;
-tests = dir('_tests/test*.m');
-executers = dir('_tests/execute*.m');
+tests = dir('measures/_tests/test*.m');
+executers = dir('measures/_tests/execute*.m');
 n_tests = size(tests, 1);
 n_executes = size(executers,1);
 
