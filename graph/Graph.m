@@ -1472,6 +1472,43 @@ classdef Graph < handle & matlab.mixin.Copyable
                     B = max(A,transpose(A));
             end
         end
+        function [B,threshold] = binarize(A,varargin)
+            % BINARIZE binarizes a matrix
+            %
+            % [B,THRESHOLD] = BINARIZE(A) binarizes the matrix A by fixing either the
+            %   threshold (default, threshold=0) or the density (percent of connections).
+            %   It returns the binarized matrix B and the threshold THRESHOLD.
+            %
+            % [B,THRESHOLD] = BINARIZE(A,'PropertyName',PropertyValue) binarizes the
+            %   matrix A by using the property PropertyName specified by the PropertyValue.
+            %   Admissible properties are:
+            %       threshold   -   0 (default)
+            %       bins        -   -1:.001:1 (default)
+            %       density     -   percentage of connections
+            %       diagonal    -   'exclude' (default) | 'include'
+            %
+            % See also Graph, histogram.
+            
+            % Threshold and density
+            threshold = 0;
+            for n = 1:1:length(varargin)-1
+                if strcmpi(varargin{n},'threshold')
+                    threshold = varargin{n+1};
+                elseif strcmpi(varargin{n},'density')
+                    [~,bins,density] = Graph.histogram(A,varargin{:});
+                    threshold = bins(density<varargin{n+1});
+                    if isempty(threshold)
+                        threshold = 1;
+                    else
+                        threshold = threshold(1);
+                    end
+                end
+            end
+            
+            % Calculates binary graph
+            B = zeros(size(A));
+            B(A>threshold) = 1;
+        end
         function [count,bins,density] = histogram(A,varargin)
             % HISTOGRAM histogram of a matrix
             %
@@ -1515,43 +1552,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             end
             
             density = density*100;
-        end
-        function [B,threshold] = binarize(A,varargin)
-            % BINARIZE binarizes a matrix
-            %
-            % [B,THRESHOLD] = BINARIZE(A) binarizes the matrix A by fixing either the
-            %   threshold (default, threshold=0) or the density (percent of connections).
-            %   It returns the binarized matrix B and the threshold THRESHOLD.
-            %
-            % [B,THRESHOLD] = BINARIZE(A,'PropertyName',PropertyValue) binarizes the
-            %   matrix A by using the property PropertyName specified by the PropertyValue.
-            %   Admissible properties are:
-            %       threshold   -   0 (default)
-            %       bins        -   -1:.001:1 (default)
-            %       density     -   percentage of connections
-            %       diagonal    -   'exclude' (default) | 'include'
-            %
-            % See also Graph, histogram.
-            
-            % Threshold and density
-            threshold = 0;
-            for n = 1:1:length(varargin)-1
-                if strcmpi(varargin{n},'threshold')
-                    threshold = varargin{n+1};
-                elseif strcmpi(varargin{n},'density')
-                    [~,bins,density] = Graph.histogram(A,varargin{:});
-                    threshold = bins(density<varargin{n+1});
-                    if isempty(threshold)
-                        threshold = 1;
-                    else
-                        threshold = threshold(1);
-                    end
-                end
-            end
-            
-            % Calculates binary graph
-            B = zeros(size(A));
-            B(A>threshold) = 1;
         end
         function h = plotw(A,varargin)
             % PLOTW plots a weighted matrix
@@ -1762,23 +1762,23 @@ classdef Graph < handle & matlab.mixin.Copyable
                 h = [ht1 ht2];
             end
         end
-        function bool = isnodal(mi)
-            % ISNODAL checks if measure is nodal
+        function bool = is_nodal(mi)
+            % IS_NODAL checks if measure is nodal
             %
-            % BOOL = ISNODAL(MI) returns true if measure MI is nodal and false otherwise.
+            % BOOL = IS_NODAL(MI) returns true if measure MI is nodal and false otherwise.
             %
             % See also Graph, isglobal.
             
-            bool = Graph.NODAL(mi);
+            bool = Graph.MS{mi}.NODAL;
         end
-        function bool = isglobal(mi)
-            % ISGLOBAL checks if measure is global
+        function bool = is_global(mi)
+            % IS_GLOBAL checks if measure is global
             %
-            % BOOL = ISGLOBAL(MI) returns true if measure MI is global and false otherwise.
+            % BOOL = IS_GLOBAL(MI) returns true if measure MI is global and false otherwise.
             %
             % See also Graph, isnodal.
             
-            bool = ~Graph.isnodal(mi);
+            bool = ~Graph.MS{mi}.NODAL;
         end
         function bool = is_directed(arg)
             % IS_DIRECTED checks if the graph type is directed
