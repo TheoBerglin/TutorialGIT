@@ -1,9 +1,6 @@
-function [passed, test_struct] = execute_graph_test(test_name)
-%EXECUTER_MEASURE_TESTS This file should execute the test TEST_NAME for
+function [passed, test_struct] = execute_graph_measure_test(test_name)
+%EXECUTE_GRAPH_MEASURE_TEST This file should execute the test TEST_NAME for
 %graph object measures
-% This is not finished yet, Need to restructure graph objects first with
-% adding the properties struct
-% Change return parameter
 
 %% Get test information
  eval(['[test_struct, test_func] = ' test_name '();'])
