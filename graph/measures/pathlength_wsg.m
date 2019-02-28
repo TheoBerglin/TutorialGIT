@@ -1,7 +1,7 @@
-function plin = pathlength_in( A, type )
-% PATHLENGTH_IN in-pathlength of nodes
+function pl = pathlength_wsg( A, type )
+% PATHLENGTH_WSG path length of nodes within subgraphs
 %
-% PLIN = PATHLENGTH_IN(A,type) calculates the in-pathlength PLIN 
+% PL = PATHLENGTH_WSG(A,type) calculates the pathlength PL within subgraphs
 %   of all nodes in the graph represented by the connectivity matrix A.
 %   TYPE specifies the type of graph:
 %   Graph.BD = Binary Directed
@@ -11,22 +11,18 @@ function plin = pathlength_in( A, type )
 %   Graph.WDN = Weighted Directed with Negative weights
 %   Graph.WUN = Weighted Undirected with Negative weights
 %
-% The in-pathlength is the average shortest pathlength from all other
-%   nodes to a particular node.
+% The pathlength-wsg of a node is the average of the in-pathlength-wsg and
+%   out-pathlength-wsg of that node. The pathlength-wsg of disconnected 
+%   nodes is set to NaN. 
 %
 % Authors: Adam Liberda, Theo Berglin, Mite Mijalkov, Ehsan Kakaei, Giovanni Volpe
-% Date: 2019/02/28
+% Date: 2019/02/05
 % http://braph.org/
 
-D = distance(A,type);
+plin = pathlength_wsg_in(A, type);
+plout = pathlength_wsg_out(A, type);
 
-N = size(A,1); % Number of nodes
-plin = zeros(1,N);
-
-for u = 1:1:N
-    Du = D(:,u);
-    plin(u) = sum(Du)/length(nonzeros(Du));
-end
+pl = mean([plin; plout],1);
 
 end
 

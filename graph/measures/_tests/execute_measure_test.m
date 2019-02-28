@@ -26,7 +26,8 @@ for i=1:length(test_struct)
         end
     end
     
-    if isequaln(res, exp_result) || all(all(abs(res - exp_result) < tol))
+    comparison = res - exp_result;
+    if isequaln(res, exp_result) || all(all(abs(comparison(~isnan(comparison))) < tol))
         test_struct(i).passed = true;
     else
         passed = false;

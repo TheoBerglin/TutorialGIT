@@ -1,18 +1,18 @@
-function [test_struct, test_func] = test_pathlength_out(  )
-%TEST_PATHLENGTH_OUT Test suite for the out-pathlength measures
+function [test_struct, test_func] = test_pathlength_wsg_out(  )
+%TEST_PATHLENGTH_WSG_OUT Test suite for the out-pathlength-wsg measures
 %
 % Authors: Adam Liberda, Theo Berglin
 % Date: 2019/02/11
 % http://braph.org/
 
 %% Initializations
-test_func = 'pathlength_out';
+test_func = 'pathlength_wsg_out';
 N = 5; % number of nodes
 
 %% Diagonal adjacency matrix
 A1 = eye(N);
 type11 = Graph.BD;
-exp_res1 = inf(1, N);
+exp_res1 = nan(1, N);
 test_struct(1) = get_test_struct(A1, type11, exp_res1, 'Diagonal matrix Binary Directed');
 type12 = Graph.WU;
 test_struct(2) = get_test_struct(A1, type12, exp_res1, 'Diagonal matrix Weighted Undirected');
@@ -32,7 +32,7 @@ A3 = [1 1 1 1 0;
     1 0 1 1 0;
     0 0 0 0 1];
 type3 = Graph.BD;
-exp_res3 = inf(1, N);
+exp_res3 = [1 5/3 2 4/3 nan];
 test_struct(5) = get_test_struct(A3, type3, exp_res3, 'Binary Directed');
 
 %% Binary Undirected matrix
@@ -49,10 +49,10 @@ test_struct(6) = get_test_struct(A4, type4, exp_res4, 'Binary Undirected');
 A5 = [0 1/2 0 0 0;
     1/5 0 0 1/3 2;
     0 0 0 3/5 0;
-    1 0 0 0 0;
+    1 0 4/5 0 0;
     0 0 0 1/5 0];
 type5 = Graph.WD;
-exp_res5 = [inf inf 85/24 inf inf];
+exp_res5 = [63/16 47/16 85/24 35/16 101/16];
 test_struct(7) = get_test_struct(A5, type5, exp_res5, 'Weighted Directed');
 
 %% Weighted Undirected matrix

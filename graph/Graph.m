@@ -102,7 +102,6 @@ classdef Graph < handle & matlab.mixin.Copyable
     %   DIAMETER                -   maximum eccentricity of a graph
     %   IN_DIAMETER             -   maximum in-eccentricity of a graph
     %   OUT_DIAMETER            -   maximum out-eccentricity of a graph
-    %   CPL_WSG                 -   characteristic path length of a graph (within connected subgraphs)
     %   IN_IN_ASSORTATIVITY     -   in-in-assortativity
     %   IN_OUT_ASSORTATIVITY    -   in-out-assortativity
     %   OUT_IN_ASSORTATIVITY    -   out-in-assortativity
@@ -111,6 +110,12 @@ classdef Graph < handle & matlab.mixin.Copyable
     %   SW_WSG                  -   small worldness (within connected subgraphs)
     %   DISTANCE                -   shortest paths between all nodes
     %   DENSITY                 -   density of graph
+    %   CPL_WSG                 -   characteristic path length of a graph (within connected subgraphs)
+    %   PL_WSG                  -   path length of a graph (within connected subgraphs)
+    %   IN_CPL_WSG              -   characteristic in-path length of a graph (within connected subgraphs)
+    %   IN_PL_WSG               -   in-path length of a node (within connected subgraphs)
+    %   OUT_CPL_WSG             -   characteristic out-path length of a graph (within connected subgraphs)
+    %   OUT_PL_WSG              -   out-path length of a node (within connected subgraphs)
     %
     %   MEASURES     -   array of names of the measures
     %
@@ -640,15 +645,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_DIAMETER_AVERAGE = false;
         OUT_DIAMETER_STRUCTURAL = false;
         
-        CPL_WSG = 56;
-        CPL_WSG_NAME = 'char. path length (within subgraphs)';
-        CPL_WSG_NODAL = false;
-        CPL_WSG_DESCRIPTION = 'The characteristic path length of a graph is the average shortest path length in the graph. It is the average of the path length of all nodes in the graph. This measure is calculated within subgraphs.';
-        CPL_WSG_FUNCTION = 'pathlength';
-        CPL_WSG_AVERAGE = true;
-        CPL_WSG_STRUCTURAL = false;
-        
-        IN_IN_ASSORTATIVITY = 57;
+        IN_IN_ASSORTATIVITY = 56;
         IN_IN_ASSORTATIVITY_NAME = 'in-in-assortativity';
         IN_IN_ASSORTATIVITY_NODAL = false;
         IN_IN_ASSORTATIVITY_DESCRIPTION = 'The assortativity coefficient is a correlation coefficient between the degrees/strengths of all nodes on two opposite ends of a link. A positive assortativity coefficient indicates that nodes tend to link to other nodes with the same or similar degree/strength.'
@@ -656,7 +653,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_IN_ASSORTATIVITY_AVERAGE = false;
         IN_IN_ASSORTATIVITY_STRUCTURAL = false;
         
-        IN_OUT_ASSORTATIVITY = 58;
+        IN_OUT_ASSORTATIVITY = 57;
         IN_OUT_ASSORTATIVITY_NAME = 'in-out-assortativity';
         IN_OUT_ASSORTATIVITY_NODAL = false;
         IN_OUT_ASSORTATIVITY_DESCRIPTION = 'The assortativity coefficient is a correlation coefficient between the degrees/strengths of all nodes on two opposite ends of a link. A positive assortativity coefficient indicates that nodes tend to link to other nodes with the same or similar degree/strength.'
@@ -664,7 +661,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_OUT_ASSORTATIVITY_AVERAGE = false;
         IN_OUT_ASSORTATIVITY_STRUCTURAL = false;
         
-        OUT_IN_ASSORTATIVITY = 59;
+        OUT_IN_ASSORTATIVITY = 58;
         OUT_IN_ASSORTATIVITY_NAME = 'out-in-assortativity';
         OUT_IN_ASSORTATIVITY_NODAL = false;
         OUT_IN_ASSORTATIVITY_DESCRIPTION = 'The assortativity coefficient is a correlation coefficient between the degrees/strengths of all nodes on two opposite ends of a link. A positive assortativity coefficient indicates that nodes tend to link to other nodes with the same or similar degree/strength.'
@@ -672,7 +669,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_IN_ASSORTATIVITY_AVERAGE = false;
         OUT_IN_ASSORTATIVITY_STRUCTURAL = false;
         
-        OUT_OUT_ASSORTATIVITY = 60;
+        OUT_OUT_ASSORTATIVITY = 59;
         OUT_OUT_ASSORTATIVITY_NAME = 'out-out-assortativity';
         OUT_OUT_ASSORTATIVITY_NODAL = false;
         OUT_OUT_ASSORTATIVITY_DESCRIPTION = 'The assortativity coefficient is a correlation coefficient between the degrees/strengths of all nodes on two opposite ends of a link. A positive assortativity coefficient indicates that nodes tend to link to other nodes with the same or similar degree/strength.'
@@ -680,7 +677,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_OUT_ASSORTATIVITY_AVERAGE = false;
         OUT_OUT_ASSORTATIVITY_STRUCTURAL = false;
         
-        SW = 61;
+        SW = 60;
         SW_NAME = 'small-worldness';
         SW_NODAL = false;
         SW_DESCRIPTION = 'Network small-worldness.'
@@ -688,7 +685,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         SW_AVERAGE = false;
         SW_STRUCTURAL = false;
         
-        SW_WSG = 62;
+        SW_WSG = 61;
         SW_WSG_NAME = 'small-worldness (within subgraphs)';
         SW_WSG_NODAL = false;
         SW_WSG_DESCRIPTION = 'Network small-worldness. This measure is calculated within subgraph'
@@ -696,7 +693,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         SW_WSG_AVERAGE = false;
         SW_WSG_STRUCTURAL = false;
         
-        DISTANCE = 63;
+        DISTANCE = 62;
         DISTANCE_NAME = 'distance';
         DISTANCE_NODAL = true;
         DISTANCE_DESCRIPTION = 'The distance from one node to another is the shortest path length between the two.';
@@ -704,13 +701,61 @@ classdef Graph < handle & matlab.mixin.Copyable
         DISTANCE_AVERAGE = false;
         DISTANCE_STRUCTURAL = false;
         
-        DENSITY = 64;
+        DENSITY = 63;
         DENSITY_NAME = 'density';
         DENSITY_NODAL = true;
         DENSITY_DESCRIPTION = 'The density is the number of edges in the graph divided by the maximum number of possible edges.';
         DENSITY_FUNCTION = 'density';
         DENSITY_AVERAGE = false;
         DENSITY_STRUCTURAL = false;
+        
+        CPL_WSG = 64;
+        CPL_WSG_NAME = 'char. path length (within subgraphs)';
+        CPL_WSG_NODAL = false;
+        CPL_WSG_DESCRIPTION = 'The characteristic path length of a graph is the average shortest path length in the graph. It is the average of the path length of all nodes in the graph. This measure is calculated within subgraphs.';
+        CPL_WSG_FUNCTION = 'pathlength_wsg';
+        CPL_WSG_AVERAGE = true;
+        CPL_WSG_STRUCTURAL = false;
+        
+        PL_WSG = 65;
+        PL_WSG_NAME = 'path length (within subgraphs)';
+        PL_WSG_NODAL = true;
+        PL_WSG_DESCRIPTION = 'For undirected graphs, the path length of a node is the average path length from the note to all other nodes. For directed graphs, it is the sum of the in-path length and of the out-path length. This measure is calculated within subgraphs.';
+        PL_WSG_FUNCTION = 'pathlength_wsg';
+        PL_WSG_AVERAGE = false;
+        PL_WSG_STRUCTURAL = false;
+        
+        IN_CPL_WSG = 66;
+        IN_CPL_WSG_NAME = 'char. path length (in, within subgraphs)';
+        IN_CPL_WSG_NODAL = false;
+        IN_CPL_WSG_DESCRIPTION = 'The characteristic in-path length of a graph is the average of the in-path length of all nodes in the graph. This measure is calculated within subgraphs.';
+        IN_CPL_WSG_FUNCTION = 'pathlength_wsg_in';
+        IN_CPL_WSG_AVERAGE = true;
+        IN_CPL_WSG_STRUCTURAL = false;
+        
+        IN_PL_WSG = 67;
+        IN_PL_WSG_NAME = 'path length (in, within subgraphs)';
+        IN_PL_WSG_NODAL = true;
+        IN_PL_WSG_DESCRIPTION = 'The in-path length of a node is the average path length from the node itself to all other nodes. This measure is calculated within subgraphs.';
+        IN_PL_WSG_FUNCTION = 'pathlength_wsg_in';
+        IN_PL_WSG_AVERAGE = false;
+        IN_PL_WSG_STRUCTURAL = false;
+        
+        OUT_CPL_WSG = 68;
+        OUT_CPL_WSG_NAME = 'char. path length (out, within subgraphs)';
+        OUT_CPL_WSG_NODAL = false;
+        OUT_CPL_WSG_DESCRIPTION = 'The characteristic out-path length of a graph is the average of the out-path length of all nodes in the graph. This measure is calculated within subgraphs.';
+        OUT_CPL_WSG_FUNCTION = 'pathlength_wsg_out';
+        OUT_CPL_WSG_AVERAGE = true;
+        OUT_CPL_WSG_STRUCTURAL = false;
+        
+        OUT_PL_WSG = 69;
+        OUT_PL_WSG_NAME = 'path length (out, within subgraphs)';
+        OUT_PL_WSG_NODAL = true;
+        OUT_PL_WSG_DESCRIPTION = 'The out-path length of a node is the average path length from all other nodes to the node itself. This measure is calculated within subgraphs.';
+        OUT_PL_WSG_FUNCTION = 'pathlength_wsg_out';
+        OUT_PL_WSG_AVERAGE = false;
+        OUT_PL_WSG_STRUCTURAL = false;
         
         % List of all measures
         MEASURES = {'DEGREE',...
@@ -768,7 +813,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             'DIAMETER',...
             'IN_DIAMETER',...
             'OUT_DIAMETER',...
-            'CPL_WSG',...
             'IN_IN_ASSORTATIVITY',...
             'IN_OUT_ASSORTATIVITY',...
             'OUT_IN_ASSORTATIVITY',...
@@ -776,7 +820,13 @@ classdef Graph < handle & matlab.mixin.Copyable
             'SW',...
             'SW_WSG',...
             'DISTANCE',...
-            'DENSITY'};
+            'DENSITY',...
+            'CPL_WSG',...
+            'PL_WSG',...
+            'IN_CPL_WSG',...
+            'IN_PL_WSG',...
+            'OUT_CPL_WSG',...
+            'OUT_PL_WSG'};
         
     end
     properties (GetAccess = public, SetAccess = protected)
