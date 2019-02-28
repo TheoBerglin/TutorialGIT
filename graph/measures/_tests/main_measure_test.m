@@ -1,7 +1,8 @@
 %Main file for all tests
 
 clc,clear all, close all;
-tests = dir('measures/_tests/test*.m');
+%tests = dir('measures/**/_tests/test*.m');
+tests = subdir(fullfile('measures', 'test_*'));
 executers = dir('measures/_tests/execute*.m');
 n_tests = size(tests, 1);
 n_executes = size(executers,1);
@@ -17,7 +18,8 @@ for ex = 1:n_executes
     fprintf('Running for executer: %s\n', executer_name)
     for i = 1:n_tests
         file_name = tests(i).name;
-        tmp = strsplit(file_name, '.');
+        tmp = strsplit(file_name,filesep);
+        tmp = strsplit(tmp{end}, '.');
         test_name = tmp{1};
         tic
         eval(['[passed, details] =' executer_name '(test_name);'])

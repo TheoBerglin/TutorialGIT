@@ -1,170 +1,172 @@
 classdef Graph < handle & matlab.mixin.Copyable
     % Graph < handle & matlab.mixin.Copyable (Abstract) : Creates and implements graph
-    %   Graph represents graph and a set of measures that can be calculated
+    %   Graph represents a graph and a set of measures that can be calculated
     %   on an instance of a graph.
     %   Instances of this class cannot be created. Use one of the subclasses
     %   (e.g., GraphBD, GraphBU, GraphWD, GraphWU).
     %
     % Graph properties (Constant):
-    %   A measure denoted by MEAS can have 4 properties. The properties
+    %
+    %   Graph types:
+    %   BD      -   Binary Directed
+    %   BU      -   Binary Undirected
+    %   WD      -   Weighted Directed
+    %   WU      -   Weighted Undirected
+    %   WDN     -   Weighted Directed with Negative weights
+    %   WUN     -   Weighted Undirected with Negative weights
+    %
+    %   Community structure properties:
+    %   CS_NAME         -   name
+    %   CS_DESCRIPTION  -   description of the community structure
+    %   CS_LAST_PARAMS  -   last used parameters for calculating the community structure
+    %
+    %   A measure denoted by MEAS can have 7 properties. The properties
     %   addmissible to any measure are defined as follows:
-    %   MEAS        -   order number for the measure
-    %   MEAS_NAME   -   name of the measure
-    %   MEAS_NODAL  -   logical expression of nodality of the measure
-    %   MEAS_TXT    -   description of the measure
+    %   MEAS                -   order number for the measure
+    %   MEAS_NAME           -   name of the measure
+    %   MEAS_NODAL          -   logical expression of nodality of the measure
+    %   MEAS_DESCRIPTION    -   description of the measure
+    %   MEAS_FUNCTION       -   corresponding function name (.m file)
+    %   MEAS_AVERAGE        -   logical expression whether this is an average
+    %                           of a measure
+    %   MEAS_STRUCTURAL     -   logical expression whether this measure
+    %                           requires a community structure
     %
     %   Example: The measure DEGREE is a nodal measure of the number of connections
     %   of each node in a graph. It has the following properties:
-    %       DEGREE = 1;
-    %       DEGREE_NAME = 'degree';
-    %       DEGREE_NODAL = true;
-    %       DEGREE_TXT = 'The degree of a node is the number of edges connected to the node.
-    %                      Connection weights are ignored in calculations.'
+    %   DEGREE = 1;
+    %   DEGREE_NAME = 'degree';
+    %   DEGREE_NODAL = true;
+    %   DEGREE_DESCRIPTION = 'The degree of a node is the number of edges connected to the node. 
+    %                         Connection weights are ignored in calculations.';
+    %   DEGREE_FUNCTION = 'degree';
+    %   DEGREE_AVERAGE = false;
+    %   DEGREE_STRUCTURAL = false;
     %
-    % The measures that can be calculated are the following:
-    %   DEGREE              -   degree of a node
-    %   DEGREEAV            -   average degree of a graph
-    %   IN_DEGREE           -   in-degree of a node
-    %   IN_DEGREEAV         -   average in-degree of a graph
-    %   OUT_DEGREE          -   out-degree of a node
-    %   OUT_DEGREEAV        -   average out-degree of a graph
-    %   STRENGTH            -   strength of a node
-    %   STRENGTHAV          -   average strength of a graph
-    %   IN_STRENGTH         -   in-strength of a node
-    %   IN_STRENGTHAV       -   average in-strength of a graph
-    %   OUT_STRENGTH        -   out-strength of a node
-    %   OUT_STRENGTHAV      -   average out-strength of a graph
-    %   TRIANGLES           -   number of triangles around a node
-    %   CPL                 -   characteristic path length of a graph
-    %   PL                  -   path length of a node
-    %   IN_CPL              -   characteristic in-path length of a graph
-    %   IN_PL               -   in-path length of a node
-    %   OUT_CPL             -   characteristic out-path length of a graph
-    %   OUT_PL              -   out-path length of a node
-    %   GEFF                -   global efficiency of a graph
-    %   GEFFNODE            -   global efficiency of a node
-    %   IN_GEFF             -   in-global efficiency of a graph
-    %   IN_GEFFNODE         -   in-global efficiency of a node
-    %   OUT_GEFF            -   out-global efficiency of a graph
-    %   OUT_GEFFNODE        -   out-global efficiency of a node
-    %   LEFF                -   local efficiency of a graph
-    %   LEFFNODE            -   local efficiency of a node
-    %   IN_LEFF             -   in-local efficiency of a graph
-    %   IN_LEFFNODE         -   in-local efficiency of a node
-    %   OUT_LEFF            -   out-local efficiency of a graph
-    %   OUT_LEFFNODE        -   out-local efficiency of a node
-    %   CLUSTER             -   clustering coefficient of a graph
-    %   CLUSTERNODE         -   clustering coefficient around a node
-    %   BETWEENNESS         -   betweenness centrality of a node
-    %   CLOSENESS           -   closeness centrality of a node
-    %   IN_CLOSENESS        -   in-closeness centrality of a node
-    %   OUT_CLOSENESS       -   out-closeness centrality of a node
-    %   ZSCORE              -   within module degree z-score of a node
-    %   IN_ZSCORE           -   within module degree in-z-score of a node
-    %   OUT_ZSCORE          -   within module degree out-z-score of a node
-    %   PARTICIPATION       -   participation
-    %   TRANSITIVITY        -   transitivity of a graph
-    %   ECCENTRICITY        -   eccentricity of a node
-    %   ECCENTRICITYAV      -   average eccentricity of a graph
-    %   IN_ECCENTRICITY     -   in-eccentricity of a node
-    %   IN_ECCENTRICITYAV   -   average in-eccentricity of a graph
-    %   OUT_ECCENTRICITY    -   out-eccentricity of a node
-    %   OUT_ECCENTRICITYAV  -   average out-eccentricity of a graph
-    %   RADIUS              -   minimum eccentricity of a graph
-    %   DIAMETER            -   maximum eccentricity of a graph
-    %   CPL_WSG             -   characteristic path length of a graph (within connected subgraphs)
-    %   ASSORTATIVITY       -   assortativity
-    %   SW                  -   small worldness
-    %   SW_WSG              -   small worldness (within connected subgraphs)
+    %   The measures have a default value set when initialized:
+    %   DEFAULT_MEASURE_VALUE   -   default value
     %
-    %   NAME     -   array of names of the measures
-    %   NODAL    -   array of logical expressions of nodality of the measures
-    %   TXT      -   array of descriptions of the measure
+    %   The measures that can be calculated are the following:
+    %   DEGREE                  -   degree of a node
+    %   DEGREEAV                -   average degree of a graph
+    %   IN_DEGREE               -   in-degree of a node
+    %   IN_DEGREEAV             -   average in-degree of a graph
+    %   OUT_DEGREE              -   out-degree of a node
+    %   OUT_DEGREEAV            -   average out-degree of a graph
+    %   STRENGTH                -   strength of a node
+    %   STRENGTHAV              -   average strength of a graph
+    %   IN_STRENGTH             -   in-strength of a node
+    %   IN_STRENGTHAV           -   average in-strength of a graph
+    %   OUT_STRENGTH            -   out-strength of a node
+    %   OUT_STRENGTHAV          -   average out-strength of a graph
+    %   TRIANGLES               -   number of triangles around a node
+    %   CPL                     -   characteristic path length of a graph
+    %   PL                      -   path length of a node
+    %   IN_CPL                  -   characteristic in-path length of a graph
+    %   IN_PL                   -   in-path length of a node
+    %   OUT_CPL                 -   characteristic out-path length of a graph
+    %   OUT_PL                  -   out-path length of a node
+    %   GEFF                    -   global efficiency of a graph
+    %   GEFFNODE                -   global efficiency of a node
+    %   IN_GEFF                 -   in-global efficiency of a graph
+    %   IN_GEFFNODE             -   in-global efficiency of a node
+    %   OUT_GEFF                -   out-global efficiency of a graph
+    %   OUT_GEFFNODE            -   out-global efficiency of a node
+    %   LEFF                    -   local efficiency of a graph
+    %   LEFFNODE                -   local efficiency of a node
+    %   CLUSTER                 -   clustering coefficient of a graph
+    %   CLUSTERNODE             -   clustering coefficient around a node
+    %   MODULARITY              -   modularity of a graph
+    %   BETWEENNESS             -   betweenness centrality of a node
+    %   CLOSENESS               -   closeness centrality of a node
+    %   IN_CLOSENESS            -   in-closeness centrality of a node
+    %   OUT_CLOSENESS           -   out-closeness centrality of a node
+    %   ZSCORE                  -   within module degree z-score of a node
+    %   IN_ZSCORE               -   within module degree in-z-score of a node
+    %   OUT_ZSCORE              -   within module degree out-z-score of a node
+    %   PARTICIPATION           -   participation
+    %   TRANSITIVITY            -   transitivity of a graph
+    %   ECCENTRICITY            -   eccentricity of a node
+    %   ECCENTRICITYAV          -   average eccentricity of a graph
+    %   IN_ECCENTRICITY         -   in-eccentricity of a node
+    %   IN_ECCENTRICITYAV       -   average in-eccentricity of a graph
+    %   OUT_ECCENTRICITY        -   out-eccentricity of a node
+    %   OUT_ECCENTRICITYAV      -   average out-eccentricity of a graph
+    %   RADIUS                  -   minimum eccentricity of a graph
+    %   IN_RADIUS               -   minimum in-eccentricity of a graph
+    %   OUT_RADIUS              -   minimum out-eccentricity of a graph
+    %   DIAMETER                -   maximum eccentricity of a graph
+    %   IN_DIAMETER             -   maximum in-eccentricity of a graph
+    %   OUT_DIAMETER            -   maximum out-eccentricity of a graph
+    %   IN_IN_ASSORTATIVITY     -   in-in-assortativity
+    %   IN_OUT_ASSORTATIVITY    -   in-out-assortativity
+    %   OUT_IN_ASSORTATIVITY    -   out-in-assortativity
+    %   OUT_OUT_ASSORTATIVITY   -   out-out-assortativity
+    %   SW                      -   small worldness
+    %   SW_WSG                  -   small worldness (within connected subgraphs)
+    %   DISTANCE                -   shortest paths between all nodes
+    %   DENSITY                 -   density of graph
+    %   CPL_WSG                 -   characteristic path length of a graph (within connected subgraphs)
+    %   PL_WSG                  -   path length of a graph (within connected subgraphs)
+    %   IN_CPL_WSG              -   characteristic in-path length of a graph (within connected subgraphs)
+    %   IN_PL_WSG               -   in-path length of a node (within connected subgraphs)
+    %   OUT_CPL_WSG             -   characteristic out-path length of a graph (within connected subgraphs)
+    %   OUT_PL_WSG              -   out-path length of a node (within connected subgraphs)
+    %   CLOSENESS_WSG           -   closeness centrality of a node (within connected subgraphs)
+    %   IN_CLOSENESS_WSG        -   in-closeness centrality of a node (within connected subgraphs)
+    %   OUT_CLOSENESS_WSG       -   out-closeness centrality of a node (within connected subgraphs)
+    %
+    %   MEASURES     -   array of names of the measures
     %
     % Graph properties (GetAccess = public, SetAccess = protected):
     %   A        -   connection matrix
     %   P        -   coefficient p-values
     %   S        -   default community structure
     %   TYPE     -   graph type
+    %   MS       -   cell array containing the measure structs
     %
     % Graph properties (Access = protected):
+    %   CS       -   a structure for the calculated community structure
     %   N        -   number of nodes
-    %   D        -   matrix of the shortest path lengths
-    %   deg      -   degree
-    %   indeg    -   in-degree
-    %   outdeg   -   out-degree
-    %   str      -   strength
-    %   instr    -   in-strength
-    %   outstr   -   out-strength
-    %   ecc      -   eccentricity
-    %   eccin    -   in-eccentricity
-    %   eccout   -   out-eccentricity
-    %   t        -   triangles
-    %   c        -   path length
-    %   cin      -   in-path length
-    %   cout     -   out-path length
-    %   ge       -   global efficiency
-    %   gein     -   in-global efficiency
-    %   geout    -   out-global efficiency
-    %   le       -   local efficiency
-    %   lenode   -   local efficiency of a node
-    %   cl       -   clustering coefficient
-    %   clnode   -   clustering coefficient of a node
-    %   b        -   betweenness (non-normalized)
-    %   tr       -   transitivity
-    %   clo      -   closeness
-    %   cloin    -   in-closeness
-    %   cloout   -   out-closeness
-    %   Ci       -   structure
-    %   m        -   modularity
-    %   z        -   z-score
-    %   zin      -   in-z-score
-    %   zout     -   out-z-score
-    %   p        -   participation
-    %   a        -   assortativity
-    %   sw       -   small-worldness
-    %   sw_wsg   -   small-worldness
     %
     % Graph methods (Access = protected):
     %   Graph                               -   constructor
-    %   reset_structure_related_measures    -   resets z-score and participation
+    %   reset_structure_related_measures    -   resets z-score,
+    %                                           participation and modularity
     %   copyElement                         -   copy community structure
     %
     % Graph methods (Abstract):
-    %   weighted     -   weighted graph
-    %   binary       -   binary graph
-    %   directed	 -   direced graph
-    %   undirected   -   undirected graph
-    %   distance     -   distance between nodes (shortest path length)
-    %   measure      -   calculates given measure
     %   randomize    -   randomize graph while preserving degree distribution
     %
     % Graph methods :
-    %   get_type            -   returns the type of the graph
-    %   subgraph            -   creates subgraph from given nodes
-    %   nodeattack          -   removes given nodes from a graph
-    %   edgeattack          -   removes given edges from a graph
-    %   nodenumber          -   number of nodes in a graph
-    %   radius              -   radius of a graph
-    %   diameter            -   diameter of a graph
-    %   eccentricity        -   eccentricity of nodes
-    %   pl                  -   path length of nodes
-    %   closeness           -   closeness centrality of nodes
-    %   structure           -   community structures of a graph
-    %   zscore              -   within module degree z-score
-    %   participation       -   participation coefficient of nodes
-    %   smallworldness       -   small-wordness of the graph
+    %   add_measure_to_struct       -   adds measure to MS struct
+    %   get_community_structure     -   returns the community structure
+    %   set_community_structure     -   sets a community structure using the 
+    %                                   structure S
+    %   get_type                    -   returns the type of the graph
+    %   get_adjacency_matrix        -   returns the adjacency matrix of the graph
+    %   nodeattack                  -   removes given nodes from a graph
+    %   edgeattack                  -   removes given edges from a graph
+    %   nodenumber                  -   number of nodes in a graph
+    %   calculate_structure_louvain -   calculates a community structure
+    %                                   using the louvain algorithm
+    %   calculate_structure_newman  -   calculates a community structure
+    %                                   using the newman algorithm
+    %   calculate_structure_fixed   -   calculates a community structure
+    %                                   using the fixed algorithm
+    %   smallworldness              -   small-wordness of the graph
+    %   calculate_measure           -   calculates a specific measure
     %
     % Graph methods (Static):
-    %   removediagonal      -   replaces matrix diagonal with given value
+    %   positivize          -   positivizes a matrix
     %   symmetrize          -   symmetrizes a matrix
-    %   histogram           -   histogram of a matrix
     %   binarize            -   binarizes a matrix
+    %   histogram           -   histogram of a matrix
     %   plotw               -   plots a weighted matrix
     %   plotb               -   plots a binary matrix
     %   hist                -   plots the histogram and density of a matrix
-    %   isnodal             -   checks if measure is nodal
-    %   isglobal            -   checks if measure is global
+    %   is_nodal            -   checks if measure is nodal
+    %   is_global           -   checks if measure is global
     %   is_directed         -   checks if the graph type is directed
     %   is_undirected       -   checks if the graph type is undirected
     %   is_binary           -   checks if the graph type is binary
@@ -178,8 +180,12 @@ classdef Graph < handle & matlab.mixin.Copyable
     %
     % See also GraphBD, GraphBU, GraphWD, GraphWU, Structure, handle, matlab.mixin.Copyable.
     
-    % Author: Mite Mijalkov, Ehsan Kakaei & Giovanni Volpe
-    % Date: 2016/01/01
+    % Version 1:
+    %   - Authors: Mite Mijalkov, Ehsan Kakaei & Giovanni Volpe
+    %   - Date: 2016/01/01
+    % Version 2: 
+    %   - Authors: Adam Liberda, Theo Berglin, Mite Mijalkov, Ehsan Kakaei & Giovanni Volpe
+    %   - Date: 2019/02/25
     
     properties (Constant)
         % Graph types
@@ -414,39 +420,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         LEFFNODE_AVERAGE = false;
         LEFFNODE_STRUCTURAL = false;
         
-        IN_LEFF = 28;
-        IN_LEFF_NAME = 'local efficiency (in)';
-        IN_LEFF_NODAL = false;
-        IN_LEFF_DESCRIPTION = 'The in-local efficiency of a graph is the average of the in-local efficiencies of its nodes.';
-        IN_LEFF_FUNCTION = 'INPUT_FUNCTIONTION';
-        IN_LEFF_AVERAGE = false;
-        IN_LEFF_STRUCTURAL = false;
-        
-        IN_LEFFNODE = 29;
-        IN_LEFFNODE_NAME = 'local efficiency nodes (in)';
-        IN_LEFFNODE_NODAL = true;
-        IN_LEFFNODE_DESCRIPTION = 'The in-local efficiency of a node is the in-global efficiency of the node computed on the node''s neighborhood';
-        IN_LEFFNODE_FUNCTION = 'INPUT_FUNCTIONTION';
-        IN_LEFFNODE_AVERAGE = false;
-        IN_LEFFNODE_STRUCTURAL = false;
-        
-        OUT_LEFF = 30;
-        OUT_LEFF_NAME = 'local efficiency (out)';
-        OUT_LEFF_NODAL = false;
-        OUT_LEFF_DESCRIPTION = 'The out-local efficiency of a graph is the average of the out-local efficiencies of its nodes.';
-        OUT_LEFF_FUNCTION = 'INPUT_FUNCTIONTION';
-        OUT_LEFF_AVERAGE = false;
-        OUT_LEFF_STRUCTURAL = false;
-        
-        OUT_LEFFNODE = 31;
-        OUT_LEFFNODE_NAME = 'local efficiency nodes (out)';
-        OUT_LEFFNODE_NODAL = true;
-        OUT_LEFFNODE_DESCRIPTION = 'The out-local efficiency of a node is the out-global efficiency of the node computed on the node''s neighborhood';
-        OUT_LEFFNODE_FUNCTION = 'INPUT_FUNCTIONTION';
-        OUT_LEFFNODE_AVERAGE = false;
-        OUT_LEFFNODE_STRUCTURAL = false;
-        
-        CLUSTER = 32;
+        CLUSTER = 28;
         CLUSTER_NAME = 'clustering graph';
         CLUSTER_NODAL = false;
         CLUSTER_DESCRIPTION = 'The clustering coefficient of a graph is the average of the clustering coefficients of its nodes.';
@@ -454,7 +428,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         CLUSTER_AVERAGE = true;
         CLUSTER_STRUCTURAL = false;
         
-        CLUSTERNODE = 33;
+        CLUSTERNODE = 29;
         CLUSTERNODE_NAME = 'clustering nodes';
         CLUSTERNODE_NODAL = true;
         CLUSTERNODE_DESCRIPTION = 'The clustering coefficient is the fraction of triangles around a node. It is equivalent to the fraction of a node''s neighbors that are neighbors of each other.';
@@ -462,7 +436,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         CLUSTERNODE_AVERAGE = false;
         CLUSTERNODE_STRUCTURAL = false;
         
-        MODULARITY = 34;
+        MODULARITY = 30;
         MODULARITY_NAME = 'modularity';
         MODULARITY_NODAL = false;
         MODULARITY_DESCRIPTION = 'The modularity is a statistic that quantifies the degree to which the graph may be subdivided into such clearly delineated groups.';
@@ -470,7 +444,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         MODULARITY_AVERAGE = false;
         MODULARITY_STRUCTURAL = true;
         
-        BETWEENNESS = 35;
+        BETWEENNESS = 31;
         BETWEENNESS_NAME = 'betweenness centrality';
         BETWEENNESS_NODAL = true;
         BETWEENNESS_DESCRIPTION = 'Node betweenness centrality of a node is the fraction of all shortest paths in the graph that contain a given node. Nodes with high values of betweenness centrality participate in a large number of shortest paths.';
@@ -478,7 +452,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         BETWEENNESS_AVERAGE = false;
         BETWEENNESS_STRUCTURAL = false;
         
-        CLOSENESS = 36;
+        CLOSENESS = 32;
         CLOSENESS_NAME = 'closeness centrality';
         CLOSENESS_NODAL = true;
         CLOSENESS_DESCRIPTION = 'The closeness centrality of a node is the inverse of the average shortest path length from the node to all other nodes in the graph.';
@@ -486,7 +460,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         CLOSENESS_AVERAGE = false;
         CLOSENESS_STRUCTURAL = false;
         
-        IN_CLOSENESS = 37;
+        IN_CLOSENESS = 33;
         IN_CLOSENESS_NAME = 'in-closeness centrality';
         IN_CLOSENESS_NODAL = true;
         IN_CLOSENESS_DESCRIPTION = 'The in-closeness centrality of a node is the inverse of the average shortest path length from the node to all other nodes in the graph.';
@@ -494,7 +468,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_CLOSENESS_AVERAGE = false;
         IN_CLOSENESS_STRUCTURAL = false;
         
-        OUT_CLOSENESS = 38;
+        OUT_CLOSENESS = 34;
         OUT_CLOSENESS_NAME = 'in-closeness centrality';
         OUT_CLOSENESS_NODAL = true;
         OUT_CLOSENESS_DESCRIPTION = 'The in-closeness centrality of a node is the inverse of the average shortest path length from all other nodes in the graph to the node.';
@@ -502,7 +476,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_CLOSENESS_AVERAGE = false;
         OUT_CLOSENESS_STRUCTURAL = false;
         
-        ZSCORE = 39;
+        ZSCORE = 35;
         ZSCORE_NAME = 'within module degree z-score';
         ZSCORE_NODAL = true;
         ZSCORE_DESCRIPTION = 'The within-module degree z-score of a node is a within-module version of degree centrality. This measure requires a previously determined community structure.';
@@ -510,7 +484,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         ZSCORE_AVERAGE = false;
         ZSCORE_STRUCTURAL = true;
         
-        IN_ZSCORE = 40;
+        IN_ZSCORE = 36;
         IN_ZSCORE_NAME = 'within module degree in-z-score';
         IN_ZSCORE_NODAL = true;
         IN_ZSCORE_DESCRIPTION = 'The within-module degree in-z-score of a node is a within-module version of degree centrality. This measure requires a previously determined community structure.';
@@ -518,7 +492,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_ZSCORE_AVERAGE = false;
         IN_ZSCORE_STRUCTURAL = true;
         
-        OUT_ZSCORE = 41;
+        OUT_ZSCORE = 37;
         OUT_ZSCORE_NAME = 'within module degree out-z-score';
         OUT_ZSCORE_NODAL = true;
         OUT_ZSCORE_DESCRIPTION = 'The within-module degree out-z-score of a node is a within-module version of degree centrality. This measure requires a previously determined community structure.';
@@ -526,7 +500,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_ZSCORE_AVERAGE = false;
         OUT_ZSCORE_STRUCTURAL = true;
         
-        PARTICIPATION = 42;
+        PARTICIPATION = 38;
         PARTICIPATION_NAME = 'participation';
         PARTICIPATION_NODAL = true;
         PARTICIPATION_DESCRIPTION = 'The complementary participation coefficient assesses the diversity of intermodular interconnections of individual nodes. Nodes with a high within-module degree but with a low participation coefficient (known as provincial hubs) are hence likely to play an important part in the facilitation of modular segregation. On the other hand, nodes with a high participation coefficient (known as connector hubs) are likely to facilitate global intermodular integration.';
@@ -534,7 +508,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         PARTICIPATION_AVERAGE = false;
         PARTICIPATION_STRUCTURAL = true;
         
-        TRANSITIVITY = 43;
+        TRANSITIVITY = 39;
         TRANSITIVITY_NAME = 'transitivity';
         TRANSITIVITY_NODAL = false;
         TRANSITIVITY_DESCRIPTION = 'The transitivity is the ratio of triangles to triplets in the graph. It is an alternative to the graph clustering coefficient.';
@@ -542,7 +516,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         TRANSITIVITY_AVERAGE = false;
         TRANSITIVITY_STRUCTURAL = false;
         
-        ECCENTRICITY = 44;
+        ECCENTRICITY = 40;
         ECCENTRICITY_NAME = 'eccentricity';
         ECCENTRICITY_NODAL = true;
         ECCENTRICITY_DESCRIPTION = 'The node eccentricity is the maximal shortest path length between a node and any other node.';
@@ -550,7 +524,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         ECCENTRICITY_AVERAGE = false;
         ECCENTRICITY_STRUCTURAL = false;
         
-        ECCENTRICITYAV = 45;
+        ECCENTRICITYAV = 41;
         ECCENTRICITYAV_NAME = 'eccentricity';
         ECCENTRICITYAV_NODAL = false;
         ECCENTRICITYAV_DESCRIPTION = 'The average eccentricity is the average node eccentricy.';
@@ -558,7 +532,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         ECCENTRICITYAV_AVERAGE = true;
         ECCENTRICITYAV_STRUCTURAL = false;
         
-        IN_ECCENTRICITY = 46;
+        IN_ECCENTRICITY = 42;
         IN_ECCENTRICITY_NAME = 'in-eccentricity';
         IN_ECCENTRICITY_NODAL = true;
         IN_ECCENTRICITY_DESCRIPTION = 'In directed graphs, the node in-eccentricity is the maximal shortest path length from any nodes in the netwrok and a node.';
@@ -566,7 +540,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_ECCENTRICITY_AVERAGE = false;
         IN_ECCENTRICITY_STRUCTURAL = false;
         
-        IN_ECCENTRICITYAV = 47;
+        IN_ECCENTRICITYAV = 43;
         IN_ECCENTRICITYAV_NAME = 'av. in-eccentricity';
         IN_ECCENTRICITYAV_NODAL = false;
         IN_ECCENTRICITYAV_DESCRIPTION = 'In directed graphs, the average in-eccentricity is the average node in-eccentricy.';
@@ -574,7 +548,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_ECCENTRICITYAV_AVERAGE = true;
         IN_ECCENTRICITYAV_STRUCTURAL = false;
         
-        OUT_ECCENTRICITY = 48;
+        OUT_ECCENTRICITY = 44;
         OUT_ECCENTRICITY_NAME = 'out-eccentricity';
         OUT_ECCENTRICITY_NODAL = true;
         OUT_ECCENTRICITY_DESCRIPTION = 'In directed graphs, the node out-eccentricity is the maximal shortest path length from a node to all other nodes in the netwrok.';
@@ -582,7 +556,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_ECCENTRICITY_AVERAGE = false;
         OUT_ECCENTRICITY_STRUCTURAL = false;
         
-        OUT_ECCENTRICITYAV = 49;
+        OUT_ECCENTRICITYAV = 45;
         OUT_ECCENTRICITYAV_NAME = 'av. out-eccentricity';
         OUT_ECCENTRICITYAV_NODAL = false;
         OUT_ECCENTRICITYAV_DESCRIPTION = 'In directed graphs, the average out-eccentricity is the average node out-eccentricy.';
@@ -590,7 +564,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_ECCENTRICITYAV_AVERAGE = true;
         OUT_ECCENTRICITYAV_STRUCTURAL = false;
         
-        RADIUS = 50;
+        RADIUS = 46;
         RADIUS_NAME = 'radius';
         RADIUS_NODAL = false;
         RADIUS_DESCRIPTION = 'The radius is the minimum eccentricity.';
@@ -598,7 +572,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         RADIUS_AVERAGE = false;
         RADIUS_STRUCTURAL = false;
         
-        IN_RADIUS = 51;
+        IN_RADIUS = 47;
         IN_RADIUS_NAME = 'in-radius';
         IN_RADIUS_NODAL = false;
         IN_RADIUS_DESCRIPTION = 'The in-radius is the minimum in-eccentricity.';
@@ -606,7 +580,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_RADIUS_AVERAGE = false;
         IN_RADIUS_STRUCTURAL = false;
         
-        OUT_RADIUS = 52;
+        OUT_RADIUS = 48;
         OUT_RADIUS_NAME = 'out-radius';
         OUT_RADIUS_NODAL = false;
         OUT_RADIUS_DESCRIPTION = 'The out-radius is the minimum out-eccentricity.';
@@ -614,7 +588,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_RADIUS_AVERAGE = false;
         OUT_RADIUS_STRUCTURAL = false;
         
-        DIAMETER = 53;
+        DIAMETER = 49;
         DIAMETER_NAME = 'diameter';
         DIAMETER_NODAL = false;
         DIAMETER_DESCRIPTION = 'The diameter is the maximum eccentricity.'
@@ -622,7 +596,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         DIAMETER_AVERAGE = false;
         DIAMETER_STRUCTURAL = false;
         
-        IN_DIAMETER = 54;
+        IN_DIAMETER = 50;
         IN_DIAMETER_NAME = 'in-diameter';
         IN_DIAMETER_NODAL = false;
         IN_DIAMETER_DESCRIPTION = 'The in-diameter is the maximum in-eccentricity.'
@@ -630,7 +604,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_DIAMETER_AVERAGE = false;
         IN_DIAMETER_STRUCTURAL = false;
         
-        OUT_DIAMETER = 55;
+        OUT_DIAMETER = 51;
         OUT_DIAMETER_NAME = 'out-diameter';
         OUT_DIAMETER_NODAL = false;
         OUT_DIAMETER_DESCRIPTION = 'The out-diameter is the maximum out-eccentricity.'
@@ -638,15 +612,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_DIAMETER_AVERAGE = false;
         OUT_DIAMETER_STRUCTURAL = false;
         
-        CPL_WSG = 56;
-        CPL_WSG_NAME = 'char. path length (within subgraphs)';
-        CPL_WSG_NODAL = false;
-        CPL_WSG_DESCRIPTION = 'The characteristic path length of a graph is the average shortest path length in the graph. It is the average of the path length of all nodes in the graph. This measure is calculated within subgraphs.';
-        CPL_WSG_FUNCTION = 'pathlength';
-        CPL_WSG_AVERAGE = true;
-        CPL_WSG_STRUCTURAL = false;
-        
-        IN_IN_ASSORTATIVITY = 57;
+        IN_IN_ASSORTATIVITY = 52;
         IN_IN_ASSORTATIVITY_NAME = 'in-in-assortativity';
         IN_IN_ASSORTATIVITY_NODAL = false;
         IN_IN_ASSORTATIVITY_DESCRIPTION = 'The assortativity coefficient is a correlation coefficient between the degrees/strengths of all nodes on two opposite ends of a link. A positive assortativity coefficient indicates that nodes tend to link to other nodes with the same or similar degree/strength.'
@@ -654,7 +620,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_IN_ASSORTATIVITY_AVERAGE = false;
         IN_IN_ASSORTATIVITY_STRUCTURAL = false;
         
-        IN_OUT_ASSORTATIVITY = 58;
+        IN_OUT_ASSORTATIVITY = 53;
         IN_OUT_ASSORTATIVITY_NAME = 'in-out-assortativity';
         IN_OUT_ASSORTATIVITY_NODAL = false;
         IN_OUT_ASSORTATIVITY_DESCRIPTION = 'The assortativity coefficient is a correlation coefficient between the degrees/strengths of all nodes on two opposite ends of a link. A positive assortativity coefficient indicates that nodes tend to link to other nodes with the same or similar degree/strength.'
@@ -662,7 +628,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_OUT_ASSORTATIVITY_AVERAGE = false;
         IN_OUT_ASSORTATIVITY_STRUCTURAL = false;
         
-        OUT_IN_ASSORTATIVITY = 59;
+        OUT_IN_ASSORTATIVITY = 54;
         OUT_IN_ASSORTATIVITY_NAME = 'out-in-assortativity';
         OUT_IN_ASSORTATIVITY_NODAL = false;
         OUT_IN_ASSORTATIVITY_DESCRIPTION = 'The assortativity coefficient is a correlation coefficient between the degrees/strengths of all nodes on two opposite ends of a link. A positive assortativity coefficient indicates that nodes tend to link to other nodes with the same or similar degree/strength.'
@@ -670,7 +636,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_IN_ASSORTATIVITY_AVERAGE = false;
         OUT_IN_ASSORTATIVITY_STRUCTURAL = false;
         
-        OUT_OUT_ASSORTATIVITY = 60;
+        OUT_OUT_ASSORTATIVITY = 55;
         OUT_OUT_ASSORTATIVITY_NAME = 'out-out-assortativity';
         OUT_OUT_ASSORTATIVITY_NODAL = false;
         OUT_OUT_ASSORTATIVITY_DESCRIPTION = 'The assortativity coefficient is a correlation coefficient between the degrees/strengths of all nodes on two opposite ends of a link. A positive assortativity coefficient indicates that nodes tend to link to other nodes with the same or similar degree/strength.'
@@ -678,7 +644,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_OUT_ASSORTATIVITY_AVERAGE = false;
         OUT_OUT_ASSORTATIVITY_STRUCTURAL = false;
         
-        SW = 61;
+        SW = 56;
         SW_NAME = 'small-worldness';
         SW_NODAL = false;
         SW_DESCRIPTION = 'Network small-worldness.'
@@ -686,7 +652,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         SW_AVERAGE = false;
         SW_STRUCTURAL = false;
         
-        SW_WSG = 62;
+        SW_WSG = 57;
         SW_WSG_NAME = 'small-worldness (within subgraphs)';
         SW_WSG_NODAL = false;
         SW_WSG_DESCRIPTION = 'Network small-worldness. This measure is calculated within subgraph'
@@ -694,7 +660,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         SW_WSG_AVERAGE = false;
         SW_WSG_STRUCTURAL = false;
         
-        DISTANCE = 63;
+        DISTANCE = 58;
         DISTANCE_NAME = 'distance';
         DISTANCE_NODAL = true;
         DISTANCE_DESCRIPTION = 'The distance from one node to another is the shortest path length between the two.';
@@ -702,13 +668,85 @@ classdef Graph < handle & matlab.mixin.Copyable
         DISTANCE_AVERAGE = false;
         DISTANCE_STRUCTURAL = false;
         
-        DENSITY = 64;
+        DENSITY = 59;
         DENSITY_NAME = 'density';
         DENSITY_NODAL = true;
         DENSITY_DESCRIPTION = 'The density is the number of edges in the graph divided by the maximum number of possible edges.';
         DENSITY_FUNCTION = 'density';
         DENSITY_AVERAGE = false;
         DENSITY_STRUCTURAL = false;
+        
+        CPL_WSG = 60;
+        CPL_WSG_NAME = 'char. path length (within subgraphs)';
+        CPL_WSG_NODAL = false;
+        CPL_WSG_DESCRIPTION = 'The characteristic path length of a graph is the average shortest path length in the graph. It is the average of the path length of all nodes in the graph. This measure is calculated within subgraphs.';
+        CPL_WSG_FUNCTION = 'pathlength_wsg';
+        CPL_WSG_AVERAGE = true;
+        CPL_WSG_STRUCTURAL = false;
+        
+        PL_WSG = 61;
+        PL_WSG_NAME = 'path length (within subgraphs)';
+        PL_WSG_NODAL = true;
+        PL_WSG_DESCRIPTION = 'For undirected graphs, the path length of a node is the average path length from the note to all other nodes. For directed graphs, it is the sum of the in-path length and of the out-path length. This measure is calculated within subgraphs.';
+        PL_WSG_FUNCTION = 'pathlength_wsg';
+        PL_WSG_AVERAGE = false;
+        PL_WSG_STRUCTURAL = false;
+        
+        IN_CPL_WSG = 62;
+        IN_CPL_WSG_NAME = 'char. path length (in, within subgraphs)';
+        IN_CPL_WSG_NODAL = false;
+        IN_CPL_WSG_DESCRIPTION = 'The characteristic in-path length of a graph is the average of the in-path length of all nodes in the graph. This measure is calculated within subgraphs.';
+        IN_CPL_WSG_FUNCTION = 'pathlength_wsg_in';
+        IN_CPL_WSG_AVERAGE = true;
+        IN_CPL_WSG_STRUCTURAL = false;
+        
+        IN_PL_WSG = 63;
+        IN_PL_WSG_NAME = 'path length (in, within subgraphs)';
+        IN_PL_WSG_NODAL = true;
+        IN_PL_WSG_DESCRIPTION = 'The in-path length of a node is the average path length from the node itself to all other nodes. This measure is calculated within subgraphs.';
+        IN_PL_WSG_FUNCTION = 'pathlength_wsg_in';
+        IN_PL_WSG_AVERAGE = false;
+        IN_PL_WSG_STRUCTURAL = false;
+        
+        OUT_CPL_WSG = 64;
+        OUT_CPL_WSG_NAME = 'char. path length (out, within subgraphs)';
+        OUT_CPL_WSG_NODAL = false;
+        OUT_CPL_WSG_DESCRIPTION = 'The characteristic out-path length of a graph is the average of the out-path length of all nodes in the graph. This measure is calculated within subgraphs.';
+        OUT_CPL_WSG_FUNCTION = 'pathlength_wsg_out';
+        OUT_CPL_WSG_AVERAGE = true;
+        OUT_CPL_WSG_STRUCTURAL = false;
+        
+        OUT_PL_WSG = 65;
+        OUT_PL_WSG_NAME = 'path length (out, within subgraphs)';
+        OUT_PL_WSG_NODAL = true;
+        OUT_PL_WSG_DESCRIPTION = 'The out-path length of a node is the average path length from all other nodes to the node itself. This measure is calculated within subgraphs.';
+        OUT_PL_WSG_FUNCTION = 'pathlength_wsg_out';
+        OUT_PL_WSG_AVERAGE = false;
+        OUT_PL_WSG_STRUCTURAL = false;
+        
+        CLOSENESS_WSG = 66;
+        CLOSENESS_WSG_NAME = 'closeness centrality (within subgraphs)';
+        CLOSENESS_WSG_NODAL = true;
+        CLOSENESS_WSG_DESCRIPTION = 'The closeness centrality of a node is the inverse of the average shortest path length from the node to all other nodes in the graph.';
+        CLOSENESS_WSG_FUNCTION = 'closeness_wsg';
+        CLOSENESS_WSG_AVERAGE = false;
+        CLOSENESS_WSG_STRUCTURAL = false;
+        
+        IN_CLOSENESS_WSG = 67;
+        IN_CLOSENESS_WSG_NAME = 'in-closeness centrality (within subgraphs)';
+        IN_CLOSENESS_WSG_NODAL = true;
+        IN_CLOSENESS_WSG_DESCRIPTION = 'The in-closeness centrality of a node is the inverse of the average shortest path length from the node to all other nodes in the graph.';
+        IN_CLOSENESS_WSG_FUNCTION = 'closeness_wsg_in';
+        IN_CLOSENESS_WSG_AVERAGE = false;
+        IN_CLOSENESS_WSG_STRUCTURAL = false;
+        
+        OUT_CLOSENESS_WSG = 68;
+        OUT_CLOSENESS_WSG_NAME = 'in-closeness centrality (within subgraphs)';
+        OUT_CLOSENESS_WSG_NODAL = true;
+        OUT_CLOSENESS_WSG_DESCRIPTION = 'The in-closeness centrality of a node is the inverse of the average shortest path length from all other nodes in the graph to the node.';
+        OUT_CLOSENESS_WSG_FUNCTION = 'closeness_wsg_out';
+        OUT_CLOSENESS_WSG_AVERAGE = false;
+        OUT_CLOSENESS_WSG_STRUCTURAL = false;
         
         % List of all measures
         MEASURES = {'DEGREE',...
@@ -738,10 +776,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             'OUT_GEFFNODE',...
             'LEFF',...
             'LEFFNODE',...
-            'IN_LEFF',...
-            'IN_LEFFNODE',...
-            'OUT_LEFF',...
-            'OUT_LEFFNODE',...
             'CLUSTER',...
             'CLUSTERNODE',...
             'MODULARITY',...
@@ -766,7 +800,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             'DIAMETER',...
             'IN_DIAMETER',...
             'OUT_DIAMETER',...
-            'CPL_WSG',...
             'IN_IN_ASSORTATIVITY',...
             'IN_OUT_ASSORTATIVITY',...
             'OUT_IN_ASSORTATIVITY',...
@@ -774,15 +807,24 @@ classdef Graph < handle & matlab.mixin.Copyable
             'SW',...
             'SW_WSG',...
             'DISTANCE',...
-            'DENSITY'};
+            'DENSITY',...
+            'CPL_WSG',...
+            'PL_WSG',...
+            'IN_CPL_WSG',...
+            'IN_PL_WSG',...
+            'OUT_CPL_WSG',...
+            'OUT_PL_WSG',...
+            'CLOSENESS_WSG',...
+            'IN_CLOSENESS_WSG',...
+            'OUT_CLOSENESS_WSG'};
         
     end
     properties (GetAccess = public, SetAccess = protected)
         A  % connection matrix
         P  % coefficient p-values
         S  % community structure
-        TYPE % Graph type
-        MS
+        TYPE % graph type
+        MS  % measures
     end
     properties (Access = protected)
         CS = struct('NAME', Graph.CS_NAME, 'DESCRIPTION', Graph.CS_DESCRIPTION,...
@@ -790,17 +832,6 @@ classdef Graph < handle & matlab.mixin.Copyable
         
         % N = nodenumber(g)
         N
-        
-        % Graph properties
-        % Weighted
-        weight
-        % Binary
-        bin
-        % Directed
-        dir
-        % Undirected
-        undir
-        
     end
     methods (Access = protected)
         function g = Graph(A,varargin)
@@ -840,10 +871,11 @@ classdef Graph < handle & matlab.mixin.Copyable
             end
         end
         function reset_structure_related_measures(g)
-            % RESET_STRUCTURE_RELATED_MEASURES resets z-score and participation
+            % RESET_STRUCTURE_RELATED_MEASURES resets z-score, participation and modularity
             %
-            % RESET_STRUCTURE_RELATED_MEASURES(G) resets all measures (z-score and
-            %   participation) related to the community structure of the graph G.
+            % RESET_STRUCTURE_RELATED_MEASURES(G) resets all measures
+            %   (z-score, participation, modularity) related to the 
+            %   community structure of the graph G.
             %
             % See also Graph.
             
@@ -872,39 +904,11 @@ classdef Graph < handle & matlab.mixin.Copyable
         randomize(g)  % randomize graph while preserving degree distribution
     end
     methods
-        function bool = weighted(g)
-            % WEIGHTED check if graph is weighted
-            %
-            % BOOL = WEIGHTED(G) checks if the graph G is weighted. If it's
-            % weighted the value of BOOL is true, otherwise false.
-            bool = g.weight;
-        end
-        function bool = binary(g)
-            % BINARY check if graph is binary
-            %
-            % BOOL = BINARY(G) checks if the graph G is binary. If it's
-            % binary the value of BOOL is true, otherwise false.
-            bool = g.bin;
-        end
-        function bool = directed(g)
-            % DIRECTED check if graph is directed
-            %
-            % BOOL = DIRECTED(G) checks if the graph G is directed. If it's
-            % directed the value of BOOL is true, otherwise false.
-            bool = g.dir;
-        end
-        function bool = undirected(g)
-            % UNDIRECTED check if graph is undirected
-            %
-            % BOOL = UNDIRECTED(G) checks if the graph G is undirected. If
-            % it's undirected the value of BOOL is true, otherwise false.
-            bool = g.undir;
-        end
         function add_measure_to_struct(g, m)
             % ADD_MEASURE_TO_STRUCT adds a measure to the measure struct of
             % a graph object
             %
-            % ADD_MEASURE_TO_STRUCT(G, M) adds the measure M to the cell 
+            % ADD_MEASURE_TO_STRUCT(G, M) adds the measure M to the cell
             % array MS of the graph object G
             
             appstr = ''''; % apostrophe is a special sign in matlab
@@ -917,7 +921,7 @@ classdef Graph < handle & matlab.mixin.Copyable
             value_field = sprintf('%sVALUE%s, Graph.DEFAULT_MEASURE_VALUE', appstr, appstr);
             average_field = sprintf('%sAVERAGE%s, Graph.%s_AVERAGE', appstr, appstr, m);
             structural_field = sprintf('%sSTRUCTURAL%s, Graph.%s_STRUCTURAL', appstr, appstr, m);
-           
+            
             struct_str = sprintf('struct(%s, %s, %s, %s, %s, %s, %s);', name_field,...
                 nodal_field, description_field, function_field, value_field,...
                 average_field, structural_field); % Struct str for eval
@@ -1511,6 +1515,43 @@ classdef Graph < handle & matlab.mixin.Copyable
                     B = max(A,transpose(A));
             end
         end
+        function [B,threshold] = binarize(A,varargin)
+            % BINARIZE binarizes a matrix
+            %
+            % [B,THRESHOLD] = BINARIZE(A) binarizes the matrix A by fixing either the
+            %   threshold (default, threshold=0) or the density (percent of connections).
+            %   It returns the binarized matrix B and the threshold THRESHOLD.
+            %
+            % [B,THRESHOLD] = BINARIZE(A,'PropertyName',PropertyValue) binarizes the
+            %   matrix A by using the property PropertyName specified by the PropertyValue.
+            %   Admissible properties are:
+            %       threshold   -   0 (default)
+            %       bins        -   -1:.001:1 (default)
+            %       density     -   percentage of connections
+            %       diagonal    -   'exclude' (default) | 'include'
+            %
+            % See also Graph, histogram.
+            
+            % Threshold and density
+            threshold = 0;
+            for n = 1:1:length(varargin)-1
+                if strcmpi(varargin{n},'threshold')
+                    threshold = varargin{n+1};
+                elseif strcmpi(varargin{n},'density')
+                    [~,bins,density] = Graph.histogram(A,varargin{:});
+                    threshold = bins(density<varargin{n+1});
+                    if isempty(threshold)
+                        threshold = 1;
+                    else
+                        threshold = threshold(1);
+                    end
+                end
+            end
+            
+            % Calculates binary graph
+            B = zeros(size(A));
+            B(A>threshold) = 1;
+        end
         function [count,bins,density] = histogram(A,varargin)
             % HISTOGRAM histogram of a matrix
             %
@@ -1554,43 +1595,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             end
             
             density = density*100;
-        end
-        function [B,threshold] = binarize(A,varargin)
-            % BINARIZE binarizes a matrix
-            %
-            % [B,THRESHOLD] = BINARIZE(A) binarizes the matrix A by fixing either the
-            %   threshold (default, threshold=0) or the density (percent of connections).
-            %   It returns the binarized matrix B and the threshold THRESHOLD.
-            %
-            % [B,THRESHOLD] = BINARIZE(A,'PropertyName',PropertyValue) binarizes the
-            %   matrix A by using the property PropertyName specified by the PropertyValue.
-            %   Admissible properties are:
-            %       threshold   -   0 (default)
-            %       bins        -   -1:.001:1 (default)
-            %       density     -   percentage of connections
-            %       diagonal    -   'exclude' (default) | 'include'
-            %
-            % See also Graph, histogram.
-            
-            % Threshold and density
-            threshold = 0;
-            for n = 1:1:length(varargin)-1
-                if strcmpi(varargin{n},'threshold')
-                    threshold = varargin{n+1};
-                elseif strcmpi(varargin{n},'density')
-                    [~,bins,density] = Graph.histogram(A,varargin{:});
-                    threshold = bins(density<varargin{n+1});
-                    if isempty(threshold)
-                        threshold = 1;
-                    else
-                        threshold = threshold(1);
-                    end
-                end
-            end
-            
-            % Calculates binary graph
-            B = zeros(size(A));
-            B(A>threshold) = 1;
         end
         function h = plotw(A,varargin)
             % PLOTW plots a weighted matrix
@@ -1801,23 +1805,23 @@ classdef Graph < handle & matlab.mixin.Copyable
                 h = [ht1 ht2];
             end
         end
-        function bool = isnodal(mi)
-            % ISNODAL checks if measure is nodal
+        function bool = is_nodal(mi)
+            % IS_NODAL checks if measure is nodal
             %
-            % BOOL = ISNODAL(MI) returns true if measure MI is nodal and false otherwise.
+            % BOOL = IS_NODAL(MI) returns true if measure MI is nodal and false otherwise.
             %
             % See also Graph, isglobal.
             
-            bool = Graph.NODAL(mi);
+            bool = eval(sprintf('Graph.%s_NODAL', Graph.MEASURES{mi}));
         end
-        function bool = isglobal(mi)
-            % ISGLOBAL checks if measure is global
+        function bool = is_global(mi)
+            % IS_GLOBAL checks if measure is global
             %
-            % BOOL = ISGLOBAL(MI) returns true if measure MI is global and false otherwise.
+            % BOOL = IS_GLOBAL(MI) returns true if measure MI is global and false otherwise.
             %
             % See also Graph, isnodal.
             
-            bool = ~Graph.isnodal(mi);
+            bool = ~is_nodal(mi);
         end
         function bool = is_directed(arg)
             % IS_DIRECTED checks if the graph type is directed
