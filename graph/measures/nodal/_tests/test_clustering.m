@@ -6,7 +6,7 @@ function [test_struct, test_func] = test_clustering(  )
 % http://braph.org/
 
 %% Initializations
-test_func = 'clustering';
+test_func = 'clustering_nodal';
 N = 5; % number of nodes
 
 %% Diagonal adjacency matrix
