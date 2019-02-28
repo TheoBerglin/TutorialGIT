@@ -71,4 +71,14 @@ A8 = [1 0 0 1 0;
 type8 = Graph.WD;
 exp_res8 = [0 2/12 0 3/12 0];
 test_struct(8) = get_test_struct(A8, type8, exp_res8, 'Weighted Directed 1');
+
+%% Test if bug exist
+A9 = [1 2 0 2 0;
+    2 1 4 1 0;
+    0 4 1 0 0;
+    2 1 0 1 4;
+    0 0 0 4 1];
+type9 = Graph.WU;
+exp_res9 = [2/5 5/8 0 5/8 0];
+test_struct(9) = get_test_struct(A9, type9, exp_res9, 'Weighted Undireced 2 (Bug test)');
 end
