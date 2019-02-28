@@ -74,10 +74,6 @@ classdef Graph < handle & matlab.mixin.Copyable
     %   OUT_GEFFNODE            -   out-global efficiency of a node
     %   LEFF                    -   local efficiency of a graph
     %   LEFFNODE                -   local efficiency of a node
-    %   IN_LEFF (not impl)      -   in-local efficiency of a graph
-    %   IN_LEFFNODE (not impl)  -   in-local efficiency of a node
-    %   OUT_LEFF (not impl)     -   out-local efficiency of a graph
-    %   OUT_LEFFNODE (not impl) -   out-local efficiency of a node
     %   CLUSTER                 -   clustering coefficient of a graph
     %   CLUSTERNODE             -   clustering coefficient around a node
     %   MODULARITY              -   modularity of a graph
@@ -424,39 +420,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         LEFFNODE_AVERAGE = false;
         LEFFNODE_STRUCTURAL = false;
         
-        IN_LEFF = 28;
-        IN_LEFF_NAME = 'local efficiency (in)';
-        IN_LEFF_NODAL = false;
-        IN_LEFF_DESCRIPTION = 'The in-local efficiency of a graph is the average of the in-local efficiencies of its nodes.';
-        IN_LEFF_FUNCTION = 'INPUT_FUNCTIONTION';
-        IN_LEFF_AVERAGE = false;
-        IN_LEFF_STRUCTURAL = false;
-        
-        IN_LEFFNODE = 29;
-        IN_LEFFNODE_NAME = 'local efficiency nodes (in)';
-        IN_LEFFNODE_NODAL = true;
-        IN_LEFFNODE_DESCRIPTION = 'The in-local efficiency of a node is the in-global efficiency of the node computed on the node''s neighborhood';
-        IN_LEFFNODE_FUNCTION = 'INPUT_FUNCTIONTION';
-        IN_LEFFNODE_AVERAGE = false;
-        IN_LEFFNODE_STRUCTURAL = false;
-        
-        OUT_LEFF = 30;
-        OUT_LEFF_NAME = 'local efficiency (out)';
-        OUT_LEFF_NODAL = false;
-        OUT_LEFF_DESCRIPTION = 'The out-local efficiency of a graph is the average of the out-local efficiencies of its nodes.';
-        OUT_LEFF_FUNCTION = 'INPUT_FUNCTIONTION';
-        OUT_LEFF_AVERAGE = false;
-        OUT_LEFF_STRUCTURAL = false;
-        
-        OUT_LEFFNODE = 31;
-        OUT_LEFFNODE_NAME = 'local efficiency nodes (out)';
-        OUT_LEFFNODE_NODAL = true;
-        OUT_LEFFNODE_DESCRIPTION = 'The out-local efficiency of a node is the out-global efficiency of the node computed on the node''s neighborhood';
-        OUT_LEFFNODE_FUNCTION = 'INPUT_FUNCTIONTION';
-        OUT_LEFFNODE_AVERAGE = false;
-        OUT_LEFFNODE_STRUCTURAL = false;
-        
-        CLUSTER = 32;
+        CLUSTER = 28;
         CLUSTER_NAME = 'clustering graph';
         CLUSTER_NODAL = false;
         CLUSTER_DESCRIPTION = 'The clustering coefficient of a graph is the average of the clustering coefficients of its nodes.';
@@ -464,7 +428,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         CLUSTER_AVERAGE = true;
         CLUSTER_STRUCTURAL = false;
         
-        CLUSTERNODE = 33;
+        CLUSTERNODE = 29;
         CLUSTERNODE_NAME = 'clustering nodes';
         CLUSTERNODE_NODAL = true;
         CLUSTERNODE_DESCRIPTION = 'The clustering coefficient is the fraction of triangles around a node. It is equivalent to the fraction of a node''s neighbors that are neighbors of each other.';
@@ -472,7 +436,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         CLUSTERNODE_AVERAGE = false;
         CLUSTERNODE_STRUCTURAL = false;
         
-        MODULARITY = 34;
+        MODULARITY = 30;
         MODULARITY_NAME = 'modularity';
         MODULARITY_NODAL = false;
         MODULARITY_DESCRIPTION = 'The modularity is a statistic that quantifies the degree to which the graph may be subdivided into such clearly delineated groups.';
@@ -480,7 +444,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         MODULARITY_AVERAGE = false;
         MODULARITY_STRUCTURAL = true;
         
-        BETWEENNESS = 35;
+        BETWEENNESS = 31;
         BETWEENNESS_NAME = 'betweenness centrality';
         BETWEENNESS_NODAL = true;
         BETWEENNESS_DESCRIPTION = 'Node betweenness centrality of a node is the fraction of all shortest paths in the graph that contain a given node. Nodes with high values of betweenness centrality participate in a large number of shortest paths.';
@@ -488,7 +452,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         BETWEENNESS_AVERAGE = false;
         BETWEENNESS_STRUCTURAL = false;
         
-        CLOSENESS = 36;
+        CLOSENESS = 32;
         CLOSENESS_NAME = 'closeness centrality';
         CLOSENESS_NODAL = true;
         CLOSENESS_DESCRIPTION = 'The closeness centrality of a node is the inverse of the average shortest path length from the node to all other nodes in the graph.';
@@ -496,7 +460,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         CLOSENESS_AVERAGE = false;
         CLOSENESS_STRUCTURAL = false;
         
-        IN_CLOSENESS = 37;
+        IN_CLOSENESS = 33;
         IN_CLOSENESS_NAME = 'in-closeness centrality';
         IN_CLOSENESS_NODAL = true;
         IN_CLOSENESS_DESCRIPTION = 'The in-closeness centrality of a node is the inverse of the average shortest path length from the node to all other nodes in the graph.';
@@ -504,7 +468,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_CLOSENESS_AVERAGE = false;
         IN_CLOSENESS_STRUCTURAL = false;
         
-        OUT_CLOSENESS = 38;
+        OUT_CLOSENESS = 34;
         OUT_CLOSENESS_NAME = 'in-closeness centrality';
         OUT_CLOSENESS_NODAL = true;
         OUT_CLOSENESS_DESCRIPTION = 'The in-closeness centrality of a node is the inverse of the average shortest path length from all other nodes in the graph to the node.';
@@ -512,7 +476,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_CLOSENESS_AVERAGE = false;
         OUT_CLOSENESS_STRUCTURAL = false;
         
-        ZSCORE = 39;
+        ZSCORE = 35;
         ZSCORE_NAME = 'within module degree z-score';
         ZSCORE_NODAL = true;
         ZSCORE_DESCRIPTION = 'The within-module degree z-score of a node is a within-module version of degree centrality. This measure requires a previously determined community structure.';
@@ -520,7 +484,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         ZSCORE_AVERAGE = false;
         ZSCORE_STRUCTURAL = true;
         
-        IN_ZSCORE = 40;
+        IN_ZSCORE = 36;
         IN_ZSCORE_NAME = 'within module degree in-z-score';
         IN_ZSCORE_NODAL = true;
         IN_ZSCORE_DESCRIPTION = 'The within-module degree in-z-score of a node is a within-module version of degree centrality. This measure requires a previously determined community structure.';
@@ -528,7 +492,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_ZSCORE_AVERAGE = false;
         IN_ZSCORE_STRUCTURAL = true;
         
-        OUT_ZSCORE = 41;
+        OUT_ZSCORE = 37;
         OUT_ZSCORE_NAME = 'within module degree out-z-score';
         OUT_ZSCORE_NODAL = true;
         OUT_ZSCORE_DESCRIPTION = 'The within-module degree out-z-score of a node is a within-module version of degree centrality. This measure requires a previously determined community structure.';
@@ -536,7 +500,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_ZSCORE_AVERAGE = false;
         OUT_ZSCORE_STRUCTURAL = true;
         
-        PARTICIPATION = 42;
+        PARTICIPATION = 38;
         PARTICIPATION_NAME = 'participation';
         PARTICIPATION_NODAL = true;
         PARTICIPATION_DESCRIPTION = 'The complementary participation coefficient assesses the diversity of intermodular interconnections of individual nodes. Nodes with a high within-module degree but with a low participation coefficient (known as provincial hubs) are hence likely to play an important part in the facilitation of modular segregation. On the other hand, nodes with a high participation coefficient (known as connector hubs) are likely to facilitate global intermodular integration.';
@@ -544,7 +508,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         PARTICIPATION_AVERAGE = false;
         PARTICIPATION_STRUCTURAL = true;
         
-        TRANSITIVITY = 43;
+        TRANSITIVITY = 39;
         TRANSITIVITY_NAME = 'transitivity';
         TRANSITIVITY_NODAL = false;
         TRANSITIVITY_DESCRIPTION = 'The transitivity is the ratio of triangles to triplets in the graph. It is an alternative to the graph clustering coefficient.';
@@ -552,7 +516,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         TRANSITIVITY_AVERAGE = false;
         TRANSITIVITY_STRUCTURAL = false;
         
-        ECCENTRICITY = 44;
+        ECCENTRICITY = 40;
         ECCENTRICITY_NAME = 'eccentricity';
         ECCENTRICITY_NODAL = true;
         ECCENTRICITY_DESCRIPTION = 'The node eccentricity is the maximal shortest path length between a node and any other node.';
@@ -560,7 +524,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         ECCENTRICITY_AVERAGE = false;
         ECCENTRICITY_STRUCTURAL = false;
         
-        ECCENTRICITYAV = 45;
+        ECCENTRICITYAV = 41;
         ECCENTRICITYAV_NAME = 'eccentricity';
         ECCENTRICITYAV_NODAL = false;
         ECCENTRICITYAV_DESCRIPTION = 'The average eccentricity is the average node eccentricy.';
@@ -568,7 +532,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         ECCENTRICITYAV_AVERAGE = true;
         ECCENTRICITYAV_STRUCTURAL = false;
         
-        IN_ECCENTRICITY = 46;
+        IN_ECCENTRICITY = 42;
         IN_ECCENTRICITY_NAME = 'in-eccentricity';
         IN_ECCENTRICITY_NODAL = true;
         IN_ECCENTRICITY_DESCRIPTION = 'In directed graphs, the node in-eccentricity is the maximal shortest path length from any nodes in the netwrok and a node.';
@@ -576,7 +540,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_ECCENTRICITY_AVERAGE = false;
         IN_ECCENTRICITY_STRUCTURAL = false;
         
-        IN_ECCENTRICITYAV = 47;
+        IN_ECCENTRICITYAV = 43;
         IN_ECCENTRICITYAV_NAME = 'av. in-eccentricity';
         IN_ECCENTRICITYAV_NODAL = false;
         IN_ECCENTRICITYAV_DESCRIPTION = 'In directed graphs, the average in-eccentricity is the average node in-eccentricy.';
@@ -584,7 +548,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_ECCENTRICITYAV_AVERAGE = true;
         IN_ECCENTRICITYAV_STRUCTURAL = false;
         
-        OUT_ECCENTRICITY = 48;
+        OUT_ECCENTRICITY = 44;
         OUT_ECCENTRICITY_NAME = 'out-eccentricity';
         OUT_ECCENTRICITY_NODAL = true;
         OUT_ECCENTRICITY_DESCRIPTION = 'In directed graphs, the node out-eccentricity is the maximal shortest path length from a node to all other nodes in the netwrok.';
@@ -592,7 +556,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_ECCENTRICITY_AVERAGE = false;
         OUT_ECCENTRICITY_STRUCTURAL = false;
         
-        OUT_ECCENTRICITYAV = 49;
+        OUT_ECCENTRICITYAV = 45;
         OUT_ECCENTRICITYAV_NAME = 'av. out-eccentricity';
         OUT_ECCENTRICITYAV_NODAL = false;
         OUT_ECCENTRICITYAV_DESCRIPTION = 'In directed graphs, the average out-eccentricity is the average node out-eccentricy.';
@@ -600,7 +564,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_ECCENTRICITYAV_AVERAGE = true;
         OUT_ECCENTRICITYAV_STRUCTURAL = false;
         
-        RADIUS = 50;
+        RADIUS = 46;
         RADIUS_NAME = 'radius';
         RADIUS_NODAL = false;
         RADIUS_DESCRIPTION = 'The radius is the minimum eccentricity.';
@@ -608,7 +572,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         RADIUS_AVERAGE = false;
         RADIUS_STRUCTURAL = false;
         
-        IN_RADIUS = 51;
+        IN_RADIUS = 47;
         IN_RADIUS_NAME = 'in-radius';
         IN_RADIUS_NODAL = false;
         IN_RADIUS_DESCRIPTION = 'The in-radius is the minimum in-eccentricity.';
@@ -616,7 +580,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_RADIUS_AVERAGE = false;
         IN_RADIUS_STRUCTURAL = false;
         
-        OUT_RADIUS = 52;
+        OUT_RADIUS = 48;
         OUT_RADIUS_NAME = 'out-radius';
         OUT_RADIUS_NODAL = false;
         OUT_RADIUS_DESCRIPTION = 'The out-radius is the minimum out-eccentricity.';
@@ -624,7 +588,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_RADIUS_AVERAGE = false;
         OUT_RADIUS_STRUCTURAL = false;
         
-        DIAMETER = 53;
+        DIAMETER = 49;
         DIAMETER_NAME = 'diameter';
         DIAMETER_NODAL = false;
         DIAMETER_DESCRIPTION = 'The diameter is the maximum eccentricity.'
@@ -632,7 +596,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         DIAMETER_AVERAGE = false;
         DIAMETER_STRUCTURAL = false;
         
-        IN_DIAMETER = 54;
+        IN_DIAMETER = 50;
         IN_DIAMETER_NAME = 'in-diameter';
         IN_DIAMETER_NODAL = false;
         IN_DIAMETER_DESCRIPTION = 'The in-diameter is the maximum in-eccentricity.'
@@ -640,7 +604,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_DIAMETER_AVERAGE = false;
         IN_DIAMETER_STRUCTURAL = false;
         
-        OUT_DIAMETER = 55;
+        OUT_DIAMETER = 51;
         OUT_DIAMETER_NAME = 'out-diameter';
         OUT_DIAMETER_NODAL = false;
         OUT_DIAMETER_DESCRIPTION = 'The out-diameter is the maximum out-eccentricity.'
@@ -648,7 +612,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_DIAMETER_AVERAGE = false;
         OUT_DIAMETER_STRUCTURAL = false;
         
-        IN_IN_ASSORTATIVITY = 56;
+        IN_IN_ASSORTATIVITY = 52;
         IN_IN_ASSORTATIVITY_NAME = 'in-in-assortativity';
         IN_IN_ASSORTATIVITY_NODAL = false;
         IN_IN_ASSORTATIVITY_DESCRIPTION = 'The assortativity coefficient is a correlation coefficient between the degrees/strengths of all nodes on two opposite ends of a link. A positive assortativity coefficient indicates that nodes tend to link to other nodes with the same or similar degree/strength.'
@@ -656,7 +620,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_IN_ASSORTATIVITY_AVERAGE = false;
         IN_IN_ASSORTATIVITY_STRUCTURAL = false;
         
-        IN_OUT_ASSORTATIVITY = 57;
+        IN_OUT_ASSORTATIVITY = 53;
         IN_OUT_ASSORTATIVITY_NAME = 'in-out-assortativity';
         IN_OUT_ASSORTATIVITY_NODAL = false;
         IN_OUT_ASSORTATIVITY_DESCRIPTION = 'The assortativity coefficient is a correlation coefficient between the degrees/strengths of all nodes on two opposite ends of a link. A positive assortativity coefficient indicates that nodes tend to link to other nodes with the same or similar degree/strength.'
@@ -664,7 +628,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_OUT_ASSORTATIVITY_AVERAGE = false;
         IN_OUT_ASSORTATIVITY_STRUCTURAL = false;
         
-        OUT_IN_ASSORTATIVITY = 58;
+        OUT_IN_ASSORTATIVITY = 54;
         OUT_IN_ASSORTATIVITY_NAME = 'out-in-assortativity';
         OUT_IN_ASSORTATIVITY_NODAL = false;
         OUT_IN_ASSORTATIVITY_DESCRIPTION = 'The assortativity coefficient is a correlation coefficient between the degrees/strengths of all nodes on two opposite ends of a link. A positive assortativity coefficient indicates that nodes tend to link to other nodes with the same or similar degree/strength.'
@@ -672,7 +636,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_IN_ASSORTATIVITY_AVERAGE = false;
         OUT_IN_ASSORTATIVITY_STRUCTURAL = false;
         
-        OUT_OUT_ASSORTATIVITY = 59;
+        OUT_OUT_ASSORTATIVITY = 55;
         OUT_OUT_ASSORTATIVITY_NAME = 'out-out-assortativity';
         OUT_OUT_ASSORTATIVITY_NODAL = false;
         OUT_OUT_ASSORTATIVITY_DESCRIPTION = 'The assortativity coefficient is a correlation coefficient between the degrees/strengths of all nodes on two opposite ends of a link. A positive assortativity coefficient indicates that nodes tend to link to other nodes with the same or similar degree/strength.'
@@ -680,7 +644,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_OUT_ASSORTATIVITY_AVERAGE = false;
         OUT_OUT_ASSORTATIVITY_STRUCTURAL = false;
         
-        SW = 60;
+        SW = 56;
         SW_NAME = 'small-worldness';
         SW_NODAL = false;
         SW_DESCRIPTION = 'Network small-worldness.'
@@ -688,7 +652,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         SW_AVERAGE = false;
         SW_STRUCTURAL = false;
         
-        SW_WSG = 61;
+        SW_WSG = 57;
         SW_WSG_NAME = 'small-worldness (within subgraphs)';
         SW_WSG_NODAL = false;
         SW_WSG_DESCRIPTION = 'Network small-worldness. This measure is calculated within subgraph'
@@ -696,7 +660,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         SW_WSG_AVERAGE = false;
         SW_WSG_STRUCTURAL = false;
         
-        DISTANCE = 62;
+        DISTANCE = 58;
         DISTANCE_NAME = 'distance';
         DISTANCE_NODAL = true;
         DISTANCE_DESCRIPTION = 'The distance from one node to another is the shortest path length between the two.';
@@ -704,7 +668,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         DISTANCE_AVERAGE = false;
         DISTANCE_STRUCTURAL = false;
         
-        DENSITY = 63;
+        DENSITY = 59;
         DENSITY_NAME = 'density';
         DENSITY_NODAL = true;
         DENSITY_DESCRIPTION = 'The density is the number of edges in the graph divided by the maximum number of possible edges.';
@@ -712,7 +676,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         DENSITY_AVERAGE = false;
         DENSITY_STRUCTURAL = false;
         
-        CPL_WSG = 64;
+        CPL_WSG = 60;
         CPL_WSG_NAME = 'char. path length (within subgraphs)';
         CPL_WSG_NODAL = false;
         CPL_WSG_DESCRIPTION = 'The characteristic path length of a graph is the average shortest path length in the graph. It is the average of the path length of all nodes in the graph. This measure is calculated within subgraphs.';
@@ -720,7 +684,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         CPL_WSG_AVERAGE = true;
         CPL_WSG_STRUCTURAL = false;
         
-        PL_WSG = 65;
+        PL_WSG = 61;
         PL_WSG_NAME = 'path length (within subgraphs)';
         PL_WSG_NODAL = true;
         PL_WSG_DESCRIPTION = 'For undirected graphs, the path length of a node is the average path length from the note to all other nodes. For directed graphs, it is the sum of the in-path length and of the out-path length. This measure is calculated within subgraphs.';
@@ -728,7 +692,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         PL_WSG_AVERAGE = false;
         PL_WSG_STRUCTURAL = false;
         
-        IN_CPL_WSG = 66;
+        IN_CPL_WSG = 62;
         IN_CPL_WSG_NAME = 'char. path length (in, within subgraphs)';
         IN_CPL_WSG_NODAL = false;
         IN_CPL_WSG_DESCRIPTION = 'The characteristic in-path length of a graph is the average of the in-path length of all nodes in the graph. This measure is calculated within subgraphs.';
@@ -736,7 +700,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_CPL_WSG_AVERAGE = true;
         IN_CPL_WSG_STRUCTURAL = false;
         
-        IN_PL_WSG = 67;
+        IN_PL_WSG = 63;
         IN_PL_WSG_NAME = 'path length (in, within subgraphs)';
         IN_PL_WSG_NODAL = true;
         IN_PL_WSG_DESCRIPTION = 'The in-path length of a node is the average path length from the node itself to all other nodes. This measure is calculated within subgraphs.';
@@ -744,7 +708,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_PL_WSG_AVERAGE = false;
         IN_PL_WSG_STRUCTURAL = false;
         
-        OUT_CPL_WSG = 68;
+        OUT_CPL_WSG = 64;
         OUT_CPL_WSG_NAME = 'char. path length (out, within subgraphs)';
         OUT_CPL_WSG_NODAL = false;
         OUT_CPL_WSG_DESCRIPTION = 'The characteristic out-path length of a graph is the average of the out-path length of all nodes in the graph. This measure is calculated within subgraphs.';
@@ -752,7 +716,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_CPL_WSG_AVERAGE = true;
         OUT_CPL_WSG_STRUCTURAL = false;
         
-        OUT_PL_WSG = 69;
+        OUT_PL_WSG = 65;
         OUT_PL_WSG_NAME = 'path length (out, within subgraphs)';
         OUT_PL_WSG_NODAL = true;
         OUT_PL_WSG_DESCRIPTION = 'The out-path length of a node is the average path length from all other nodes to the node itself. This measure is calculated within subgraphs.';
@@ -760,7 +724,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_PL_WSG_AVERAGE = false;
         OUT_PL_WSG_STRUCTURAL = false;
         
-        CLOSENESS_WSG = 70;
+        CLOSENESS_WSG = 66;
         CLOSENESS_WSG_NAME = 'closeness centrality (within subgraphs)';
         CLOSENESS_WSG_NODAL = true;
         CLOSENESS_WSG_DESCRIPTION = 'The closeness centrality of a node is the inverse of the average shortest path length from the node to all other nodes in the graph.';
@@ -768,7 +732,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         CLOSENESS_WSG_AVERAGE = false;
         CLOSENESS_WSG_STRUCTURAL = false;
         
-        IN_CLOSENESS_WSG = 71;
+        IN_CLOSENESS_WSG = 67;
         IN_CLOSENESS_WSG_NAME = 'in-closeness centrality (within subgraphs)';
         IN_CLOSENESS_WSG_NODAL = true;
         IN_CLOSENESS_WSG_DESCRIPTION = 'The in-closeness centrality of a node is the inverse of the average shortest path length from the node to all other nodes in the graph.';
@@ -776,7 +740,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         IN_CLOSENESS_WSG_AVERAGE = false;
         IN_CLOSENESS_WSG_STRUCTURAL = false;
         
-        OUT_CLOSENESS_WSG = 72;
+        OUT_CLOSENESS_WSG = 68;
         OUT_CLOSENESS_WSG_NAME = 'in-closeness centrality (within subgraphs)';
         OUT_CLOSENESS_WSG_NODAL = true;
         OUT_CLOSENESS_WSG_DESCRIPTION = 'The in-closeness centrality of a node is the inverse of the average shortest path length from all other nodes in the graph to the node.';
@@ -812,10 +776,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             'OUT_GEFFNODE',...
             'LEFF',...
             'LEFFNODE',...
-            'IN_LEFF',...
-            'IN_LEFFNODE',...
-            'OUT_LEFF',...
-            'OUT_LEFFNODE',...
             'CLUSTER',...
             'CLUSTERNODE',...
             'MODULARITY',...
