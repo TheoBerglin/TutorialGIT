@@ -116,6 +116,9 @@ classdef Graph < handle & matlab.mixin.Copyable
     %   IN_PL_WSG               -   in-path length of a node (within connected subgraphs)
     %   OUT_CPL_WSG             -   characteristic out-path length of a graph (within connected subgraphs)
     %   OUT_PL_WSG              -   out-path length of a node (within connected subgraphs)
+    %   CLOSENESS_WSG           -   closeness centrality of a node (within connected subgraphs)
+    %   IN_CLOSENESS_WSG        -   in-closeness centrality of a node (within connected subgraphs)
+    %   OUT_CLOSENESS_WSG       -   out-closeness centrality of a node (within connected subgraphs)
     %
     %   MEASURES     -   array of names of the measures
     %
@@ -757,6 +760,30 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_PL_WSG_AVERAGE = false;
         OUT_PL_WSG_STRUCTURAL = false;
         
+        CLOSENESS_WSG = 70;
+        CLOSENESS_WSG_NAME = 'closeness centrality (within subgraphs)';
+        CLOSENESS_WSG_NODAL = true;
+        CLOSENESS_WSG_DESCRIPTION = 'The closeness centrality of a node is the inverse of the average shortest path length from the node to all other nodes in the graph.';
+        CLOSENESS_WSG_FUNCTION = 'closeness_wsg';
+        CLOSENESS_WSG_AVERAGE = false;
+        CLOSENESS_WSG_STRUCTURAL = false;
+        
+        IN_CLOSENESS_WSG = 71;
+        IN_CLOSENESS_WSG_NAME = 'in-closeness centrality (within subgraphs)';
+        IN_CLOSENESS_WSG_NODAL = true;
+        IN_CLOSENESS_WSG_DESCRIPTION = 'The in-closeness centrality of a node is the inverse of the average shortest path length from the node to all other nodes in the graph.';
+        IN_CLOSENESS_WSG_FUNCTION = 'closeness_wsg_in';
+        IN_CLOSENESS_WSG_AVERAGE = false;
+        IN_CLOSENESS_WSG_STRUCTURAL = false;
+        
+        OUT_CLOSENESS_WSG = 72;
+        OUT_CLOSENESS_WSG_NAME = 'in-closeness centrality (within subgraphs)';
+        OUT_CLOSENESS_WSG_NODAL = true;
+        OUT_CLOSENESS_WSG_DESCRIPTION = 'The in-closeness centrality of a node is the inverse of the average shortest path length from all other nodes in the graph to the node.';
+        OUT_CLOSENESS_WSG_FUNCTION = 'closeness_wsg_out';
+        OUT_CLOSENESS_WSG_AVERAGE = false;
+        OUT_CLOSENESS_WSG_STRUCTURAL = false;
+        
         % List of all measures
         MEASURES = {'DEGREE',...
             'DEGREEAV',...
@@ -826,7 +853,10 @@ classdef Graph < handle & matlab.mixin.Copyable
             'IN_CPL_WSG',...
             'IN_PL_WSG',...
             'OUT_CPL_WSG',...
-            'OUT_PL_WSG'};
+            'OUT_PL_WSG',...
+            'CLOSENESS_WSG',...
+            'IN_CLOSENESS_WSG',...
+            'OUT_CLOSENESS_WSG'};
         
     end
     properties (GetAccess = public, SetAccess = protected)

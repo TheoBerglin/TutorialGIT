@@ -1,4 +1,4 @@
-function [test_struct, test_func] = test_closeness(  )
+function [test_struct, test_func] = test_closeness_wsg(  )
 %TEST_CLOSENESS Test suite for the closeness measure
 %
 % Authors: Adam Liberda, Theo Berglin
@@ -6,13 +6,13 @@ function [test_struct, test_func] = test_closeness(  )
 % http://braph.org/
 
 %% Initializations
-test_func = 'closeness';
+test_func = 'closeness_wsg';
 N = 5; % number of nodes
 
 %% Diagonal adjacency matrix
 A1 = eye(N);
 type11 = Graph.BD;
-exp_res1 = zeros(1, N);
+exp_res1 = nan(1, N);
 test_struct(1) = get_test_struct(A1, type11, exp_res1, 'Diagonal matrix Binary Directed');
 type12 = Graph.WU;
 test_struct(2) = get_test_struct(A1, type12, exp_res1, 'Diagonal matrix Weighted Undirected');
@@ -32,7 +32,7 @@ A3 = [1 1 1 1 0;
     1 0 1 1 0;
     0 0 0 0 1];
 type3 = Graph.BD;
-exp_res3 = zeros(1, N);
+exp_res3 = 1./[3/2 3/2 5/3 4/3 nan];
 test_struct(5) = get_test_struct(A3, type3, exp_res3, 'Binary Directed');
 
 %% Binary Undirected matrix
@@ -49,10 +49,10 @@ test_struct(6) = get_test_struct(A4, type4, exp_res4, 'Binary Undirected');
 A5 = [0 1/2 0 0 0;
     1/5 0 0 1/3 2;
     0 0 0 3/5 0;
-    1 0 0 0 0;
+    1 0 4/5 0 0;
     0 0 0 1/5 0];
 type5 = Graph.WD;
-exp_res5 = zeros(1, N);
+exp_res5 = 1./[353/96 353/96 193/48 281/96 443/96];
 test_struct(7) = get_test_struct(A5, type5, exp_res5, 'Weighted Directed');
 
 %% Weighted Undirected matrix

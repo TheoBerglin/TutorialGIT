@@ -12,7 +12,7 @@ N = 5; % number of nodes
 %% Diagonal adjacency matrix
 A1 = eye(N);
 type11 = Graph.BD;
-exp_res1 = nan(1, N);
+exp_res1 = zeros(1, N);
 test_struct(1) = get_test_struct(A1, type11, exp_res1, 'Diagonal matrix Binary Directed');
 type12 = Graph.WU;
 test_struct(2) = get_test_struct(A1, type12, exp_res1, 'Diagonal matrix Weighted Undirected');
@@ -26,13 +26,13 @@ type22 = Graph.WD;
 test_struct(4) = get_test_struct(A2, type22, exp_res2, 'Fully Connected Weighted Directed');
 
 %% Binary Directed matrix
-A3 = [1 1 0 0 0;
-    1 1 0 1 1;
-    0 0 1 1 1;
+A3 = [1 1 1 1 0;
+    0 1 0 1 0;
+    0 1 1 0 0;
     1 0 1 1 0;
-    0 0 0 1 1];
+    0 0 0 0 1];
 type3 = Graph.BD;
-exp_res3 = 1./[2 5/4 7/4 3/2 2];
+exp_res3 = zeros(1, N);
 test_struct(5) = get_test_struct(A3, type3, exp_res3, 'Binary Directed');
 
 %% Binary Undirected matrix
@@ -49,10 +49,10 @@ test_struct(6) = get_test_struct(A4, type4, exp_res4, 'Binary Undirected');
 A5 = [0 1/2 0 0 0;
     1/5 0 0 1/3 2;
     0 0 0 3/5 0;
-    1 0 4/5 0 0;
+    1 0 0 0 0;
     0 0 0 1/5 0];
 type5 = Graph.WD;
-exp_res5 = 1./[63/16 47/16 85/24 35/16 101/16];
+exp_res5 = [0 0 24/85 0 0];
 test_struct(7) = get_test_struct(A5, type5, exp_res5, 'Weighted Directed');
 
 %% Weighted Undirected matrix
