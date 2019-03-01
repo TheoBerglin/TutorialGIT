@@ -985,7 +985,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         function ga = nodeattack(g,nodes)
             % NODEATTACK removes given nodes from a graph
             %
-            % GA = NODEATTACK(G,NODES) creates the graph GA resulting by removing
+            % GA = NODEATTACK(G,NODES) creates the graph GA by removing
             %   the nodes specified by NODES from G.
             %
             % NODES are removed by setting all the connections from and to
