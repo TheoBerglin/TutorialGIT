@@ -11,7 +11,7 @@ for ex = 1:n_executes
     n_passed = 0;
     n_failed = 0;
     disp('--------------------------------------')
-    
+    clearvars failed_tests 
     executer_name = executers(ex).name;
     tmp = strsplit(executer_name, '.');
     executer_name = tmp{1};
