@@ -9,24 +9,29 @@ function test_struct = get_test_struct(connectivity, type, exp_result, name, var
 %       COMMUNITY_STRUCTURE - contains a community structure corresponding
 %                             to the connectivity matrix.
 %       NODES               - nodes to remove in case of nodeattack
-%       EDGES               - edges to remove in case of edgeattack
+%       NODES_FROM          - start node of edges to remove in case of edgeattack
+%       NODES_TO            - end node of edges to remove in case of edgeattack
 
 community_structure = [];
 nodes = [];
-edges = [];
+nodes_from = [];
+nodes_to = [];
 
 for n = 1:1:length(varargin)-1
     if strcmpi(varargin{n},'community_structure')
         community_structure = varargin{n+1};
     elseif strcmpi(varargin{n},'nodes')
         nodes = varargin{n+1};
-    elseif strcmpi(varargin{n},'edges')
-        edges = varargin{n+1};
+    elseif strcmpi(varargin{n},'nodes_from')
+        nodes_from = varargin{n+1};
+    elseif strcmpi(varargin{n},'nodes_to')
+        nodes_to = varargin{n+1};
     end
 end
 
 test_struct = struct('connectivity', connectivity, 'type', type, ...
     'exp_result', exp_result, 'name', name, 'community_structure',...
-    community_structure, 'nodes', nodes, 'edges', edges, 'passed', false);
+    community_structure, 'nodes', nodes, 'nodes_from', nodes_from,...
+    'nodes_to', nodes_to, 'passed', false);
 end
 

@@ -1005,8 +1005,8 @@ classdef Graph < handle & matlab.mixin.Copyable
         function ga = edgeattack(g,nodes1,nodes2)
             % EDGEATTACK removes given edges from a graph
             %
-            % GA = EDGEATTACK(G,NODES1,NODES2) creates the graph GA resulting
-            %   by removing the edges going from NODES1 to NODES2 from G.
+            % GA = EDGEATTACK(G,NODES1,NODES2) creates the graph GA by 
+            %   removing the edges going from NODES1 to NODES2 from G.
             %
             % EDGES are removed by setting all the connections from NODES1 to
             %   NODES2 in the connection matrix to 0.
