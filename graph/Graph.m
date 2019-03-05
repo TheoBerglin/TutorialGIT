@@ -394,7 +394,7 @@ classdef Graph < handle & matlab.mixin.Copyable
         CLUSTER_NAME = 'clustering graph';
         CLUSTER_NODAL = false;
         CLUSTER_DESCRIPTION = 'The clustering coefficient of a graph is the average of the clustering coefficients of its nodes.';
-        CLUSTER_FUNCTION = 'clustering_average';
+        CLUSTER_FUNCTION = 'clustering_global';
         CLUSTER_STRUCTURAL = false;
         
         CLUSTERNODE = 29;
