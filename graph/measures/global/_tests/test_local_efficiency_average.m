@@ -1,12 +1,12 @@
-function [test_struct, test_func] = test_local_efficiency_graph(  )
-%TEST_LOCAL_EFFICIENCY_GRAPH Test suite for the local efficiency-graph measure
+function [test_struct, test_func] = test_local_efficiency_average(  )
+%TEST_LOCAL_EFFICIENCY_AVERAGE Test suite for the average of the local efficiency measure
 %
 % Authors: Adam Liberda, Theo Berglin
 % Date: 2019/02/22
 % http://braph.org/
 
 %% Initializations
-test_func = 'local_efficiency_graph';
+test_func = 'local_efficiency_average';
 N = 5; % number of nodes
 
 %% Diagonal adjacency matrix
