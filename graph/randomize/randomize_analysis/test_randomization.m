@@ -2,8 +2,8 @@
 clear all, clc, close all;
 %% Settings
 test_func_1 = 'randomize_braph_BU'; % Ground truth function
-test_func_2 = 'randomize_braph_BU'; % New function
-A = load('dens_0.100_nodes_100_bin_undir.txt');
+test_func_2 = 'randm_giovanni_bu'; % New function
+A = load('dens_0.500_nodes_100_bin_undir.txt');
 matrix_tag = 'known'; % Could be used to load Ground truth distributions and good for saving
 n_randomizations = 100;
 type = Graph.BD; % Graph type for the global measures

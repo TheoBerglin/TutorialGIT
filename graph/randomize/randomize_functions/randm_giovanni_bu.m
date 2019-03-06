@@ -46,7 +46,7 @@ end
 
 % number of nodes
 N = length(A);
-
+A = remove_diagonal(A);
 % binary directed random matrix
 B = randm_giovanni_bd(A,I,error);
 
@@ -120,5 +120,5 @@ end
 
 % calculate number of miswired edges
 mw = sum(abs(sum(A)-sum(D)))/2;
-
+D = D + eye(size(A));
 end
