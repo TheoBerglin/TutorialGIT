@@ -1,9 +1,9 @@
 clear all, clc, close all
 %% Settings
-dens = 0.1; % Between 0 and 1.
+dens = 0.15; % Between 0 and 1.
 nodes = 100;
 s = nodes*nodes;
-type = Graph.BD;
+type = Graph.BU;
 directed = Graph.is_directed(type);
 binary = Graph.is_binary(type);
 %dens = dens+0.01; % To account for diagonal
