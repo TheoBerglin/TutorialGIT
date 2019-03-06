@@ -7,7 +7,7 @@ function [equal_dist, p_value] = kolmogorov_smirnov(d1, d2, alpha)
 % is 0.05. EQUAL_DIST = true if the data are from the same distribution.
 % p_value is the p-value of the Kolmogorov-Smirnov test.
 
-if length(varargin) == 2
+if ~exist('alpha','var')
     alpha = 0.05;
 end
 
