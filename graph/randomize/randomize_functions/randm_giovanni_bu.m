@@ -1,4 +1,4 @@
-function [D,mw] = randm_bu(A,I,error)
+function [D,mw] = randm_giovanni_bu(A,I,error)
 % RANDM_BU calculates a random binary undirected matrix
 %
 % B = RANDM_BU(A) calculates a random binary undirected matrix
@@ -48,7 +48,7 @@ end
 N = length(A);
 
 % binary directed random matrix
-B = randm_bd(A,I,error);
+B = randm_giovanni_bd(A,I,error);
 
 % matrix with the bi-directional edges
 % symmetric, i.e. D = transpose(D)

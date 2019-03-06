@@ -1,4 +1,4 @@
-function [B,mw] = randm_bd(A,I,error)
+function [B,mw] = randm_giovanni_bd(A,I,error)
 % RANDM_BD calculates a random binary directed matrix
 %
 % B = RANDM_BD(A) calculates a random binary directed matrix
