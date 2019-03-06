@@ -112,6 +112,8 @@ classdef Graph < handle & matlab.mixin.Copyable
     %   CLOSENESS_WSG           -   closeness centrality of a node (within connected subgraphs)
     %   IN_CLOSENESS_WSG        -   in-closeness centrality of a node (within connected subgraphs)
     %   OUT_CLOSENESS_WSG       -   out-closeness centrality of a node (within connected subgraphs)
+    %   IN_PARTICIPATION        -   in-participation
+    %   OUT_PARTICIPATION       -   out-participation
     %
     %   MEASURES     -   array of names of the measures
     %
@@ -677,6 +679,20 @@ classdef Graph < handle & matlab.mixin.Copyable
         OUT_CLOSENESS_WSG_FUNCTION = 'closeness_wsg_out';
         OUT_CLOSENESS_WSG_STRUCTURAL = false;
         
+        IN_PARTICIPATION = 69;
+        IN_PARTICIPATION_NAME = 'participation-in';
+        IN_PARTICIPATION_NODAL = true;
+        IN_PARTICIPATION_DESCRIPTION = 'The complementary participation coefficient assesses the diversity of intermodular interconnections of individual nodes. Nodes with a high within-module degree but with a low participation coefficient (known as provincial hubs) are hence likely to play an important part in the facilitation of modular segregation. On the other hand, nodes with a high participation coefficient (known as connector hubs) are likely to facilitate global intermodular integration.';
+        IN_PARTICIPATION_FUNCTION = 'participation_in';
+        IN_PARTICIPATION_STRUCTURAL = true;
+        
+        OUT_PARTICIPATION = 70;
+        OUT_PARTICIPATION_NAME = 'participation-out';
+        OUT_PARTICIPATION_NODAL = true;
+        OUT_PARTICIPATION_DESCRIPTION = 'The complementary participation coefficient assesses the diversity of intermodular interconnections of individual nodes. Nodes with a high within-module degree but with a low participation coefficient (known as provincial hubs) are hence likely to play an important part in the facilitation of modular segregation. On the other hand, nodes with a high participation coefficient (known as connector hubs) are likely to facilitate global intermodular integration.';
+        OUT_PARTICIPATION_FUNCTION = 'participation_out';
+        OUT_PARTICIPATION_STRUCTURAL = true;
+        
         % List of all measures
         MEASURES = {'DEGREE',...
             'DEGREEAV',...
@@ -745,7 +761,9 @@ classdef Graph < handle & matlab.mixin.Copyable
             'OUT_PL_WSG',...
             'CLOSENESS_WSG',...
             'IN_CLOSENESS_WSG',...
-            'OUT_CLOSENESS_WSG'};
+            'OUT_CLOSENESS_WSG',...
+            'IN_PARTICIPATION',...
+            'OUT_PARTICIPATION'};
         
     end
     properties (GetAccess = public, SetAccess = protected)
