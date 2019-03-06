@@ -4,7 +4,7 @@ clear all, clc, close all;
 test_func_1 = 'randomize_braph_BU'; % Ground truth function
 test_func_2 = 'randomize_braph_BU'; % New function
 A = load('dens_0.200_nodes_100_bin_undir.txt');
-matrix_tag = 'known_dens_0.200'; % Could be used to load Ground truth distributions and good for saving
+matrix_tag = 'known'; % Could be used to load Ground truth distributions and good for saving
 n_randomizations = 100;
 type = Graph.BD; % Graph type for the global measures
 %save_file_ending = '.mat';
@@ -23,7 +23,7 @@ addpath(save_path_1);
 save_path_2 = sprintf('%s%s%s', data_path, filesep, test_func_2); % data_path/function
 exist_create_dir(save_path_2);
 addpath(save_path_2);
-file_name = sprintf('%s_dens_%d.mat', matrix_tag, dens); % tag_density.mat
+file_name = sprintf('%s_dens_%.2f.mat', matrix_tag, dens); % tag_density.mat
 %% Save file variables
 save_file_1 = sprintf('%s%s%s', save_path_1, filesep, file_name); 
 save_file_2 = sprintf('%s%s%s', save_path_2, filesep, file_name);
