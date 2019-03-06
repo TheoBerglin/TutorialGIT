@@ -62,7 +62,7 @@ gm = struct();
 n_measures = size(measures,2);
 % Evaluate all measures
 for i = 1:n_measures
-   func = replace(measures{i}, '.m', '');
+   func = strrep(measures{i}, '.m', '');
    eval(sprintf('gm.%s = %s(A, type);', out_var{i}, func))
 end
 end

@@ -50,8 +50,3 @@ save(validation_file, 'valid', 'n_eq_dist', 'n_meas');
 fprintf('Number of equal distributions: %d\nTotalt tested distributions: %d\n', n_eq_dist, n_meas)
 disp('done')
 %% TODO: Add some validation analysis/print
-function exist_create_dir(d)
-if ~exist(d, 'dir')
-    mkdir(d)
-end
-end
