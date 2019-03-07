@@ -9,6 +9,7 @@ n_randomizations = 100;
 type = Graph.BD; % Graph type for the global measures
 %save_file_ending = '.mat';
 alpha = 0.05; %Confidence level Kolmogorov-Smirnov test
+load_gt = false; % Do we want to load ground truth or calculate new
 %% Data path
 current_loc = fileparts(which('test_randomization.m'));
 data_path = sprintf('%s%s%s', current_loc, filesep, 'data');
@@ -34,7 +35,7 @@ validation_name = sprintf('valid_%s_dens_%.2f_%s_%s.mat', matrix_tag, dens, test
 % otherwise
 validation_file = sprintf('%s%s%s', save_path_2, filesep, validation_name);
 %% Check if ground truth data available
-if exist(save_file_1, 'file') % Ground truth available
+if load_gt && exist(save_file_1, 'file') % Ground truth available
     d = load(save_file_1);
     gm_list_1 = d.gm_list_1;
 else % Ground truth doesn't exist
