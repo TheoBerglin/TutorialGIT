@@ -2,13 +2,14 @@ clear all, clc, close all
 densities = [0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 0.65 0.7];
 
 %% Settings
+nodes = 1000;
+s = nodes*nodes;
+type = Graph.WU;
+directed = Graph.is_directed(type);
+binary = Graph.is_binary(type);
+
 for i=1:length(densities)
     dens = densities(i); % Between 0 and 1.
-    nodes = 1000;
-    s = nodes*nodes;
-    type = Graph.WU;
-    directed = Graph.is_directed(type);
-    binary = Graph.is_binary(type);
     %dens = dens+0.01; % To account for diagonal
     %% Generate matrix
     indizes = randperm(s, round(s*dens));
