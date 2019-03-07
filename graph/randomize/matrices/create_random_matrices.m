@@ -18,7 +18,7 @@ if binary
 else
     % Add weights
     str_bin = 'wei';
-    W = rand(s);
+    W = rand(nodes);
     A = A.*W;
 end
 
