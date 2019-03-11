@@ -10,6 +10,7 @@ graph/oldTests/*
 % Ignore file
 unwanted_file.m
 *.asv
+graph/randomize/matrices/nodes_1000/*.txt
 
 % Disregard rules for some file
 
