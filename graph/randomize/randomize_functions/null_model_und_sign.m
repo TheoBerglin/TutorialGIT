@@ -133,8 +133,9 @@ for s=[1 -1]
     
     if wei_freq==1
         for m=numel(Wv):-1:1                                %iteratively explore all weights
-            [dum,Oind]=sort(P(Lij));                        %get indices of Lij that sort P
-            r=ceil(rand*m);
+			% Why sort then take random? Take only random from 1->m. Smallest weights wont be selected
+            [dum,Oind]=sort(P(Lij));                        %get indices of Lij that sort P 
+            r=ceil(rand*m); % Randi
             o=Oind(r);                                      %choose random index of sorted expected weight
             W0(Lij(o)) = s*Wv(r);                           %assign corresponding sorted weight at this index
             
@@ -146,9 +147,11 @@ for s=[1 -1]
             P(:,J(o)) = P(:,J(o))*f;
             
             S([I(o) J(o)]) = S([I(o) J(o)])-Wv(r);          %readjust strengths of nodes I(o) and J(o)
+			% Why change the probabilities but remove the indices?
             Lij(o)=[];                                      %remove current index from further consideration
             I(o)=[];
             J(o)=[];
+			
             Wv(r)=[];                                       %remove current weight from further consideration
         end
     else
