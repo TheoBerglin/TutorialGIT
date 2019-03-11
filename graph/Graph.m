@@ -1135,7 +1135,7 @@ classdef Graph < handle & matlab.mixin.Copyable
             n_perm = randperm(N);  % randomly permute order of nodes
             A = A(n_perm,n_perm);  % DB: use permuted matrix for subsequent analysis
             
-            if g.directed()
+            if g.is_directed(g)
                 Ki = sum(A,1);  % in-degree
                 Ko = sum(A,2);  % out-degree
                 m = sum(Ki);  % number of edges
@@ -1196,7 +1196,7 @@ classdef Graph < handle & matlab.mixin.Copyable
                 s = Ci(:,ones(1,N));  % compute modularity
                 Q =~ (s-s.').*B/(2*m);
                 
-            elseif g.undirected()
+            elseif g.is_undirected(g)
                 K = sum(A);  % degree
                 m = sum(K);  % number of edges (each undirected edge is counted twice)
                 B = A-gamma*(K.'*K)/m;  % modularity matrix
@@ -1289,7 +1289,7 @@ classdef Graph < handle & matlab.mixin.Copyable
             Q = 0;
             type = g.get_type();
             
-            if g.undirected()
+            if g.is_undirected(g)
                 
                 L = sum(sum(A(:)))/2; % sum of link weights (divide by 2 for undirected)
                 deg = degree(g.A, type);
@@ -1302,7 +1302,7 @@ classdef Graph < handle & matlab.mixin.Copyable
                 end
                 
                 
-            elseif g.directed()
+            elseif g.is_directed(g)
                 
                 L = sum(sum(A(:))); % sum of link weights
                 indeg = degree_in(g.A, type);
