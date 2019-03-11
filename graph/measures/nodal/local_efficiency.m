@@ -1,7 +1,7 @@
 function lenode = local_efficiency( A, type )
 % LENODE local efficiency of each node
 %
-% LENODE = LOCAL_EFFICIENCY_NODAL(A,TYPE) calculates the local efficiency
+% LENODE = LOCAL_EFFICIENCY(A,TYPE) calculates the local efficiency
 %   LENODE of each node in the graph represented by the adjacency matrix A.
 %   TYPE specifies the type of graph:
 %   Graph.BD = Binary Directed
