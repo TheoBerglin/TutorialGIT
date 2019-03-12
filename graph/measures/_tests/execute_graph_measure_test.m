@@ -3,8 +3,8 @@ function [passed, test_struct] = execute_graph_measure_test(test_name)
 %graph object measures
 
 %% Get test information
- eval(['[test_struct, test_func] = ' test_name '();'])
- 
+eval(['[test_struct, test_func] = ' test_name '();'])
+
 %% Perform tests
 tol = 1e-6;
 passed = true;
@@ -28,14 +28,29 @@ for i=1:length(test_struct)
     type = test_struct(i).type;
     g = [];
     exp_result = test_struct(i).exp_result;
-    if type == Graph.BD
-        g = GraphBD(connectivity_matrix);
-    elseif type == Graph.BU
-        g = GraphBU(connectivity_matrix);
-    elseif type == Graph.WU
-        g = GraphWU(connectivity_matrix);
-    elseif type == Graph.WD
-        g = GraphWD(connectivity_matrix);
+    cs = test_struct(i).community_structure;
+    
+    if isempty(cs)
+        if type == Graph.BD
+            g = GraphBD(connectivity_matrix);
+        elseif type == Graph.BU
+            g = GraphBU(connectivity_matrix);
+        elseif type == Graph.WU
+            g = GraphWU(connectivity_matrix);
+        elseif type == Graph.WD
+            g = GraphWD(connectivity_matrix);
+        end
+    else
+        structure = Structure('Ci', cs, 'algorithm', 'fixed');
+        if type == Graph.BD
+            g = GraphBD(connectivity_matrix,'structure', structure);
+        elseif type == Graph.BU
+            g = GraphBU(connectivity_matrix,'structure', structure);
+        elseif type == Graph.WU
+            g = GraphWU(connectivity_matrix,'structure', structure);
+        elseif type == Graph.WD
+            g = GraphWD(connectivity_matrix,'structure', structure);
+        end
     end
     
     if ~isempty(g)

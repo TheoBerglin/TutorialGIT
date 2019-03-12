@@ -1,5 +1,5 @@
-function [test_struct, test_func] = test_local_efficiency_nodal(  )
-%TEST_LOCAL_EFFICIENCY_NODAL Test suite for the local efficiency-nodal measure
+function [test_struct, test_func] = test_local_efficiency(  )
+%TEST_LOCAL_EFFICIENCY Test suite for the local efficiency measure
 %
 % Authors: Adam Liberda, Theo Berglin
 % Date: 2019/02/22

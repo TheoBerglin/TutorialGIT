@@ -27,4 +27,4 @@ function res = clustering_average( A, type)
 % Date: 2019/02/28
 % http://braph.org/
 
-res = mean(clustering(A, type));
+res = mean(clustering_nodal(A, type));
