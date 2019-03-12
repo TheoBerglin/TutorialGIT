@@ -1,4 +1,4 @@
-function [B,mw] = randm_giovanni_bd(A,I,error)
+function [B,ind_rm] = randm_giovanni_bd(A,I,error)
 % RANDM_BD calculates a random binary directed matrix
 %
 % B = RANDM_BD(A) calculates a random binary directed matrix
@@ -71,6 +71,8 @@ end
 
 % eliminate remaining miswired edges
 ind_mw = miswired();
+e_orig = find(A);
+ind_rm = e_orig(ind_mw);
 e(ind_mw) = 0;
 c(ind_mw) = 0;
 r(ind_mw) = 0;
