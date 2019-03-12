@@ -1,15 +1,15 @@
 %This file tests two randomization functions
 clear all, clc, close all;
 %% Settings
-test_func_1 = 'randomize_braph_BU'; % Ground truth function
-test_func_2 = 'randm_giovanni_bu'; % New function
-A = load('dens_0.500_nodes_100_bin_undir.txt');
+test_func_1 = 'null_model_dir_sign'; % Ground truth function
+test_func_2 = 'null_model_dir_sign_giovanni'; % New function
+A = load('dens_0.500_nodes_100_bin_dir.txt');
 matrix_tag = 'known'; % Could be used to load Ground truth distributions and good for saving
 n_randomizations = 100;
 type = Graph.BD; % Graph type for the global measures
 %save_file_ending = '.mat';
 alpha = 0.05; %Confidence level Kolmogorov-Smirnov test
-load_gt = false; % Do we want to load ground truth or calculate new
+load_gt = true; % Do we want to load ground truth or calculate new
 %% Data path
 current_loc = fileparts(which('test_randomization.m'));
 data_path = sprintf('%s%s%s', current_loc, filesep, 'data');

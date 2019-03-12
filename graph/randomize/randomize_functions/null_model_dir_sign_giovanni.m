@@ -96,15 +96,26 @@ An = W<0;                                               %negative adjacency matr
 
 if nnz(Ap)<(n*(n-1))                                    %if Ap is not full
     [W_r, rm_ind] = randm_giovanni_bd(W);
+    for i = 1 : length(rm_ind)
+        [rm_i, rm_j] = ind2sub(size(W),rm_ind(i));
+        
+        possible = find(W_r(:, rm_j) == 0);
+        tmp = randperm(length(possible), 1);
+        rm_i_new = possible(tmp);
+        W_r(rm_i_new, rm_j) = 1;
+        
+    end
     Ap_r = W_r>0;
     An_r = W_r<0;
 else
     Ap_r = Ap;
     An_r = An;
 end
-W(rm_ind) = 0;
-Ap(rm_ind) = 0;
-An(rm_ind) = 0;
+
+
+%W(rm_ind) = 0;
+%Ap(rm_ind) = 0;
+%An(rm_ind) = 0;
 toc
 tic
 W0=zeros(n);                                            %null model network
@@ -150,16 +161,16 @@ for s=[1 -1]
         for m=numel(Wv):-wei_period:1                   %iteratively explore at the given period
             [dum, Oind]=sort(P(Lij));                   %get indices of Lij that sort P
             R=randperm(m,min(m,wei_period)).';
-
+            
             O=Oind(R);                                  %choose random index of sorted expected weight
             W0(Lij(O)) = s*Wv(R);                       %assign corresponding sorted weight at this index
-
+            
             WAi = accumarray(I(O),Wv(R),[n,1]);
             Iu = any(WAi,2);
             F = 1 - WAi(Iu)./So(Iu);                    %readjust expected weight probabilities for node I(o)
             P(Iu,:) = P(Iu,:).*F(:,ones(1,n));          %[1 - Wv(r)/S(I(o)) = (S(I(o)) - Wv(r))/S(I(o))]
             So(Iu) = So(Iu) - WAi(Iu);                  %readjust in-strength of node I(o)
-
+            
             WAj = accumarray(J(O),Wv(R),[n,1]);
             Ju = any(WAj,2);
             F = 1 - WAj(Ju)./Si(Ju);                    %readjust expected weight probabilities for node J(o)
