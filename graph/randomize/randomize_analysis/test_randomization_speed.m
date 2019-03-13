@@ -1,8 +1,8 @@
 clear all, clc, close all
 %% Settings
-func = 'randomize_gio_bct_dir_sign';
+func = 'null_model_dir_sign';
 densities = [0.1, 0.2 0.3 0.4];
-sizes = [50 100 200 400 600 800 1000 2000];
+sizes = [50 100 200];% 600 800 1000 2000];
 n_randomizations = 100;
 dir = true;
 wei = false;
