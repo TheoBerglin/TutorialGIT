@@ -71,8 +71,6 @@ function [W0, R] = randomize_gio_bct_dir_sign(W,wei_freq)
 %             networks with negative weights (thanks to Andrew Zalesky).
 
 %#ok<*ASGLU>
-% disp('----------------- MOD --------------')
-% tic
 if ~exist('wei_freq','var')
     if nargin('randperm')==1
         wei_freq=1;
@@ -90,13 +88,12 @@ if wei_freq && wei_freq<1 && nargin('randperm')==1
 end
 
 n=size(W,1);                                            %number of nodes
-W(1:n+1:end)=0;                                         %clear diagonal
+W = remove_diagonal(W);                       			%clear diagonal
 Ap = W>0;                                               %positive adjacency matrix
 An = W<0;                                               %negative adjacency matrix
 
 if nnz(Ap)<(n*(n-1))                                    %if Ap is not full
     W_r = randm_giovanni_bd(W);
-  
     Ap_r = W_r>0;
     An_r = W_r<0;
 else
@@ -105,11 +102,6 @@ else
 end
 
 
-%W(rm_ind) = 0;
-%Ap(rm_ind) = 0;
-%An(rm_ind) = 0;
-% toc
-% tic
 W0=zeros(n);                                            %null model network
 for s=[1 -1]
     switch s                                            %switch sign (positive/negative)
@@ -157,7 +149,7 @@ for s=[1 -1]
             O=Oind(R);                                  %choose random index of sorted expected weight
             W0(Lij(O)) = s*Wv(R);                       %assign corresponding sorted weight at this index
             
-            WAi = accumarray(I(O),Wv(R),[n,1]);
+            WAi = accumarray(I(O),Wv(R),[n,1]);			
             Iu = any(WAi,2);
             F = 1 - WAi(Iu)./So(Iu);                    %readjust expected weight probabilities for node I(o)
             P(Iu,:) = P(Iu,:).*F(:,ones(1,n));          %[1 - Wv(r)/S(I(o)) = (S(I(o)) - Wv(r))/S(I(o))]
@@ -169,7 +161,6 @@ for s=[1 -1]
             P(:,Ju) = P(:,Ju).*F(:,ones(1,n)).';        %[1 - Wv(r)/S(J(o)) = (S(J(o)) - Wv(r))/S(J(o))]
             Si(Ju) = Si(Ju) - WAj(Ju);                  %readjust out-strength of node J(o)
             
-            O=Oind(R);
             Lij(O)=[];                                  %remove current index from further consideration
             I(O)=[];
             J(O)=[];
@@ -183,4 +174,4 @@ rpos_ou=corrcoef(sum( W.*(W>0),2), sum( W0.*(W0>0),2) );
 rneg_in=corrcoef(sum(-W.*(W<0),1), sum(-W0.*(W0<0),1) );
 rneg_ou=corrcoef(sum(-W.*(W<0),2), sum(-W0.*(W0<0),2) );
 R=[rpos_in(2) rpos_ou(2) rneg_in(2) rneg_ou(2)];
-% toc
+end

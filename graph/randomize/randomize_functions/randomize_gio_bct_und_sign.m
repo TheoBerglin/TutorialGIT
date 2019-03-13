@@ -174,8 +174,8 @@ for s=[1 -1]
             Lij(O)=[];                                     
             I(O)=[];
             J(O)=[];
-			%remove current weight from further consideration
-            Wv(R)=[];                                       
+			
+            Wv(R)=[]; 										%remove current weight from further consideration                                      
 			end
     end
 end
