@@ -77,6 +77,7 @@ function [W0,R] = randomize_gio_bct_und_sign(W,wei_freq)
 %   Sep 2012: Edge-sorting acceleration
 %   Dec 2015: Enforce preservation of negative degrees in sparse
 %             networks with negative weights (thanks to Andrew Zalesky).
+%	Mar 2019: New rewiring algorithm (Theo Berglin, Adam Liberda, Giovanni Volpe)
 
 %#ok<*ASGLU>
 
@@ -100,15 +101,12 @@ if wei_freq && wei_freq<1 && nargin('randperm')==1
 end
 
 n=size(W,1);                                                %number of nodes
-%W(1:n+1:end)=0;                                             %clear diagonal
 W = remove_diagonal(W);
 Ap = W>0;                                                   %positive adjacency matrix
 An = W<0;                                                   %negative adjacency matrix
 
-if nnz(Ap)<(n*(n-1))                                        %if Ap is not full
-    %W_r = randmio_und(W, bin_swaps);
+if nnz(W)<(n*(n-1))                                        %If not fully connected
     [W_r, rm_ind]  = randm_giovanni_bu(W);
-    %W_r = remove_diagonal(W_r);
     Ap_r = W_r>0;
     An_r = W_r<0;
 else
@@ -116,7 +114,6 @@ else
     An_r = An;
 end
 
-%fprintf('Before: %.2f After: %.2f\n', mean(degree(W, Graph.BU)), mean(degree(W_r, Graph.BU)))
 W0=zeros(n);                                                %null model network
 for s=[1 -1]
     switch s                                                %switch sign (positive/negative)
@@ -134,7 +131,7 @@ for s=[1 -1]
     
     P=(S*S.');                                              %expected weights matrix
     
-    if wei_freq==1
+    if wei_freq==1 %
         for m=numel(Wv):-1:1                                %iteratively explore all weights
 			% Why sort then take random? Take only random from 1->m. Smallest weights wont be selected
             [dum,Oind]=sort(P(Lij));                        %get indices of Lij that sort P 
@@ -161,8 +158,8 @@ for s=[1 -1]
         wei_period = round(1/wei_freq);                     %convert frequency to period
         for m=numel(Wv):-wei_period:1                       %iteratively explore at the given period
             [dum,Oind]=sort(P(Lij));                        %get indices of Lij that sort P
-            R=randperm(m,min(m,wei_period)).';
-            O = Oind(R);
+            R=randperm(m,min(m,wei_period)).'; 				%extract at maximum wei_period number of random numbers
+            O = Oind(R); 									%extract at maximum wei_period number of random indices
             W0(Lij(O)) = s*Wv(R);                           %assign corresponding sorted weight at this index
             
             WA = accumarray([I(O);J(O)],Wv([R;R]),[n,1]);   %cumulative weight
@@ -173,17 +170,17 @@ for s=[1 -1]
             P(:,IJu) = P(:,IJu).*F.';
             S(IJu) = S(IJu)-WA(IJu);                      	%re-adjust strengths of nodes I(o) and J(o)
             
-            O=Oind(R);
-            Lij(O)=[];                                      %remove current index from further consideration
+			%remove current index from further consideration
+            Lij(O)=[];                                     
             I(O)=[];
             J(O)=[];
-            Wv(R)=[];                                       %remove current weight from further consideration
-        end
+			%remove current weight from further consideration
+            Wv(R)=[];                                       
+			end
     end
 end
 W0=W0+W0.';
 
-%fprintf('Before strength: %.2f After strength fix: %.2f\n', mean(degree(W_r, Graph.BU)), mean(degree(W0, Graph.BU)))
 rpos=corrcoef(sum( W.*(W>0)),sum( W0.*(W0>0)));
 rneg=corrcoef(sum(-W.*(W<0)),sum(-W0.*(W0<0)));
 R=[rpos(2) rneg(2)];
