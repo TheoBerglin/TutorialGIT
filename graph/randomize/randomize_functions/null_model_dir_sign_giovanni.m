@@ -71,8 +71,8 @@ function [W0, R] = null_model_dir_sign_giovanni(W,wei_freq)
 %             networks with negative weights (thanks to Andrew Zalesky).
 
 %#ok<*ASGLU>
-disp('----------------- MOD --------------')
-tic
+% disp('----------------- MOD --------------')
+% tic
 if ~exist('wei_freq','var')
     if nargin('randperm')==1
         wei_freq=1;
@@ -95,16 +95,8 @@ Ap = W>0;                                               %positive adjacency matr
 An = W<0;                                               %negative adjacency matrix
 
 if nnz(Ap)<(n*(n-1))                                    %if Ap is not full
-    [W_r, rm_ind] = randm_giovanni_bd(W);
-    for i = 1 : length(rm_ind)
-        [rm_i, rm_j] = ind2sub(size(W),rm_ind(i));
-        
-        possible = find(W_r(:, rm_j) == 0);
-        tmp = randperm(length(possible), 1);
-        rm_i_new = possible(tmp);
-        W_r(rm_i_new, rm_j) = 1;
-        
-    end
+    W_r = randm_giovanni_bd(W);
+  
     Ap_r = W_r>0;
     An_r = W_r<0;
 else
@@ -116,8 +108,8 @@ end
 %W(rm_ind) = 0;
 %Ap(rm_ind) = 0;
 %An(rm_ind) = 0;
-toc
-tic
+% toc
+% tic
 W0=zeros(n);                                            %null model network
 for s=[1 -1]
     switch s                                            %switch sign (positive/negative)
@@ -191,4 +183,4 @@ rpos_ou=corrcoef(sum( W.*(W>0),2), sum( W0.*(W0>0),2) );
 rneg_in=corrcoef(sum(-W.*(W<0),1), sum(-W0.*(W0<0),1) );
 rneg_ou=corrcoef(sum(-W.*(W<0),2), sum(-W0.*(W0<0),2) );
 R=[rpos_in(2) rpos_ou(2) rneg_in(2) rneg_ou(2)];
-toc
+% toc
