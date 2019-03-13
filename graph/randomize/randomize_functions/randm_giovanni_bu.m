@@ -44,11 +44,31 @@ if nargin<3 || isempty(error)
     error = 1e-4;
 end
 
+% check squareness
+if ~isequal(size(A,1), size(A,2))
+    error('Input matrix needs to be square');
+end
+
+% check binarism
+if ~all(all(A == 0 | A == 1))
+    error('Input matrix is not binary');
+end
+
 % number of nodes
 N = length(A);
-A = remove_diagonal(A);
+
+% check for self-connections and remove these if they exist
+if ~all(A(1:N+1:end) == 0)
+    A = remove_diagonal(A);
+end
+
+% check for symmetry
+if ~isequal(A, A.')
+    error('Input matrix is not symmetric');
+end
+
 % binary directed random matrix
-[B, mw213] = randm_giovanni_bd(A,I,error);
+B = randm_giovanni_bd(A,I,error);
 
 % matrix with the bi-directional edges
 % symmetric, i.e. D = transpose(D)
@@ -120,5 +140,4 @@ end
 
 % calculate number of miswired edges
 mw = sum(abs(sum(A)-sum(D)))/2;
-D = D;% + eye(size(A));
 end
