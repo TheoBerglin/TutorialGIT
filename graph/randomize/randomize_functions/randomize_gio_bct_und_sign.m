@@ -1,4 +1,4 @@
-function [W0,R] = null_model_und_sign_combo_gio(W,bin_swaps,wei_freq)
+function [W0,R] = randomize_gio_bct_und_sign(W,wei_freq)
 %NULL_MODEL_UND_SIGN     Random graphs with preserved weight, degree and
 %                        strength distributions
 %

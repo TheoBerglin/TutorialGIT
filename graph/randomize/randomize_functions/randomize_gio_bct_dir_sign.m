@@ -1,4 +1,4 @@
-function [W0, R] = null_model_dir_sign_giovanni(W,wei_freq)
+function [W0, R] = randomize_gio_bct_dir_sign(W,wei_freq)
 %NULL_MODEL_DIR_SIGN     Directed random graphs with preserved weight,
 %                        degree and strength distributions
 %
