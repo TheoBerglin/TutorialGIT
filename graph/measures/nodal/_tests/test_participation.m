@@ -41,8 +41,7 @@ A3 = [1 1 0 0 0;
     1 1 1 1 1];
 
 type3 = Graph.BD;
-g3 = GraphBD(A3);
-struc3 = g3.get_community_structure();
+struc3 = [1 1 2 2 2];
 exp_res3 = [0.375000000000000   0.500000000000000   0.320000000000000   0.277777777777778   0.408163265306122];
 test_struct(5) = get_test_struct(A3, type3, exp_res3, 'Binary Directed', 'community_structure', struc3);
 
@@ -53,8 +52,7 @@ A4 = [1 1 0 0 1;
     0 1 1 1 1;
     1 0 0 1 0];
 type4 = Graph.BU;
-g4 = GraphBU(A4);
-struc4 = g4.get_community_structure();
+struc4 = [1 2 2 2 1];
 exp_res4 = [4/9 3/8 0 3/8 1/2];
 test_struct(6) = get_test_struct(A4, type4, exp_res4, 'Binary Undirected', 'community_structure', struc4);
 
