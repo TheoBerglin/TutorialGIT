@@ -1,11 +1,11 @@
 %This file tests two randomization functions
 clear all, clc, close all;
 %% Settings
-test_func_1 = 'randomize_bct_D'; % Ground truth function
-test_func_2 = 'randomize_bct_D'; % New function
+test_func_1 = 'randomize_bct_U'; % Ground truth function
+test_func_2 = 'randomize_bct_U'; % New function
 densities = [0.010 0.020 0.030 0.040 0.050 0.060 0.070 0.080 0.090 0.100 0.150 0.200 0.300];
 nodes = 100;
-type = Graph.BD; % Graph type for the global measures
+type = Graph.BU; % Graph type for the global measures
 load_matrix = true;  % whether to load existing matrix or create a new
 matrix_tag = 'known'; % Could be used to load Ground truth distributions and good for saving
 n_randomizations = 100;
