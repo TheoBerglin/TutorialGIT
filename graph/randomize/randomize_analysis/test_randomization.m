@@ -1,35 +1,39 @@
 %This file tests two randomization functions
 clear all, clc, close all;
 %% Settings
-test_func_1 = 'null_model_dir_sign'; % Ground truth function
-test_func_2 = 'null_model_dir_sign'; % New function
-density = 0.300;
+test_func_1 = 'randomize_bct_D'; % Ground truth function
+test_func_2 = 'randomize_bct_D'; % New function
+dens = 0.300;
 nodes = 100;
-type_bin = 'bin';  % binary or weighted: bin/wei
-type_dir = 'dir';  % directed or undirected: dir/undir
-load_matrix = false;  % whether to load existing matrix or create a new
-
-if load_matrix
-    load_file = sprintf('dens_%s_nodes_%d_%s_%s.txt', num2str(density, '%.3f'), nodes, type_bin, type_dir);
-    A = load(load_file);
-else
-    wei = true;
-    dir = true;
-    if isequal(type_bin, 'bin')
-        wei = false;
-    end
-    if isequal(type_dir, 'undir')
-        dir = false;
-    end
-    A = create_matrix(density, nodes, dir, wei);
-end
-    
+type = Graph.BD; % Graph type for the global measures
+load_matrix = false;  % whether to load existing matrix or create a new    
 matrix_tag = 'known'; % Could be used to load Ground truth distributions and good for saving
 n_randomizations = 100;
-type = Graph.BD; % Graph type for the global measures
 %save_file_ending = '.mat';
 alpha = 0.05; %Confidence level Kolmogorov-Smirnov test
 load_gt = true; % Do we want to load ground truth or calculate new
+
+if Graph.is_binary(type)
+    type_bin = 'bin';
+    wei = false;
+else
+    type_bin = 'wei';
+    wei = true;
+end
+if Graph.is_directed(type)
+    type_dir = 'dir';
+    dir = true;
+else
+    type_dir = 'undir';
+    dir = false;
+end
+
+if load_matrix
+    load_file = sprintf('dens_%s_nodes_%d_%s_%s.txt', num2str(dens, '%.3f'), nodes, type_bin, type_dir);
+    A = load(load_file);
+else
+    A = create_matrix(dens, nodes, dir, wei);
+end
 
 %% Data path
 current_loc = fileparts(which('test_randomization.m'));
