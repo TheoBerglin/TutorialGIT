@@ -1,4 +1,4 @@
-function [W0,R] = null_model_und_sign(W,bin_swaps,wei_freq)
+function [W0,R] = randomize_bct_U(W,bin_swaps,wei_freq)
 %NULL_MODEL_UND_SIGN     Random graphs with preserved weight, degree and
 %                        strength distributions
 %
