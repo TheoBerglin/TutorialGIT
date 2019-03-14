@@ -13,6 +13,8 @@ for i = 1:n_meas
     % Data to compare
     d1 = extractfield(gm_list_1, field);
     d2 = extractfield(gm_list_2, field);
+    d1(isnan(d1)) =0;
+    d2(isnan(d2)) =0;
     % Run Kolmogorov-Smirnov test
     [equal_dist, p_value] = kolmogorov_smirnov(d1, d2, alpha);
     valid.(field) = struct('equal', equal_dist, 'pvalue', p_value);  

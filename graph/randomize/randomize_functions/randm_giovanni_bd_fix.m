@@ -1,4 +1,4 @@
-function B = randm_giovanni_bd_no_fix(A,I,error)
+function B = randm_giovanni_bd_fix(A,I,error)
 % RANDM_GIOVANNI_BD calculates a random binary directed matrix
 %
 % B = RANDM_BD(A) calculates a random binary directed matrix
@@ -89,17 +89,9 @@ end
 
 % find remaining miswired edges and their lin. index in A
 ind_mw = miswired();
-%ind_rm = e_orig(ind_mw);
-ind_mw = miswired();
-e(ind_mw) = 0;
-c(ind_mw) = 0;
-r(ind_mw) = 0;
+ind_rm = e_orig(ind_mw);
 
-ind = find(e~=0);
-e = e(ind);
-c = c(ind);
-r = r(ind);
-%random_rewiring(ind_rm)
+random_rewiring(ind_rm)
 
 
     function permutation(ind)

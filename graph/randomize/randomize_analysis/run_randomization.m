@@ -5,13 +5,13 @@ function gm_list = run_randomization(A, type, randomize_function, n_randomizatio
 % N_RANDOMIZATIONS as input.
 % Returns a struct of global measures GM_LIST
 
-gm = calculate_global_measures(zeros(5), type); % For initialization of gm_list
+gm = calculate_global_measures(zeros(5), zeros(5), type); % For initialization of gm_list
 gm_list = repmat(gm, 1, n_randomizations); % Initialization
 
 % Lets run randomization
 for i = 1:n_randomizations
     eval(sprintf('rA = %s(A);', randomize_function));
-    gm = calculate_global_measures(rA, type);
+    gm = calculate_global_measures(rA, A, type);
     gm_list(i) = gm;
 end
 
