@@ -68,7 +68,7 @@ if ~isequal(A, A.')
 end
 
 % binary directed random matrix
-B = randm_giovanni_bd_no_fix(A,I,error);
+B = randm_giovanni_bd(A,I,error);
 
 % matrix with the bi-directional edges
 % symmetric, i.e. D = transpose(D)
