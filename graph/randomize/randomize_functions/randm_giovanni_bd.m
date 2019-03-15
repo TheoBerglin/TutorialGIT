@@ -1,4 +1,4 @@
-function B = randm_giovanni_bd_no_fix(A,I,error)
+function B = randm_giovanni_bd(A,I,error)
 % RANDM_GIOVANNI_BD calculates a random binary directed matrix
 %
 % B = RANDM_BD(A) calculates a random binary directed matrix
@@ -63,7 +63,6 @@ end
 
 % find edge indexes
 e = find(A); % e = (c-1)*N+r
-e_orig = e;
 
 % find column (incoming) and row (outgoing) indexes of the edges
 c = floor((e-1)/N)+1;
@@ -89,8 +88,6 @@ end
 
 % find remaining miswired edges and their lin. index in A
 ind_mw = miswired();
-%ind_rm = e_orig(ind_mw);
-ind_mw = miswired();
 e(ind_mw) = 0;
 c(ind_mw) = 0;
 r(ind_mw) = 0;
@@ -99,8 +96,6 @@ ind = find(e~=0);
 e = e(ind);
 c = c(ind);
 r = r(ind);
-%random_rewiring(ind_rm)
-
 
     function permutation(ind)
         % permutes the edges with indices ind
@@ -133,26 +128,6 @@ r = r(ind);
         % add a random edge in order to prevent the optimization from getting stuck
         if ~isempty(ind_mw)
             ind_mw = unique([ind_mw; randi(E)]);
-        end
-    end
-
-    function random_rewiring(ind)
-        % rewires the row (out-going) index of the edges specified by ind 
-        % to a randomly chosen available row (node). 
-        
-        % this random rewiring doesn't work for dense matrices, since it looks for
-        % nodes that doesn't have an edge to the node in question, and in dense
-        % matrices a node can have an in-degree equal to N-1, hence no available nodes.
-        for i = 1 : length(ind)
-            [~, rm_col] = ind2sub(size(A),ind(i));  % find old row and col of miswired edge
-            occupied = r(c == rm_col);  % find occupied rows that connect to col
-            possible = setdiff(1:1:N, occupied);  % get possible out-nodes
-            rm_row_new = rm_col;
-            while isequal(rm_row_new, rm_col)  % to not create a self-connection
-                idx = randperm(length(possible), 1);  % pick one index
-                rm_row_new = possible(idx);  % get new row index
-            end
-            r(ind_mw(i)) = rm_row_new;  % update the miswired row to the new one
         end
     end
 

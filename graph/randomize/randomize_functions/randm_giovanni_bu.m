@@ -1,4 +1,4 @@
-function [D,mw] = randm_giovanni_bu_no_fix(A,I,error)
+function [D,mw] = randm_giovanni_bu(A,I,error)
 % RANDM_BU calculates a random binary undirected matrix
 %
 % B = RANDM_BU(A) calculates a random binary undirected matrix
