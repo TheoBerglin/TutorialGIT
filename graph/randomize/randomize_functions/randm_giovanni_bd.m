@@ -1,37 +1,35 @@
 function B = randm_giovanni_bd(A,I,error)
 % RANDM_GIOVANNI_BD calculates a random binary directed matrix
 %
-% B = RANDM_BD(A) calculates a random binary directed matrix
+% B = RANDM_GIOVANNI_BD(A) calculates a random binary directed matrix
 %   preserving the indegree and outdegree of each node.
 %   Therefore, also the indegree and outdegree distributions are preserved.
-%
+%   
 % B = RANDM_BD(A,I,ERROR) permits one to set
-%   the maximum number of iterations I (default I=100) and
-%   the maximum fraction of miswired edges ERROR (default ERROR = 1e-4,
+%   the maximum number of iterations I (default I=100) and 
+%   the maximum fraction of miswired edges ERROR (default ERROR = 1e-4, 
 %   i.e. at most one edge out of 10000 is miswired).
+%   MW is the number of miswired edges that are eliminated.
 %
 % Conditions on the input connectivity matrix A:
 %   (1) A is square
 %   (2) A(r,c) = 0 or 1 (binary)
 %   (3) A(r,r) = 0 (no self-connection)
+%   These conditions are NOT enforced or checked.
 %
 % Notes on the algorithm:
 %   Almost all edges are rewired at once. This implies that some edges
-%   might be miswired because (1) they are self-connections
-%   or (2) they are duplicated.
+%   might be miswired because (1) they are self-connections 
+%   or (2) they are duplicated. 
 %   The algorithm iteratively rewires these miswired edges
 %   until the maximum number of iterations (I) or the acceptable maximum
-%   fraction of miswired edges (number of edges * ERROR) is reached.
-%   At the end, the miswired edges are randomly rewired to a available node.
+%   fraction of miswired edges (number of edges * ERROR) is reached.  
+%   At the end, the miswired edges are eliminated.
 %
 % See also randm_bu, randm_wd, randm_wu.
 
-% Version 1:
-%   - Author: Giovanni Volpe
-%   - Date: 2016/04/01
-% Version 2:
-%   - Authors: Adam Liberda, Theo Berglin
-%   - Date: 2019/03/13
+% Author: Giovanni Volpe
+% Date: 2016/04/01
 
 % maximum number of iterations
 if nargin<2 || isempty(I)
@@ -41,16 +39,6 @@ end
 % maximum fraction of miswired edges
 if nargin<3 || isempty(error)
     error = 1e-4;
-end
-
-% check squareness
-if ~isequal(size(A,1), size(A,2))
-    error('Input matrix needs to be square');
-end
-
-% check binarism
-if ~all(all(A == 0 | A == 1))
-    error('Input matrix is not binary');
 end
 
 % number of nodes
@@ -76,7 +64,7 @@ E = length(e);
 permutation(1:1:E)
 
 % try to rewire the miswired edges until the maximum number of iterations
-% or the acceptable maximum fraction of miswired edges is reached.
+% or the acceptable maximum fraction of miswired edges is reached.  
 for i = 1:1:I
     ind_mw = miswired();
     permutation(ind_mw)
@@ -86,7 +74,7 @@ for i = 1:1:I
     end
 end
 
-% find remaining miswired edges and their lin. index in A
+% eliminate remaining miswired edges
 ind_mw = miswired();
 e(ind_mw) = 0;
 c(ind_mw) = 0;
@@ -97,9 +85,12 @@ e = e(ind);
 c = c(ind);
 r = r(ind);
 
+% number of miswired edges
+mw = length(ind_mw);
+
     function permutation(ind)
         % permutes the edges with indices ind
-        
+
         % randomly permutate the row (outgoing) indexes of the edges
         % this step potentially rewires all the edges
         % the column (incoming) indexes are left unchanged without loss of generality
@@ -107,7 +98,7 @@ r = r(ind);
         r(ind) = rt(randperm(length(rt)));
         e(ind) = (c(ind)-1)*N+r(ind);
         
-        % sorts e, r, c increasingly as a function of the edge indexes (e)
+        % sorts e, r, c increasingly as a function of the edge indexes (e) 
         [e,i] = sort(e);
         r = r(i);
         c = c(i);
@@ -124,7 +115,7 @@ r = r(ind);
         
         % create a vector will the indexes of all miswired edges
         ind_mw = unique([ind_diag; ind_rep]);
-        
+
         % add a random edge in order to prevent the optimization from getting stuck
         if ~isempty(ind_mw)
             ind_mw = unique([ind_mw; randi(E)]);
