@@ -50,7 +50,8 @@ end
 save(save_file, 'speed_data');
 
 function A = create_matrix(d, s, dir, wei)
-indizes = randperm(s, round(s*d));
+edges = s*s;
+indizes = randperm(edges, round(edges*d));
 A = zeros(s, s);
 A(indizes) = 1;
 

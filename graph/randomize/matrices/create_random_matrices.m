@@ -1,10 +1,10 @@
 clear all, clc, close all
 
-densities = [0.01 0.02 0.03 0.04 0.06 0.07 0.08 0.09];
+densities = [0.01 0.02 0.03 0.04 0.06 0.07 0.08 0.09 0.1 0.15 0.2 0.3 0.4 0.5];
 %% Settings
 nodes = 100;
 s = nodes*nodes;
-type = Graph.BD;
+type = Graph.WU;
 directed = Graph.is_directed(type);
 binary = Graph.is_binary(type);
 
