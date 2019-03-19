@@ -2,10 +2,10 @@
 clear all, clc, close all;
 %% Settings
 test_func_1 = 'randomize_bct_D'; % Ground truth function
-test_func_2 = 'randm_giovanni_bd_fix'; % New function
+test_func_2 = 'randomize_bct_D'; % New function
 densities = [0.010 0.020 0.030 0.040 0.050 0.060 0.070 0.080 0.090 0.100 0.150 0.200 0.300 0.400 0.500 0.600 0.700];
 nodes = 100;
-type = Graph.BD; % Graph type for the global measures
+type = Graph.WD; % Graph type for the global measures
 load_matrix = true;  % whether to load existing matrix or create a new
 matrix_tag = 'known'; % Could be used to load Ground truth distributions and good for saving
 n_randomizations = 100;
@@ -54,7 +54,7 @@ for i = 1:length(densities)
     save_path_2 = sprintf('%s%s%s', data_path, filesep, test_func_2); % data_path/function
     exist_create_dir(save_path_2);
     addpath(save_path_2);
-    file_name = sprintf('%s_dens_%.2f.mat', matrix_tag, dens); % tag_density.mat
+    file_name = sprintf('%s_dens_%.2f_%s_%s.mat', matrix_tag, dens, type_bin, type_dir); % tag_density.mat
     
     %% Save file variables
     save_file_1 = sprintf('%s%s%s', save_path_1, filesep, file_name);
@@ -62,7 +62,7 @@ for i = 1:length(densities)
     
     %% Validation variable
     % tag_density_func1_func2.mat
-    validation_name = sprintf('valid_%s_dens_%.2f_%s_%s.mat', matrix_tag, dens, test_func_1, test_func_2);
+    validation_name = sprintf('valid_%s_dens_%.2f_%s_%s_%s.mat', matrix_tag, dens, type_bin, test_func_1, test_func_2);
     % save only to the new randomize directory. Ground truth will become messy
     % otherwise
     validation_file = sprintf('%s%s%s', save_path_2, filesep, validation_name);
