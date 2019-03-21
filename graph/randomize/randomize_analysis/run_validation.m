@@ -17,7 +17,7 @@ for i = 1:n_meas
     d2(isnan(d2)) =0;
     % Run Kolmogorov-Smirnov test
     [equal_dist, p_value] = kolmogorov_smirnov(d1, d2, alpha);
-    valid.(field) = struct('equal', equal_dist, 'pvalue', p_value);  
+    valid.(field) = struct('equal', equal_dist, 'pvalue', p_value, 'dist1', d1, 'dist2', d2);  
     n_eq_dist = n_eq_dist + equal_dist;
 end
 
