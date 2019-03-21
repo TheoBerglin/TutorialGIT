@@ -1,4 +1,4 @@
-function [D,mw] = randm_giovanni_bu_fix(A,I,error)
+function [E,mw] = randm_giovanni_bu_fix(A,I,error)
 % RANDM_BU calculates a random binary undirected matrix
 %
 % B = RANDM_BU(A) calculates a random binary undirected matrix
@@ -16,7 +16,6 @@ function [D,mw] = randm_giovanni_bu_fix(A,I,error)
 %   (2) A(r,c) = 0 or 1 (binary)
 %   (3) A(r,r) = 0 (no self-connection)
 %   (4) A(r,c) = A(c,r) (symmetric)
-%   These conditions are NOT enforced or checked.
 %
 % Notes on the algorithm:
 %   A is considered as a directed matrix and a random directed matrix B is
@@ -50,8 +49,13 @@ if ~isequal(size(A,1), size(A,2))
 end
 
 % check binarism
-if ~all(all(A == 0 | A == 1))
-    error('Input matrix is not binary');
+if ~all(all(A == 0 | A == 1 | A == -1))
+    error('Input matrix does not consist of -1, 1 or 0');
+end
+
+% check for symmetry
+if ~isequal(A, A.')
+    error('Input matrix is not symmetric');
 end
 
 % number of nodes
@@ -62,58 +66,83 @@ if ~all(A(1:N+1:end) == 0)
     A = remove_diagonal(A);
 end
 
-% check for symmetry
-if ~isequal(A, A.')
-    error('Input matrix is not symmetric');
-end
-
 % binary directed random matrix
 B = randm_giovanni_bd_fix(A,I,error);
 
+% find where 2 non-zero edges create zero-sum cycles 
+B_pos = B == 1;
+B_neg = B == -1;
+B_double_sign = transpose(B_pos) & (B_neg);
+
+% make half of these edges negative, and other half positive
+counter = 1;
+for i = find(B_double_sign).'
+    [row, col] = ind2sub(size(B), i);
+    B_neg(row, col) = mod(counter, 2);
+    B_neg(col, row) = mod(counter, 2);
+    B_pos(row, col) = mod(counter-1, 2);
+    B_pos(col, row) = mod(counter-1, 2);
+    counter = counter + 1;
+end
+
 % matrix with the bi-directional edges
 % symmetric, i.e. D = transpose(D)
-D = floor((B+transpose(B))/2);
+D_pos = floor((B_pos+transpose(B_pos))/2);
+D_neg = floor((B_neg+transpose(B_neg))/2);
+D = {D_pos, D_neg};
 
 % matrix with the one-directional edges
 % antisymmetric, i.e. C = -transpose(C)
-C = B-transpose(B)==1;
+C_pos = B_pos-transpose(B_pos)==1;
+C_neg = B_neg-transpose(B_neg)==1;
+C = {C_pos, C_neg};
 
 % correct the one-directional edges
 % it relies on the fact that the number of incoming and outgoing edges is
 % conserved and therefore the edges are arranged in cycles
-counter = sum(C(:)); % number of one-directional edges that need to be corrected
-while counter
-    r = randi(N); % choose a random row (start node)
-    cs = find(C(r,:)); % select all the corresponding end nodes
-
-    % move along a cycle (i.e. a series of nodes connected by forward connections)
-    % (1) when counter is odd, erase the edge
-    % (2) when counter is even, make the edge bidirectional
-    while ~isempty(cs)
-
-        % select random end node
-        c = cs(1); % c = cs(randi(length(cs))); % for computational efficiency
-
-        % erase edge or make it bi-directional
-        D(r,c) = mod(counter,2);
-        D(c,r) = mod(counter,2);
-
-        % erase edge from C matrix
-        C(r,c) = 0;
-
-        counter = counter-1;
-
-        r = c; % update row (start node)
-        cs = find(C(r,:)); % select all the corresponding end nodes
-
+for i = [1 2]
+    C_curr = C{i};
+    counter = sum(C_curr(:)); % number of one-directional edges that need to be corrected
+    D_curr = D{i};
+    while counter
+        r = randi(N); % choose a random row (start node)
+        cs = find(C_curr(r,:)); % select all the corresponding end nodes
+        
+        % move along a cycle (i.e. a series of nodes connected by forward connections)
+        % (1) when counter is odd, erase the edge
+        % (2) when counter is even, make the edge bidirectional
+        while ~isempty(cs)
+            
+            % select random end node
+            c = cs(1); % c = cs(randi(length(cs))); % for computational efficiency
+            
+            % erase edge or make it bi-directional
+            D_curr(r,c) = mod(counter,2);
+            D_curr(c,r) = mod(counter,2);
+            
+            % erase edge from C matrix
+            C_curr(r,c) = 0;
+            
+            counter = counter-1;
+            
+            r = c; % update row (start node)
+            cs = find(C_curr(r,:)); % select all the corresponding end nodes
+            
+        end
     end
+    D{i} = D_curr;
 end
+
+% merge positive and negative edges
+E = zeros(size(B));
+E(logical(D{1})) = 1;
+E(logical(D{2})) = -1;
 
 % correct the remaining wrong edges (typically < 10 for a number of nodes up to 1000)
 % these are due to the fact that some cycle have odd numbers
 for i = 1:1:10
     
-    dev = sum(D)-sum(A);
+    dev = sum(E~=0)-sum(A~=0);
 
     indp = find(dev>0);
     indm = find(dev<0);
@@ -125,19 +154,19 @@ for i = 1:1:10
     rp = indp(randi(length(indp)));
     rm = indm(randi(length(indm)));
     
-    c = find(D(:,rp)==1);
+    c = find(E(:,rp)~=0);
     c = c(randi(length(c)));
     
-    if D(rm,c)==0 && rm~=c && rp~=c && rp~=rm
-        D(rp,c) = 0;
-        D(c,rp) = 0;
-
-        D(rm,c) = 1;
-        D(c,rm) = 1;
+    if E(rm,c)==0 && rm~=c && rp~=c && rp~=rm
+        E(rm,c) = E(rp,c);
+        E(c,rm) = E(c, rp);
+        
+        E(rp,c) = 0;
+        E(c,rp) = 0;
     end
     
 end
 
 % calculate number of miswired edges
-mw = sum(abs(sum(A)-sum(D)))/2;
+mw = sum(abs(sum(A)-sum(E)))/2;
 end

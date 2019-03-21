@@ -70,6 +70,7 @@ end
 % binary directed random matrix
 B = randm_giovanni_bd(A,I,error);
 
+
 % matrix with the bi-directional edges
 % symmetric, i.e. D = transpose(D)
 D = floor((B+transpose(B))/2);
