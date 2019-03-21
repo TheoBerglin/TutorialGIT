@@ -1,9 +1,9 @@
 clear all, clc, close all
 %% Settings
-func = 'null_model_dir_sign';
-densities = [0.1, 0.2 0.3 0.4];
-sizes = [50 100 200];% 600 800 1000 2000];
-n_randomizations = 100;
+func = 'randomize_bct_D';
+densities = [0.01 0.1 0.2 0.5 0.7];%[0.01 0.02 0.03 0.04 0.05 0.1, 0.2 0.3 0.4 0.5 0.6 0.7];
+sizes = [50 60 100 150 200 400 800];% 1000 2000];
+n_randomizations = 40;
 dir = true;
 wei = false;
 %% Data path
@@ -41,7 +41,8 @@ for di = 1:length(densities)
             time = time + toc;
         end
         speed_data(speed_ind) = struct('size', s, 'density', d,...
-            'n_randomizations', n_randomizations, 'time', time/n_randomizations);
+            'n_randomizations', n_randomizations, 'time', time/n_randomizations, ...
+            'weighted', wei, 'directed', dir);
         fprintf('Size: %d Density: %.2f Time per run: %.7f\n', s, d, time/n_randomizations)
         speed_ind = speed_ind + 1;
     end
