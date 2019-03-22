@@ -2,8 +2,8 @@
 clear all, clc, close all;
 %% Settings
 test_func_1 = 'randomize_bct_U'; % Ground truth function
-test_func_2 = 'randomize_bct_U'; % New function
-densities = [0.010 0.020 0.030 0.040 0.050 0.060 0.070 0.080 0.090 0.100 0.150 0.200 0.300 0.400 0.500 0.600 0.700];
+test_func_2 = 'randomize_combo_WU_fix'; % New function
+densities = [0.700];%[0.010 0.020 0.030 0.040 0.050 0.060 0.070 0.080 0.090 0.100 0.150 0.200 0.300 0.400 0.500 0.600 0.700];
 nodes = 100;
 type = Graph.WU; % Graph type for the global measures
 load_matrix = true;  % whether to load existing matrix or create a new
@@ -72,6 +72,7 @@ for i = 1:length(densities)
         d = load(save_file_1);
         gm_list_1 = d.gm_list_1;
     else % Ground truth doesn't exist
+        disp('GT not loaded')
         gm_list_1 = run_randomization(A, type, test_func_1, n_randomizations);
         save(save_file_1, 'gm_list_1'); % Save ground truth
     end

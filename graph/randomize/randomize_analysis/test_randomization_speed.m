@@ -2,7 +2,7 @@ clear all, clc, close all
 %% Settings
 func = 'randomize_bct_D';
 densities = [0.01 0.1 0.2 0.5 0.7];%[0.01 0.02 0.03 0.04 0.05 0.1, 0.2 0.3 0.4 0.5 0.6 0.7];
-sizes = [50 60 100 150 200 400 800];% 1000 2000];
+sizes = [50 60 100 150 200]; % 400 800];% 1000 2000];
 n_randomizations = 40;
 dir = true;
 wei = false;
@@ -33,7 +33,7 @@ for di = 1:length(densities)
     for si = 1:length(sizes)
         d = densities(di); % Density
         s = sizes(si); % Size of matrix
-        time = 1;
+        time = 0;
         A = create_matrix(d, s, dir, wei);
         for i = 1:n_randomizations
             tic
