@@ -3,7 +3,7 @@ function Ar_reweighed = randomize_combo_WD( A )
 %   Detailed explanation goes here
 
 A = remove_diagonal(A);
-A_bin = A>0;
+A_bin = sign(A);
 Ar = randm_giovanni_bd(A_bin);
 Ar_reweighed = distribute_weights_directed(A, Ar);
 
