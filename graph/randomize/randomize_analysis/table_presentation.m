@@ -29,10 +29,10 @@ for foli = 1:length(analysis_folders)
         table = get_table(failed_tests, test_data);
         table_to_tex(table, save_path_method, data_type);
         fprintf('Plotting for %s\n', data_type);
-        plot_failed_distributions(test_data, save_path_method, data_type, dir);
+        plot_failed_distributions(test_data, save_path_method, data_type, dir); 
     end
 end
-print('DONE!')
+disp('DONE!')
 
 function plot_failed_distributions(test_data, save_path, data_type, dir)
 if dir
@@ -48,13 +48,17 @@ for i = 1:length(test_data)
     for j = 1:length(failed_test_names)
         measure_name = get_measure_name(failed_test_names{j});
         failed = failed_test_data.(failed_test_names{j});
-        plot_distributions(failed.dist1, failed.dist2);
-        f = openfig('temp_name.fig');
-        legend('Ground truth', 'Ground truth fit', 'Function', 'Function fit', 'Location', 'best')
-        title(sprintf('%s for %s and %s graph', measure_name, data_type, dir_str))
-        file_name = sprintf('%s_%s_dens_%d_%s.jpg', data_type, dir_str, dens,failed_test_names{j}); 
-        print(f, [save_path filesep file_name],'-dpng','-r300');
-        close all;
+        try
+            plot_distributions(failed.dist1, failed.dist2);
+            f = openfig('temp_name.fig');
+            legend('Ground truth', 'Ground truth fit', 'Function', 'Function fit', 'Location', 'best')
+            title(sprintf('%s for %s and %s graph', measure_name, data_type, dir_str))
+            file_name = sprintf('%s_%s_dens_%d_%s.jpg', data_type, dir_str, dens,failed_test_names{j});
+            print(f, [save_path filesep file_name],'-dpng','-r300');
+            close all;
+        catch
+            disp(['Could not plot: ' measure_name])
+        end
     end
     
 end
@@ -121,10 +125,10 @@ out_var = {'nr_edges',...
     'str_out_av'};
 possible_indices = find(contains(out_var, meas_short));
 for i = length(possible_indices)
-   if isequal(out_var{possible_indices(i)}, meas_short)
-       measure_name = measures{possible_indices(i)};
-       return
-   end
+    if isequal(out_var{possible_indices(i)}, meas_short)
+        measure_name = measures{possible_indices(i)};
+        return
+    end
 end
 measure_name = 'NoName';
 end
@@ -153,13 +157,13 @@ table_txt = sprintf(table_txt, structure );
 % Fill header
 row = '\textbf{Function/Density} &';
 for c = 1:n_header-1
-   row =sprintf('%s \\textbf{%d} & ',row,header(c)); 
+    row =sprintf('%s \\textbf{%d} & ',row,header(c));
 end
 row = sprintf('%s \\textbf{%d} \\\\ \\hline\\hline ',row,header(c+1));
 table_txt = sprintf('%s %s', table_txt, row);
 % Fill rows
 for r = 2:n_rows
-    row_vals = [table(:).(functions{r})]; 
+    row_vals = [table(:).(functions{r})];
     row = '';
     row = sprintf('%s \\textit{%s} &', row, replace(functions{r}, '_', '\_'));
     for c = 1:length(row_vals)-1
@@ -239,7 +243,7 @@ for fi = 1 : n_files
                 if isequal(failed_tests{indices(i)}, meas)
                     ok = false;
                 end
-            end            
+            end
             %if all(~isequal(failed_tests, meas))
             if ok
                 failed_tests{end+1} = meas;
