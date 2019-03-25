@@ -1,177 +1,178 @@
-function [rW,R] = randomize_braph_BU(W,bin_swaps,wei_freq)
-% RANDOMIZE_BRAPH_BU randomizes the graph using the BRAPH algorithm
+function [E,mw] = randomize_braph_BU(A,I,error)
+% RANDOMIZE_BRAPH_BU calculates a random binary undirected matrix
 %
-% [rW,R] = RANDOMIZE_BRAPH_BU(W,bin_swaps,wei_freq) randomizes the graph 
-%   represented by the adjacency matrix W and returns the new binary undirected
-%   graph rW and the correlation coefficients between strength sequences
-%   of input and output connection matrices - R.
+% E = RANDOMIZE_BRAPH_BU(A) calculates a random binary undirected matrix
+%   preserving the degree of each node.
+%   Therefore, also the degree distribution is preserved.
+%   
+% [E,MW] = RANDOMIZE_BRAPH_BU(A,I,ERROR) permits one to set
+%   the maximum number of iterations I (default I=100) and 
+%   the maximum fraction of miswired edges ERROR (default ERROR = 1e-4, 
+%   i.e. at most one edge out of 10000 is miswired).
+%   MW is the number of miswired edges that are eliminated.
 %
-% Optional parameters that can be passed to the function:
-%   BIN_SWAPS -    average number of swaps of each edge in binary randomization
-%                  (default) bin_swap = 5 : each edge is rewired 5 times
-%   WEI_FREQ  -    frequency of weight sorting in weighted randomization, must
-%                  be in the range of: 0 < wei_freq <= 1
-%                  (default) wei_freq = 1 : older [<2011] versions of MATLAB
-%                  (default) wei_freq = .1 : newer versions of MATLAB
+% Conditions on the input connectivity matrix A:
+%   (1) A is square
+%   (2) A(r,c) = 0, 1 or -1
+%   (3) A(r,r) = 0 (no self-connection)
+%   (4) A(r,c) = A(c,r) (symmetric)
 %
-% Randomization may be better (and execution time will be slower) for
-%           %   higher values of bin_swaps and wei_freq. Higher values of bin_swaps may
-%           %   enable a more random binary organization, and higher values of wei_freq
-%           %   may enable a more accurate conservation of strength sequences.
+% Notes on the algorithm:
+%   A is considered as a directed matrix and a random directed matrix B is
+%   generated using rand_bd.
+%   The connected nodes of B can be connected by two equal edges
+%   (bi-directional), two unequal edges (in case of negative networks)
+%   or by one edge (one-directional). Since the number of incoming and
+%   outgoing edges is conserved, the one-directional edges are arranged in
+%   cycles. Half of the one-directional edges are eliminated and the other
+%   hals is transformed into bi-directional edges. In case of negative
+%   networks, half of the unequal edges are made positive and half are made
+%   negative. 
+%   Some minor corrections might need to be applied at the end for a very
+%   limited numebr of nodes.
 %
-% Reference: "Weight-conserving characterization of complex functional brain
-%             networks", M.Rubinov and O.Sporns
-%             "Specificity and Stability in Topology of Protein Networks", S.Maslov
-%             and K.Sneppen
-%
-% See also GraphBU.
 
-if ~exist('bin_swaps','var')
-    bin_swaps = 5;
-end
-if ~exist('wei_freq','var')
-    if nargin('randperm')==1
-        wei_freq = 1;
-    else
-        wei_freq = 0.1;
-    end
+% Version 1:
+%   - Author: Giovanni Volpe
+%   - Date: 2016/04/01
+% Version 2:
+%   - Authors: Adam Liberda, Theo Berglin
+%   - Date: 2019/03/25
+
+% maximum number of iterations
+if nargin<2 || isempty(I)
+    I = 100;
 end
 
-if wei_freq<=0 || wei_freq>1
-    error('wei_freq must be in the range of: 0 < wei_freq <= 1.')
-end
-if wei_freq && wei_freq<1 && nargin('randperm')==1
-    warning('wei_freq may only equal 1 in older (<2011) versions of MATLAB.')
-    wei_freq = 1;
+% maximum fraction of miswired edges
+if nargin<3 || isempty(error)
+    error = 1e-4;
 end
 
-n = size(W,1);  % number of nodes
-W(1:n+1:end) = 0;  % clear diagonal
-
-Ap = W>0;  % positive adjacency matrix
-if nnz(Ap)<(n*(n-1))  % if Ap not fully connected
-    n2 = size(Ap,1);
-    [i2 j2] = find(tril(Ap));
-    K2 = length(i2);
-    bin_swaps = K2*bin_swaps;
-    
-    % maximal number of rewiring attempts per 'bin_swaps'
-    maxAttempts = round(n2*K2/(n2*(n2-1)));
-    % actual number of successful rewirings
-    eff = 0;
-    
-    for iter = 1:bin_swaps
-        att = 0;
-        while (att<=maxAttempts)  % while not rewired
-            while 1
-                e1 = ceil(K2*rand);
-                e2 = ceil(K2*rand);
-                while (e2==e1),
-                    e2 = ceil(K2*rand);
-                end
-                a = i2(e1); b = j2(e1);
-                c = i2(e2); d = j2(e2);
-                
-                if all(a~=[c d]) && all(b~=[c d]);
-                    break  % all four vertices must be different
-                end
-            end
-            
-            if rand>0.5
-                i2(e2) = d; j2(e2) = c;  % flip edge c-d with 50% probability
-                c = i2(e2); d = j2(e2);  % to explore all potential rewirings
-            end
-            
-            % rewiring condition
-            if ~(Ap(a,d) || Ap(c,b))
-                Ap(a,d) = Ap(a,b); Ap(a,b) = 0;
-                Ap(d,a) = Ap(b,a); Ap(b,a) = 0;
-                Ap(c,b) = Ap(c,d); Ap(c,d) = 0;
-                Ap(b,c) = Ap(d,c); Ap(d,c) = 0;
-                
-                j2(e1) = d;  % reassign edge indices
-                j2(e2) = b;
-                eff = eff+1;
-                break;
-            end  % rewiring condition
-            att = att+1;
-        end  % while not rewired
-    end  % iterations
-    
-    Ap_r = Ap;
-else
-    Ap_r = Ap;
+% check squareness
+if ~isequal(size(A,1), size(A,2))
+    error('Input matrix needs to be square');
 end
-An =~ Ap; An(1:n+1:end) = 0;  % negative adjacency matrix
-An_r =~ Ap_r; An_r(1:n+1:end) = 0;  % randomized negative adjacency
 
-W0 = zeros(n);  % null model network
-for s = [1 -1]
-    switch s  % switch sign (positive/negative)
-        case 1
-            S = sum(W.*Ap,2);  % positive strength
-            Wv = sort(W(triu(Ap)));  % sorted weights vector
-            [I,J] = find(triu(Ap_r));  % weights indices
-            Lij = n*(J-1)+I;  % linear weights indices
-        case -1
-            S = sum(-W.*An,2);  % negative strength
-            Wv = sort(-W(triu(An)));  % sorted weights vector
-            [I,J] = find(triu(An_r));  % weights indices
-            Lij = n*(J-1)+I;  % linear weights indices
-    end
-    
-    P = (S*S.');  % expected weights matrix
-    
-    if wei_freq==1
-        for m = numel(Wv):-1:1  % iteratively explore all weights
-            [dum,Oind] = sort(P(Lij));  % get indices of Lij that sort P
-            r = ceil(rand*m);
-            o = Oind(r);  % choose random index of sorted expected weight
-            W0(Lij(o)) = s*Wv(r);  % assign corresponding sorted weight at this index
+% check "binarism"
+if ~all(all(A == 0 | A == 1 | A == -1))
+    error('Input matrix does not consist of -1, 1 or 0');
+end
+
+% check for symmetry
+if ~isequal(A, A.')
+    error('Input matrix is not symmetric');
+end
+
+% number of nodes
+N = length(A);
+
+% check for self-connections and remove these if they exist
+if ~all(A(1:N+1:end) == 0)
+    A = remove_diagonal(A);
+end
+
+% binary directed random matrix
+B = randm_giovanni_bd_fix(A,I,error);
+
+% find where 2 non-zero edges create zero-sum cycles 
+B_pos = B == 1;
+B_neg = B == -1;
+B_double_sign = transpose(B_pos) & (B_neg);
+
+% make half of these edges negative, and other half positive
+counter = 1;
+for i = find(B_double_sign).'
+    [row, col] = ind2sub(size(B), i);
+    B_neg(row, col) = mod(counter, 2);
+    B_neg(col, row) = mod(counter, 2);
+    B_pos(row, col) = mod(counter-1, 2);
+    B_pos(col, row) = mod(counter-1, 2);
+    counter = counter + 1;
+end
+
+% matrix with the bi-directional edges
+% symmetric, i.e. D = transpose(D)
+D_pos = floor((B_pos+transpose(B_pos))/2);
+D_neg = floor((B_neg+transpose(B_neg))/2);
+D = {D_pos, D_neg};
+
+% matrix with the one-directional edges
+% antisymmetric, i.e. C = -transpose(C)
+C_pos = B_pos-transpose(B_pos)==1;
+C_neg = B_neg-transpose(B_neg)==1;
+C = {C_pos, C_neg};
+
+% correct the one-directional edges
+% it relies on the fact that the number of incoming and outgoing edges is
+% conserved and therefore the edges are arranged in cycles
+for i = [1 2]
+    C_curr = C{i};
+    counter = sum(C_curr(:)); % number of one-directional edges that need to be corrected
+    D_curr = D{i};
+    while counter
+        r = randi(N); % choose a random row (start node)
+        cs = find(C_curr(r,:)); % select all the corresponding end nodes
+        
+        % move along a cycle (i.e. a series of nodes connected by forward connections)
+        % (1) when counter is odd, erase the edge
+        % (2) when counter is even, make the edge bidirectional
+        while ~isempty(cs)
             
-            f = 1 - Wv(r)/S(I(o));  % readjust expected weight probabilities for node I(o)
-            P(I(o),:) = P(I(o),:)*f;  % [1 - Wv(r)/S(I(o)) = (S(I(o)) - Wv(r))/S(I(o))]
-            P(:,I(o)) = P(:,I(o))*f;
-            f = 1 - Wv(r)/S(J(o));  % readjust expected weight probabilities for node J(o)
-            P(J(o),:) = P(J(o),:)*f;  % [1 - Wv(r)/S(J(o)) = (S(J(o)) - Wv(r))/S(J(o))]
-            P(:,J(o)) = P(:,J(o))*f;
+            % select random end node
+            c = cs(1); % c = cs(randi(length(cs))); % for computational efficiency
             
-            S([I(o) J(o)]) = S([I(o) J(o)])-Wv(r);  % readjust strengths of nodes I(o) and J(o)
-            Lij(o) = [];  % remove current index from further consideration
-            I(o) = [];
-            J(o) = [];
-            Wv(r) = [];  % remove current weight from further consideration
-        end
-    else
-        wei_period = round(1/wei_freq);  % convert frequency to period
-        for m = numel(Wv):-wei_period:1  % iteratively explore at the given period
-            [dum,Oind] = sort(P(Lij));  % get indices of Lij that sort P
-            R = randperm(m,min(m,wei_period)).';
-            O = Oind(R);
-            W0(Lij(O)) = s*Wv(R);  % assign corresponding sorted weight at this index
+            % erase edge or make it bi-directional
+            D_curr(r,c) = mod(counter,2);
+            D_curr(c,r) = mod(counter,2);
             
-            WA = accumarray([I(O);J(O)],Wv([R;R]),[n,1]);  % cumulative weight
-            IJu = any(WA,2);
-            F = 1-WA(IJu)./S(IJu);
-            F = F(:,ones(1,n));  % readjust expected weight probabilities for node I(o)
-            P(IJu,:) = P(IJu,:).*F;  % [1 - Wv(r)/S(I(o)) = (S(I(o)) - Wv(r))/S(I(o))]
-            P(:,IJu) = P(:,IJu).*F.';
-            S(IJu) = S(IJu)-WA(IJu);  % re-adjust strengths of nodes I(o) and J(o)
+            % erase edge from C matrix
+            C_curr(r,c) = 0;
             
-            O = Oind(R);
-            Lij(O) = [];  % remove current index from further consideration
-            I(O) = [];
-            J(O) = [];
-            Wv(R) = [];  % remove current weight from further consideration
+            counter = counter-1;
+            
+            r = c; % update row (start node)
+            cs = find(C_curr(r,:)); % select all the corresponding end nodes
+            
         end
     end
+    D{i} = D_curr;
 end
-W0 = W0+W0.';
 
-rpos = corrcoef(sum( W.*(W>0)),sum( W0.*(W0>0)));
-rneg = corrcoef(sum(-W.*(W<0)),sum(-W0.*(W0<0)));
-R = [rpos(2) rneg(2)];
+% merge positive and negative edges
+E = zeros(size(B));
+E(logical(D{1})) = 1;
+E(logical(D{2})) = -1;
 
-% Create the new BU graph
-rW = W0;
+% correct the remaining wrong edges (typically < 10 for a number of nodes up to 1000)
+% these are due to the fact that some cycle have odd numbers
+for i = 1:1:10
+    
+    dev = sum(E~=0)-sum(A~=0);
+
+    indp = find(dev>0);
+    indm = find(dev<0);
+
+    if isempty(indp) || isempty(indp)
+        break
+    end
+    
+    rp = indp(randi(length(indp)));
+    rm = indm(randi(length(indm)));
+    
+    c = find(E(:,rp)~=0);
+    c = c(randi(length(c)));
+    
+    if E(rm,c)==0 && rm~=c && rp~=c && rp~=rm
+        E(rm,c) = E(rp,c);
+        E(c,rm) = E(c, rp);
+        
+        E(rp,c) = 0;
+        E(c,rp) = 0;
+    end
+    
+end
+
+% calculate number of miswired edges
+mw = sum(abs(sum(A)-sum(E)))/2;
 end
