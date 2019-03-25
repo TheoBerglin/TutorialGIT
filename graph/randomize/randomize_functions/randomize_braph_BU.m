@@ -73,7 +73,7 @@ if ~all(A(1:N+1:end) == 0)
 end
 
 % binary directed random matrix
-B = randm_giovanni_bd_fix(A,I,error);
+B = randomize_braph_BD(A,I,error);
 
 % find where 2 non-zero edges create zero-sum cycles 
 B_pos = B == 1;
