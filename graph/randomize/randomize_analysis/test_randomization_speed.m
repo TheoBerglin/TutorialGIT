@@ -1,11 +1,16 @@
 clear all, clc, close all
 %% Settings
-func = 'randomize_bct_U';
-densities = [0.01 0.1 0.2 0.5 0.7];%[0.01 0.02 0.03 0.04 0.05 0.1, 0.2 0.3 0.4 0.5 0.6 0.7];
-sizes = [50 60 100 150 200];  %400 800];% 1000 2000];
+
+functions = {'randomize_combo_WD_fix', 'randomize_combo_WU_fix', 'randm_giovanni_bd_fix', 'rand_giovanni_bu_fix'};
+type = {Graph.WD, Graph.WU, Graph.BD, Graph.BU};
+%func = 'randomize_bct_U';
+densities = [0.01 0.02 0.03 0.04 0.05 0.1, 0.2 0.3 0.4 0.5 0.6 0.7];%[0.01 0.1 0.2 0.5 0.7];%[0.01 0.02 0.03 0.04 0.05 0.1, 0.2 0.3 0.4 0.5 0.6 0.7];
+sizes = [50 60 100 150 200  400 800 1000 2000];
 n_randomizations = 40;
-dir = true;
-wei = false;
+for funci = 1:length(functions)
+func = functions{funci};
+dir = Graph.is_directed(type{funci});
+wei = Graph.is_weighted(type{funci});
 %% Data path
 current_loc = fileparts(which('test_randomization.m'));
 data_path = sprintf('%s%s%s', current_loc, filesep, 'data');
@@ -56,6 +61,7 @@ for di = 1:length(densities)
 end
 
 save(save_file, 'speed_data');
+end
 
 function A = create_matrix(d, s, dir, wei)
 edges = s*s;
@@ -65,7 +71,7 @@ A(indizes) = 1;
 
 %% Binary/weight settings
 if wei
-    W = rand(nodes);
+    W = rand(s);
     A = A.*W;
 end
 
