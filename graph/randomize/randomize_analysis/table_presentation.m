@@ -27,7 +27,7 @@ for foli = 1:length(analysis_folders)
         end
         [test_data, failed_tests] = get_failed_tests(data);
         table = get_table(failed_tests, test_data);
-        table_to_tex(table, save_path_method, data_type);
+        table_to_tex(table, save_path_method,folder, data_type);
         fprintf('Plotting for %s\n', data_type);
         plot_failed_distributions(test_data, save_path_method, data_type, dir); 
     end
@@ -132,7 +132,7 @@ for i = length(possible_indices)
 end
 measure_name = 'NoName';
 end
-function table_to_tex(table, save_path, data_type)
+function table_to_tex(table, save_path, folder, data_type)
 % \begin{table}[]
 %     \centering
 %     \begin{tabular}{c|c}
@@ -142,8 +142,8 @@ function table_to_tex(table, save_path, data_type)
 %     \caption{Caption}
 %     \label{tab:my_label}
 % \end{table}
-table_txt = '\\begin{table}[h] \\centering \\begin{tabular}{%s} \\hline';
-table_end = '\end{tabular}\caption{Caption}\label{tab:my_label} \end{table}';
+table_txt = '\\begin{table}[h] \\centering \\begin{tabular}{%s} \\hline\\multicolumn{1}{|c|}{\\textbf{\\large{Function}}} & \\multicolumn{17}{c|}{\\large{\\textbf{Density [percent]]}}}\\\\\\cline{2-18}';
+table_end = ['\end{tabular}\caption{' replace(folder, '_', '\_') ' ' data_type '}\label{tab:my_label} \end{table}'];
 functions = fieldnames(table);
 header = [table(:).dens];
 n_header = length(header);
@@ -155,11 +155,11 @@ end
 n_rows = length(functions);
 table_txt = sprintf(table_txt, structure );
 % Fill header
-row = '\textbf{Function/Density} &';
+row = ' &';
 for c = 1:n_header-1
     row =sprintf('%s \\textbf{%d} & ',row,header(c));
 end
-row = sprintf('%s \\textbf{%d} \\\\ \\hline\\hline ',row,header(c+1));
+row = sprintf('%s \\textbf{%d} \\\\ \\hline ',row,header(c+1));
 table_txt = sprintf('%s %s', table_txt, row);
 % Fill rows
 for r = 2:n_rows
@@ -183,7 +183,7 @@ for r = 2:n_rows
     table_txt = sprintf('%s %s', table_txt, row);
 end
 table_txt = sprintf('%s %s', table_txt, table_end);
-fid = fopen([save_path filesep data_type '_table.txt'],'w');
+fid = fopen([save_path filesep folder '_' data_type '_table.tex'],'w');
 %fid = fopen(sprintf('%s%stable.txt', save_path, filesep),'w');
 fprintf(fid, replace(table_txt, '\', '\\'));
 fclose(fid);
@@ -269,7 +269,7 @@ if ~contains(file_name, 'dens')
 end
 split1 = strsplit(file_name, 'dens_');
 split2 = strsplit(split1{2}, '_');
-dens = round(str2num(split2{1}));
+dens = round(str2double(split2{1}));
 end
 function [binary, weighted] = get_valid_data(folder_path)
 f = get_files(folder_path);
