@@ -134,9 +134,6 @@ classdef Graph < handle & matlab.mixin.Copyable
     %                                           participation and modularity
     %   copyElement                         -   copy community structure
     %
-    % Graph methods (Abstract):
-    %   randomize    -   randomize graph while preserving degree distribution
-    %
     % Graph methods :
     %   add_measure_to_struct       -   adds measure to MS struct
     %   get_community_structure     -   returns the community structure
@@ -154,6 +151,7 @@ classdef Graph < handle & matlab.mixin.Copyable
     %   calculate_structure_fixed   -   calculates a community structure
     %                                   using the fixed algorithm
     %   calculate_measure           -   calculates a specific measure
+    %   randomize                   -   randomize graph while preserving degree distribution
     %
     % Graph methods (Static):
     %   positivize          -   positivizes a matrix
@@ -846,9 +844,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             cp.S = copy(g.S);
         end
     end
-    methods (Abstract)
-        randomize(g)  % randomize graph while preserving degree distribution
-    end
     methods
         function add_measure_to_struct(g, m)
             % ADD_MEASURE_TO_STRUCT adds a measure to the measure struct of
@@ -1351,6 +1346,34 @@ classdef Graph < handle & matlab.mixin.Copyable
             else
                 g.MS{mi}.VALUE = feval(g.MS{mi}.FUNCTION, g.get_adjacency_matrix(), g.get_type());
             end
+        end
+        function gr = randomize(g, wei_freq)
+            % RANDOMIZE randomizes the graph
+            %
+            % GR = RANDOMIZE(G) randomizes the graph G and returns the new 
+            %   graph GR.
+            %
+            % Optional parameters that can be passed to the function:
+            %   WEI_FREQ  -    frequency of weight sorting in weighted randomization, must
+            %                  be in the range of: 0 < wei_freq <= 1
+            %                  (default) wei_freq = 1 : older [<2011] versions of MATLAB
+            %                  (default) wei_freq = .1 : newer versions of MATLAB
+            %
+            % Randomization may be better (and execution time will be slower) for
+            %   higher values wei_freq. Higher values of wei_freq
+            %   may enable a more accurate conservation of strength sequences.
+            %
+            % Reference: "Weight-conserving characterization of complex functional brain
+            %             networks", M.Rubinov and O.Sporns
+            %             "Specificity and Stability in Topology of Protein Networks", S.Maslov
+            %             and K.Sneppen
+            %
+            if exist('wei_freq','var')
+                rA = randomize(g.A, g.TYPE, wei_freq);
+            else
+                rA = randomize(g.A, g.TYPE);
+            end
+            eval(['gr = ' class(g) '(rA);'])
         end
     end
     methods (Static)
