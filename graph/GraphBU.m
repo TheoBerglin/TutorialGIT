@@ -40,7 +40,6 @@ classdef GraphBU < Graph
     %                                   using the newman algorithm < Graph
     %   calculate_structure_fixed   -   calculates a community structure
     %                                   using the fixed algorithm < Graph
-    %   smallworldness              -   small-wordness of the graph < Graph
     %   calculate_measure           -   calculates a specific measure < Graph
     %   randomize                   -   randomize graph while preserving degree distribution
     %

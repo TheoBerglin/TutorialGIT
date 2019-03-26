@@ -153,7 +153,6 @@ classdef Graph < handle & matlab.mixin.Copyable
     %                                   using the newman algorithm
     %   calculate_structure_fixed   -   calculates a community structure
     %                                   using the fixed algorithm
-    %   smallworldness              -   small-wordness of the graph
     %   calculate_measure           -   calculates a specific measure
     %
     % Graph methods (Static):
@@ -1319,50 +1318,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             g.CS.VALUE = Ci;
             g.CS.LAST_PARAMS = g.S.toString();
             g.MS{g.MODULARITY}.VALUE = Q/L;
-        end
-        function sw = smallworldness(g,wsg)
-            % SMALLWORLDNESS small-worldness of the graph
-            %
-            % SW = SMALLWORLDNESS(G,WGS) calculated the small-worldness of the graph.
-            %   WGS = true means that it is calcualted using
-            %   the characteristic path length within connected subgraphs.
-            %
-            % SW = SMALLWORLDNESS(G) is equivalent to SW = SMALLWORLDNESS(G,false)
-            %
-            % See also Graph.
-            
-            if nargin<2
-                wsg = false;
-            end
-            
-            M = 100;  % number of random graphs
-            
-            if isempty(g.sw)
-                C = g.measure(Graph.CLUSTER);
-                if g.directed() || ~wsg
-                    L = g.measure(Graph.CPL);
-                else
-                    L = g.measure(Graph.CPL_WSG);
-                end
-                
-                Cr = zeros(1,M);
-                Lr = zeros(1,M);
-                for m = 1:1:M
-                    gr = g.randomize();
-                    Cr(m) = gr.measure(Graph.CLUSTER);
-                    if g.directed()
-                        Lr(m) = gr.measure(Graph.CPL);
-                    else
-                        Lr(m) = gr.measure(Graph.CPL_WSG);
-                    end
-                end
-                Cr = mean(Cr);
-                Lr = mean(Lr);
-                
-                g.sw = (C/Cr)/(L/Lr);
-            end
-            
-            sw = g.sw;
         end
         function calculate_measure(g,mi)
             % CALCULATE_MEASURE calculates a given measure
