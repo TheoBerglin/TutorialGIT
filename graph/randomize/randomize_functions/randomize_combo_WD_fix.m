@@ -4,7 +4,7 @@ function Ar_reweighed = randomize_combo_WD_fix( A )
 
 A = remove_diagonal(A);
 A_bin = sign(A);
-Ar = randm_giovanni_bd_fix(A_bin);
+Ar = randomize_braph_BD(A_bin);
 Ar_reweighed = distribute_weights_directed(A, Ar);
 
 end
