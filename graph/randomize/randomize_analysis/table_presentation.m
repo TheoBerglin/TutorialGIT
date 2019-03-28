@@ -6,7 +6,9 @@ save_path =  path_append(original_path, 'validation_saves');
 exist_create_dir(save_path);
 node_folders = get_sub_folders(data_path);
 for nodi = 1: length(node_folders)
-    if isequal(node_folders{nodi}, 'speed')
+    if ~isequal(node_folders{nodi}, 'nodes_10')
+    
+    %if isequal(node_folders{nodi}, 'speed')
         continue
     end
     node_path = path_append(data_path, node_folders{nodi});
