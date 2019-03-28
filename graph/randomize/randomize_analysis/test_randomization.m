@@ -1,10 +1,10 @@
 %This file tests two randomization functions
 clear all, clc, close all;
 %% Settings
-test_func_1_array = {'randomize_bct_U' 'randomize_bct_U' 'randomize_bct_D' 'randomize_bct_D'};
-test_func_2_array = {'randomize_bct_U' 'randomize_bct_U' 'randomize_bct_D' 'randomize_bct_D'};
-type_array = {Graph.BU Graph.WU Graph.BD Graph.WD};
-densities = [0.010 0.020 0.030 0.040 0.050 0.060 0.070 0.080 0.090 0.100 0.150 0.200 0.300 0.400 0.500 0.600 0.700];
+test_func_1_array = {'randomize_bct_U' 'randomize_bct_U' 'randomize_bct_D' 'randomize_bct_D' 'randomize_bct_U' 'randomize_bct_U' 'randomize_bct_D' 'randomize_bct_D'};
+test_func_2_array = {'randomize_bct_U' 'randomize_bct_U' 'randomize_bct_D' 'randomize_bct_D' 'randomize_braph_BU' 'randomize_combo_WU_fix' 'randomize_braph_BD' 'randomize_combo_WD_fix'};
+type_array = {Graph.BU Graph.WU Graph.BD Graph.WD Graph.BU Graph.WU Graph.BD Graph.WD};
+densities = [0.010 0.020 0.050 0.100 0.300 0.700];%[0.010 0.020 0.030 0.040 0.050 0.060 0.070 0.080 0.090 0.100 0.150 0.200 0.300 0.400 0.500 0.600 0.700];
 nodes = 10;
 n_randomizations = 10000;
 alpha = 0.05; %Confidence level Kolmogorov-Smirnov test
