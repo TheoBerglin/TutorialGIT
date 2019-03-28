@@ -4,32 +4,44 @@ original_path = fileparts(which('test_randomization.m'));
 data_path = path_append(original_path, 'data');
 save_path =  path_append(original_path, 'validation_saves');
 exist_create_dir(save_path);
-analysis_folders = get_sub_folders(data_path);
-
-for foli = 1:length(analysis_folders)
-    folder = analysis_folders{foli};
-    if isequal(folder, 'speed')
+node_folders = get_sub_folders(data_path);
+for nodi = 1: length(node_folders)
+    if isequal(node_folders{nodi}, 'speed')
         continue
     end
-    dir = contains(folder, '_bd') || contains(folder, '_D') || contains(folder, '_WD');
-    folder_path = path_append(data_path, folder);
-    save_path_method = path_append(save_path, folder);
-    exist_create_dir(save_path_method);
-    [seperated.binary, seperated.weighted] = get_valid_data(folder_path);
-    %struct(repmat(struct('density', 0, 'failed_tests', struct), [1 10]))
-    seperated_fields = fieldnames(seperated);
-    fprintf('Running analysis for method %s\n', folder)
-    for d = 1 : length(seperated_fields)
-        data_type = seperated_fields{d};
-        data = seperated.(data_type);
-        if isempty(data)
+    node_path = path_append(data_path, node_folders{nodi});
+    analysis_folders = get_sub_folders(node_path);
+    for foli = 1:length(analysis_folders)
+        folder = analysis_folders{foli};
+        folder_path = path_append(node_path, folder);
+        valid_folder = path_append(folder_path, 'validation');
+        exist_create_dir(valid_folder);
+        addpath(valid_folder);
+        if isequal(folder, 'speed')
             continue
         end
-        [test_data, failed_tests] = get_failed_tests(data);
-        table = get_table(failed_tests, test_data);
-        table_to_tex(table, save_path_method,folder, data_type);
-        fprintf('Plotting for %s\n', data_type);
-        plot_failed_distributions(test_data, save_path_method, data_type, dir); 
+        dir = contains(folder, '_bd') || contains(folder, '_D') || contains(folder, '_WD');
+        save_path_method = path_append(save_path, node_folders{nodi});
+        exist_create_dir(save_path_method);
+        addpath(save_path_method)
+        save_path_method = path_append(save_path_method, folder);
+        exist_create_dir(save_path_method);
+        addpath(save_path_method)
+        [seperated.binary, seperated.weighted] = get_valid_data(valid_folder);
+        seperated_fields = fieldnames(seperated);
+        fprintf('Running analysis for method %s\n', folder)
+        for d = 1 : length(seperated_fields)
+            data_type = seperated_fields{d};
+            data = seperated.(data_type);
+            if isempty(data)
+                continue
+            end
+            [test_data, failed_tests] = get_failed_tests(data);
+            table = get_table(failed_tests, test_data);
+            table_to_tex(table, save_path_method,folder, data_type);
+            fprintf('Plotting for %s\n', data_type);
+            plot_failed_distributions(test_data, save_path_method, data_type, dir);
+        end
     end
 end
 disp('DONE!')
@@ -311,7 +323,7 @@ end
 function f = get_files(directory)
 files = dir(directory);
 fileFlag = ~[files.isdir];
-f = files(fileFlag);
+files = files(fileFlag);
 f = {files(:).name};
 end
 function subFolders = get_sub_folders(directory)

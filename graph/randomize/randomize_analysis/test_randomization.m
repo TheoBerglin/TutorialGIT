@@ -6,10 +6,10 @@ test_func_2_array = {'randomize_bct_U' 'randomize_bct_U' 'randomize_bct_D' 'rand
 type_array = {Graph.BU Graph.WU Graph.BD Graph.WD};
 densities = [0.010 0.020 0.030 0.040 0.050 0.060 0.070 0.080 0.090 0.100 0.150 0.200 0.300 0.400 0.500 0.600 0.700];
 nodes = 10;
-n_randomizations = 10;
+n_randomizations = 10000;
 alpha = 0.05; %Confidence level Kolmogorov-Smirnov test
 load_gt = true; % Do we want to load ground truth or calculate new
-load_matrix = false;  % whether to load existing matrix or create a new
+load_matrix = true;  % whether to load existing matrix or create a new
 for runi = 1: length(test_func_1_array)
     test_func_1 = test_func_1_array{runi}; % Ground truth function
     test_func_2 = test_func_2_array{runi}; % New function
@@ -68,7 +68,7 @@ for runi = 1: length(test_func_1_array)
         save_path_2 = sprintf('%s%s%s', data_path, filesep, test_func_2); % data_path/function
         exist_create_dir(save_path_2);
         addpath(save_path_2);
-        save_path_2 = sprintf('%s%s%s', save_path_2, filesep, 'Validation'); % data_path/function
+        save_path_2 = sprintf('%s%s%s', save_path_2, filesep, 'validation'); % data_path/function
         exist_create_dir(save_path_2);
         addpath(save_path_2);
         %% File names
