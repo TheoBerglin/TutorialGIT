@@ -6,6 +6,7 @@ nodes = 10;
 s = nodes*nodes;
 possible_connections = nodes*(nodes-1);
 type = Graph.WU;
+threshold = 0.3;
 directed = Graph.is_directed(type);
 binary = Graph.is_binary(type);
 
@@ -43,7 +44,7 @@ for i=1:length(densities)
     else
         % Add weights
         str_bin = 'wei';
-        W = rand(nodes);
+        W = threshold + (1-threshold) .* rand(nodes);
         A = A.*W;
     end
     
