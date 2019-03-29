@@ -11,18 +11,19 @@ for nodi = 1: length(node_folders)
     %if isequal(node_folders{nodi}, 'speed')
         continue
     end
+    
     node_path = path_append(data_path, node_folders{nodi});
     analysis_folders = get_sub_folders(node_path);
     for foli = 1:length(analysis_folders)
         folder = analysis_folders{foli};
+        dir = contains(folder, '_bd') || contains(folder, '_D') || contains(folder, '_WD') || contains(folder, 'create_matrix2') ;
         folder_path = path_append(node_path, folder);
         valid_folder = path_append(folder_path, 'validation');
         exist_create_dir(valid_folder);
         addpath(valid_folder);
-        if isequal(folder, 'speed')
+        if ~isequal(folder, 'create_matrix2')
             continue
         end
-        dir = contains(folder, '_bd') || contains(folder, '_D') || contains(folder, '_WD');
         save_path_method = path_append(save_path, node_folders{nodi});
         exist_create_dir(save_path_method);
         addpath(save_path_method)

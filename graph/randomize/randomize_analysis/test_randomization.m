@@ -1,14 +1,17 @@
 %This file tests two randomization functions
 clear all, clc, close all;
 %% Settings
-test_func_1_array = {'randomize_bct_U' 'randomize_bct_U' 'randomize_bct_D' 'randomize_bct_D' 'randomize_bct_U' 'randomize_bct_U' 'randomize_bct_D' 'randomize_bct_D'};
-test_func_2_array = {'randomize_bct_U' 'randomize_bct_U' 'randomize_bct_D' 'randomize_bct_D' 'randomize_braph_BU' 'randomize_combo_WU_fix' 'randomize_braph_BD' 'randomize_combo_WD_fix'};
-type_array = {Graph.BU Graph.WU Graph.BD Graph.WD Graph.BU Graph.WU Graph.BD Graph.WD};
+%test_func_1_array = {'randomize_bct_U' 'randomize_bct_U' 'randomize_bct_D' 'randomize_bct_D' 'randomize_bct_U' 'randomize_bct_U' 'randomize_bct_D' 'randomize_bct_D'};
+%test_func_2_array = {'randomize_bct_U' 'randomize_bct_U' 'randomize_bct_D' 'randomize_bct_D' 'randomize_braph_BU' 'randomize_combo_WU_fix' 'randomize_braph_BD' 'randomize_combo_WD_fix'};
+%type_array = {Graph.BU Graph.WU Graph.BD Graph.WD Graph.BU Graph.WU Graph.BD Graph.WD};
+test_func_1_array = {'create_matrix2' 'create_matrix2'};
+test_func_2_array = {'create_matrix2' 'create_matrix2'};
+type_array = {Graph.BD Graph.WD};
 densities = [0.010 0.020 0.030 0.040 0.050 0.060 0.070 0.080 0.090 0.100 0.150 0.200 0.300 0.400 0.500 0.600 0.700];
 nodes = 10;
 n_randomizations = 10000;
 alpha = 0.05; %Confidence level Kolmogorov-Smirnov test
-load_gt = true; % Do we want to load ground truth or calculate new
+load_gt = false; % Do we want to load ground truth or calculate new
 load_matrix = true;  % whether to load existing matrix or create a new
 for runi = 1: length(test_func_1_array)
     test_func_1 = test_func_1_array{runi}; % Ground truth function
@@ -32,6 +35,7 @@ for runi = 1: length(test_func_1_array)
     nodes_folder = sprintf('nodes_%d', nodes);
     disp('----------------------------------------------------')
     fprintf('Running test for methods\n %s\n %s\n',test_func_1, test_func_2);
+    fprintf('For %s %s\n', type_bin, type_dir);
     for i = 1:length(densities)
         dens = densities(i);
         disp('----------------------------------------------------')
@@ -73,14 +77,14 @@ for runi = 1: length(test_func_1_array)
         addpath(save_path_2);
         %% File names
         GT_file_name = sprintf('GT_nodes_%d_dens_%.2f_%s_%s.mat', nodes, dens, type_bin, type_dir);
-        validation_name = sprintf('valid_nodes_%d_dens_%.2f_%s_%s_%s.mat', nodes, dens, type_bin, test_func_1, test_func_2);
+        validation_name = sprintf('valid_nodes_%d_dens_%.2f_%s_%s_%s_%s.mat', nodes, dens, type_dir, type_bin, test_func_1, test_func_2);
         
         %% Save file variable
         save_file_1 = sprintf('%s%s%s', save_path_1, filesep, GT_file_name); % Ground truth data        
         validation_file = sprintf('%s%s%s%s%s', save_path_2, filesep, validation_name); % Validation files
         
         %% Check if ground truth data available
-        if exist(save_file_1, 'file') % Ground truth available
+        if exist(save_file_1, 'file') && load_gt% Ground truth available
             d = load(save_file_1);
             gm_list_1 = d.gm_list_1;
             if length(gm_list_1) ~= n_randomizations % Not the correct size, rerun
