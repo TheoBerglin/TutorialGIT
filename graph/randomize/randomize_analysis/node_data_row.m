@@ -6,10 +6,16 @@ if isempty(fieldnames(data))
     return
 end
 
+if length(data) == 1 && isequal(data(1).desc, 'TEMP')
+    row = 1;
+    return
+end
+
 dens_arr = extractfield(data, 'density');
 dir_arr = extractfield(data, 'directed');
+dir_arr = cell2mat(dir_arr);
 wei_arr = extractfield(data, 'weighted');
-
+wei_arr = cell2mat(wei_arr);
 dens_i = find(dens_arr == dens);
 dir_i = find(dir_arr == dir);
 wei_i = find(wei_arr == wei);
