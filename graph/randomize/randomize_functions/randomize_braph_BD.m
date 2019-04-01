@@ -144,11 +144,17 @@ random_rewiring(ind_col)
             rm_col = ind(i);  % get col of miswired edge
             occupied = r(c == rm_col);  % find occupied rows that connect to col
             possible = setdiff(1:1:N, occupied);  % get possible out-nodes
+            while length(possible) == 1  % if column is fully connected
+                rm_col = randperm(N, 1);  % pick a new col
+                occupied = r(c == rm_col);  % find occupied rows that connect to col
+                possible = setdiff(1:1:N, occupied);  % get possible out-nodes
+            end
             rm_row_new = rm_col;
             while isequal(rm_row_new, rm_col)  % to not create a self-connection
                 idx = randperm(length(possible), 1);  % pick one index
                 rm_row_new = possible(idx);  % get new row index
             end
+            c(ind_mw(i)) = rm_col;  % update col to the new one
             r(ind_mw(i)) = rm_row_new;  % update the miswired row to the new one
         end
         e(ind_mw) = (c(ind_mw)-1)*N+r(ind_mw);
