@@ -13,6 +13,7 @@ for i = 1:n_randomizations
     eval(sprintf('rA = %s(A);', randomize_function));
     gm = calculate_global_measures(rA, A, type);
     gm_list(i) = gm;
+    
     eval(sprintf('rA = %s(A);', randomize_function));
     gm = calculate_global_measures(rA, A, type);
     gm_list2(i) = gm;

@@ -15,7 +15,7 @@ exist_create_dir(data_path);
 addpath(data_path);
 %% Default structures
 rand_structure = struct('density', nan, 'weighted', false, 'directed', false, ...
-    'measures', struct(), 'desc', 'TEMP');
+    'measures', struct(), 'desc', 'TEMP', 'pValues', struct());
 node_structure = struct('nodes', 10, 'node_data', rand_structure);
 
 %% Loops
@@ -94,11 +94,13 @@ for mi = 1:length(methods)
             data(data_r).node_data(rowi).directed = dir;
             data(data_r).node_data(rowi).measures = gm_struct1;
             p_value_struct = calculate_pvalue_struct(gm_struct1, gm_struct2);
+            data(data_r).node_data(rowi).pValues = p_value_struct;
+            data(data_r).node_data(rowi).compare_measures = gm_struct2;
             data(data_r).node_data(rowi).desc = desc_str;
             fprintf('Done with density %.2f in time %.3fs\n', dens, toc)
             % save data
-            data_name = path_append(data_path, data_name);
-            save(data_name, 'data');
+            data_save_name = path_append(data_path, data_name);
+            save(data_save_name, 'data');
         end
     end
     fprintf('Done with method: %s\n', method)
