@@ -4,6 +4,7 @@ clear all, close all, clc
 method_1 = 'randomize_bct_D';
 method_2 = 'randomize_braph_BD';
 type = Graph.BD;
+nodes = 10;
 
 %% Locate & load data
 current_loc = fileparts(which('compare_methods.m'));
@@ -15,10 +16,15 @@ method_2_data = sprintf('data_%s.mat', method_2);
 if exist(method_1_data, 'file') && exist(method_2_data, 'file')
     d1 = load(method_1_data);
     d1 = d1.data;
-    gt_data = d1.node_data;
+    nodes_list = extractfield(d1, 'nodes');
+    row_idx = nodes_list == nodes;
+    gt_data = d1(row_idx).node_data;
+    
     d2 = load(method_2_data);
     data = d2.data;
-    target_data = data.node_data;
+    nodes_list = extractfield(data, 'nodes');
+    row_idx = nodes_list == nodes;
+    target_data = data(row_idx).node_data;
 else
     disp('Data for specified function(s) doesn''t exist')
 end
@@ -35,7 +41,7 @@ for i = 1:length(target_data)
         gt_measures = gt_data(gt_row).measures;
         comparison = calculate_pvalue_struct(gt_measures, target_measures);
         target_data(i).p_value_vs_gt = comparison;
-        target_data(i).p_value_gt = gt_data(gt_row).pValues;
+        target_data(i).p_value_gt = gt_data(gt_row).p_value_self;
     end
 end
 
