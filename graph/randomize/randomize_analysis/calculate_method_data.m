@@ -1,7 +1,7 @@
 clear all, clc, close all;
 %% Settings
-methods = {'randomize_bct_D' 'randomize_bct_D' 'randomize_bct_U' 'randomize_bct_U'};
-graph_types = {Graph.BD Graph.WD Graph.BU Graph.WU};
+methods = {'randomize_bct_D' 'randomize_bct_D' 'randomize_bct_U' 'randomize_bct_U' 'randomize_braph_BD' 'randomize_braph_BU' 'randomize_combo_WD_fix' 'randomize_combo_WU_fix'};
+graph_types = {Graph.BD Graph.WD Graph.BU Graph.WU Graph.BD Graph.BU Graph.WD Graph.WU};
 nodes = [50];
 densities = [0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.2 0.3 0.5 0.7];
 rerun_existing = true;
@@ -15,7 +15,7 @@ exist_create_dir(data_path);
 addpath(data_path);
 %% Default structures
 rand_structure = struct('density', nan, 'weighted', false, 'directed', false, ...
-    'measures', struct(), 'desc', 'TEMP', 'pValues', struct());
+    'measures', struct(), 'desc', 'TEMP', 'p_value_self', struct());
 node_structure = struct('nodes', 10, 'node_data', rand_structure);
 
 %% Loops
@@ -77,6 +77,8 @@ for mi = 1:length(methods)
                 if exist(load_file, 'file')
                     A = load(load_file);
                 else
+                    fprintf('Did not load matrix dens: %.3f %s %s\n', dens, type_bin, type_dir)
+                   
                     A = create_matrix(dens, n, dir, wei);
                 end
             else

@@ -23,4 +23,5 @@ function cpl_wsg = characteristic_pathlength_wsg( A, type)
 % Date: 2019/03/01
 % http://braph.org/
 
-cpl_wsg = mean(pathlength_wsg(A, type));
+pl_wsg = pathlength_wsg(A, type);
+cpl_wsg = mean(pl_wsg(~isnan(pl_wsg)));
