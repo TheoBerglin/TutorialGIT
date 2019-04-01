@@ -2,10 +2,10 @@ clear all, clc, close all;
 %% Settings
 methods = {'randomize_bct_D' 'randomize_bct_D' 'randomize_bct_U' 'randomize_bct_U'};
 graph_types = {Graph.BD Graph.WD Graph.BU Graph.WU};
-nodes = [10];
-densities = [0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.2 0.3 0.5 0.7];
+nodes = [100];
+densities = [0.5];% 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.2 0.3 0.5 0.7];
 rerun_existing = true;
-n_randomizations = 1000;
+n_randomizations = 1;
 desc_str = sprintf('%s', datestr(datetime('now')));
 load_matrix = true;
 %% Create data path for saving
@@ -39,7 +39,7 @@ for mi = 1:length(methods)
         fprintf('Running for node size: %d\n', n);
         if isempty(data_r)
             % create data row
-            data(end+1) = struct('nodes', n, 'node_data', struct());
+            data(end+1) = struct('nodes', n, 'node_data', rand_structure);
             data_r = length(data);
         end
         
