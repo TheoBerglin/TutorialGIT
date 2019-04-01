@@ -85,23 +85,22 @@ for mi = 1:length(methods)
             
             %% run randomization
             % run randomization
-            gm_struct = run_randomization(A, type, method, n_randomizations);
+            [gm_struct1, gm_struct2] = run_randomization(A, type, method, n_randomizations);
             % add data
             data(data_r).node_data(rowi) = rand_structure; % initialize the structure
             % Add information
             data(data_r).node_data(rowi).density = dens;
             data(data_r).node_data(rowi).weighted = wei;
             data(data_r).node_data(rowi).directed = dir;
-            data(data_r).node_data(rowi).measures = gm_struct;
+            data(data_r).node_data(rowi).measures = gm_struct1;
+            p_value_struct = calculate_pvalue_struct(gm_struct1, gm_struct2);
             data(data_r).node_data(rowi).desc = desc_str;
             fprintf('Done with density %.2f in time %.3fs\n', dens, toc)
-            
+            % save data
+            data_name = path_append(data_path, data_name);
+            save(data_name, 'data');
         end
     end
-    % save data
-    
-    data_name = path_append(data_path, data_name);
-    save(data_name, 'data');
     fprintf('Done with method: %s\n', method)
     disp('---------------------------------')
 end
