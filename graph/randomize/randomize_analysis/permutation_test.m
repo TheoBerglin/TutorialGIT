@@ -1,18 +1,24 @@
-function p_value = permutation_test( dist1, dist2 )
+function p_value = permutation_test( dist1, dist2, plot_on )
 %PERMUTATION_TEST Performs a permutation test on the distributions DIST1
 %and DIST2 and returns a p-value. Set plot_on = true to display a histogram
 %of the permutations along with the original value of the distributions.
 %Set two_sided to = true if you want to perform a two-sided test, and false 
 %if a one-sided is desired. Set nbr_shuffles to desired nbr of permutations.
 
-plot_on = true;
+if ~exist('plot_on', 'var')
+    plot_on = false;   
+end
 two_sided = true;
 nbr_shuffles = 1e+3;
 
 list_of_means = zeros(1, nbr_shuffles);
 nbr_values_group1 = length(dist1);
 orig_mean = mean(dist1) - mean(dist2);
-merged_values = [dist1 dist2];
+if size(dist1, 2) > size(dist1, 1)
+    merged_values = [dist1 dist2];
+else
+    merged_values = [dist1.' dist2.'];
+end
 
 for i=1:nbr_shuffles
     shuffled_indices = randperm(length(merged_values));
