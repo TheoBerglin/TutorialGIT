@@ -10,7 +10,18 @@ if ~exist('plot_on', 'var')
 end
 two_sided = true;
 nbr_shuffles = 1e+3;
-
+%% Spring cleaning
+% Remove nans
+dist1 = dist1(~isnan(dist1));
+dist2 = dist2(~isnan(dist2));
+% Remove inf
+dist1 = dist1(~isinf(dist1));
+dist2 = dist2(~isinf(dist2));
+if isempty(dist1) || isempty(dist2)
+   disp('All values removed')
+   p_value = -999;
+   return
+end
 list_of_means = zeros(1, nbr_shuffles);
 nbr_values_group1 = length(dist1);
 orig_mean = mean(dist1) - mean(dist2);
