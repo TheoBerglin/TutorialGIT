@@ -20,4 +20,4 @@ function res = eccentricity_out_average( A, type)
 % Date: 2019/03/01
 % http://braph.org/
 ecc_out = eccentricity_out(A, type);
-res = mean(ecc_in(~isnan(ecc_out)));
+res = mean(ecc_out(~isnan(ecc_out)));
