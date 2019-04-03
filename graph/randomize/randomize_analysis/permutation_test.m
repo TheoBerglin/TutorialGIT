@@ -1,4 +1,4 @@
-function p_value = permutation_test( dist1, dist2, plot_on, two_sided, shuffles)
+function p_value = permutation_test( dist1, dist2, plot_on, two_sided, nbr_shuffles)
 % PERMUTATION_TEST Performs a permutation test on the distributions DIST1
 % and DIST2 and returns a p-value. Set plot_on = true (default=false) to display a histogram
 % of the permutations along with the original value of the distributions.
