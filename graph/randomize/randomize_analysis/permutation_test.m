@@ -1,15 +1,21 @@
-function p_value = permutation_test( dist1, dist2, plot_on )
-%PERMUTATION_TEST Performs a permutation test on the distributions DIST1
-%and DIST2 and returns a p-value. Set plot_on = true to display a histogram
-%of the permutations along with the original value of the distributions.
-%Set two_sided to = true if you want to perform a two-sided test, and false 
-%if a one-sided is desired. Set nbr_shuffles to desired nbr of permutations.
+function p_value = permutation_test( dist1, dist2, plot_on, two_sided, shuffles)
+% PERMUTATION_TEST Performs a permutation test on the distributions DIST1
+% and DIST2 and returns a p-value. Set plot_on = true (default=false) to display a histogram
+% of the permutations along with the original value of the distributions.
+% Set two_sided to = true (default=true) if you want to perform a two-sided test, and false 
+% if a one-sided is desired. Set nbr_shuffles (default=1000) to desired nbr of permutations.
 
+%% Variable check
 if ~exist('plot_on', 'var')
     plot_on = false;   
 end
-two_sided = true;
-nbr_shuffles = 1e+3;
+if ~exist('two_sided', 'var')
+    two_sided = true;
+end
+if ~exist('shuffles', 'var')
+    nbr_shuffles = 1e+3;
+end
+
 %% Spring cleaning
 % Remove nans
 dist1 = dist1(~isnan(dist1));
@@ -22,6 +28,7 @@ if isempty(dist1) || isempty(dist2)
    p_value = -999;
    return
 end
+
 list_of_means = zeros(1, nbr_shuffles);
 nbr_values_group1 = length(dist1);
 orig_mean = mean(dist1) - mean(dist2);
