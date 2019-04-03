@@ -7,7 +7,8 @@ for i = 1:length(fields)
     field = fields{i};
     dist1 = extractfield(gm_struct1, field);
     dist2 = extractfield(gm_struct2, field);
-    p_value_struct.(field) =   permutation_test(dist1, dist2);  
+    p_value_struct.(field) = sample_pvalues(dist1, dist2);  
 end
+
 end
 
