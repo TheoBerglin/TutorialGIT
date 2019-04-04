@@ -1,10 +1,10 @@
 clear all, clc, close all;
 %% Settings
-methods = {'randomize_combo_WD_fix' 'randomize_combo_WU_fix'};
-graph_types = {Graph.WD Graph.WU};
+methods = {'randomize_bct_D' 'randomize_bct_D' 'randomize_bct_U' 'randomize_bct_U' 'randomize_braph_BD' 'randomize_braph_BU' 'randomize_combo_WD_fix' 'randomize_combo_WU_fix'};
+graph_types = {Graph.BD Graph.WD Graph.BU Graph.WU Graph.BD Graph.BU Graph.WD Graph.WU};
 nodes = [50];
-densities = [0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.2 0.3 0.4 0.5 0.6 0.7];
-rerun_existing = true;
+densities = [0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1]+0.005;
+rerun_existing = false;
 n_randomizations = 500;
 desc_str = sprintf('%s', datestr(datetime('now')));
 load_matrix = true;
