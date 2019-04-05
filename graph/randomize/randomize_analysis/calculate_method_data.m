@@ -1,7 +1,7 @@
 clear all, clc, close all;
 %% Settings
-methods = {'randomize_bct_D' 'randomize_bct_D' 'randomize_bct_U' 'randomize_bct_U' 'randomize_braph_BD' 'randomize_braph_BU' 'randomize_combo_WD_fix' 'randomize_combo_WU_fix'};
-graph_types = {Graph.BD Graph.WD Graph.BU Graph.WU Graph.BD Graph.BU Graph.WD Graph.WU};
+methods = {'randomize_braph_BD' 'randomize_braph_BU' 'randomize_combo_WD_fix' 'randomize_combo_WU_fix'};
+graph_types = {Graph.BD Graph.BU Graph.WD Graph.WU};
 nodes = [50];
 densities = [0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1]+0.005;
 rerun_existing = false;
@@ -15,7 +15,8 @@ exist_create_dir(data_path);
 addpath(data_path);
 %% Default structures
 rand_structure = struct('density', nan, 'weighted', false, 'directed', false, ...
-    'measures', struct(), 'desc', 'TEMP', 'p_value_self', struct(), 'compare_measures', struct());
+    'measures', struct(), 'desc', 'TEMP', 'p_value_self', struct(), 'compare_measures', struct(),...
+    'p_value_vs_gt', struct(), 'p_value_gt', struct());
 node_structure = struct('nodes', 10, 'node_data', rand_structure);
 
 %% Loops
@@ -99,7 +100,7 @@ for mi = 1:length(methods)
             data(data_r).node_data(rowi).p_value_self = p_value_struct;
             data(data_r).node_data(rowi).compare_measures = gm_struct2;
             data(data_r).node_data(rowi).desc = desc_str;
-            fprintf('Done with density %.2f in time %.3fs\n', dens, toc)
+            fprintf('Done with density %.3f in time %.3fs\n', dens, toc)
             % save data
             data_save_name = path_append(data_path, data_name);
             save(data_save_name, 'data');
