@@ -1,4 +1,4 @@
-function plot_compare_meas_distributions(density, meas, nodes, type)
+function plot_compare_measure_distributions(density, meas, nodes, type)
 %PLOT_COMPARE_MEAS_DISTRIBUTIONS Summary of this function goes here
 %   Detailed explanation goes here
 %% Ground truth
@@ -11,12 +11,16 @@ else
 end
 %% Our data
 if directed && weighted
+    graph_type_str = 'directed and weighted';
     comp = 'randomize_combo_WD_fix';
 elseif ~directed && weighted
+    graph_type_str = 'undirected and weighted';
     comp = 'randomize_combo_WU_fix';
 elseif directed && ~weighted
+    graph_type_str = 'directed and binary';
     comp = 'randomize_braph_BD';
 else
+    graph_type_str = 'undirected and binary';
     comp = 'randomize_braph_BU';
 end
 
@@ -46,7 +50,7 @@ h2 =histfit(d_gt);
 h2(2).Color = 'r';
 h2(1).FaceAlpha = 0.5;
 legend('braph', 'braph', 'bct', 'bct')
-title(sprintf('Measure: %s', replace(meas, '_', '\_')))
+title(sprintf('Measure: %s Density: %.3f \nGraph type: %s', replace(meas, '_', '\_'), density, graph_type_str))
 fprintf('Size of ground truth data: %d\nSize of compare data: %d\n', length(d_gt), length(d_comp))
 fprintf('Mean of ground truth data: %.4f\nMean of compare data: %.4f\n', mean(d_gt), mean(d_comp))
 fprintf('Standard deviation of ground truth data: %.4f\nStandard deviation of compare data: %.4f\n', std(d_gt), std(d_comp))
