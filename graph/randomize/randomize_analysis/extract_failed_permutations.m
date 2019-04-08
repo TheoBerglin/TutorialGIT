@@ -1,7 +1,10 @@
-function [p_values, fdr_res, failed_tests, ones_tests] = extract_failed_permutations(file_name, nodes_to_check, saveon, ploton)
+function [p_values, fdr_res, failed_tests, ones_tests] = extract_failed_permutations(file_name, nodes_to_check, excl_ass, saveon, ploton)
 %EXTRACT_FAILED_PERMUTATIONS Returns a struct containing failed test
 %information. Input is a file name containing the data of interest.
 
+if ~exist('excl_ass', 'var')
+    excl_ass = false;
+end
 if ~exist('saveon', 'var')
     saveon = false;
 end
@@ -15,7 +18,11 @@ C = strsplit(file_name, {'_', '.'});
 file_name = strjoin(C(2:end-1),'_');
 
 p_values = [];
-measures_exclude = {'deg', 'den', 'str', 'nr_e'};
+if excl_ass
+    measures_exclude = {'ass', 'deg', 'den', 'str', 'nr_e'};
+else
+    measures_exclude = {'deg', 'den', 'str', 'nr_e'};
+end
 
 for ni = 1:length(data)
     node_data = data(ni).node_data;
@@ -68,7 +75,11 @@ if ploton
     hold on;
     plot(x, 0.05*x/length(p_values));
     legend('P-values', 'q*x', 'Location', 'best')
-    str = sprintf('%s, relevant measures - ass, FDR: %.4f', file_name, fdr_res);
+    if excl_ass
+        str = sprintf('%s, relevant measures, ass excl, FDR: %.4f', file_name, fdr_res);
+    else
+        str = sprintf('%s, relevant measures, ass excl, FDR: %.4f', file_name, fdr_res);
+    end
     title(str)
     ylabel('P-value')
     xlabel('Number of samples')

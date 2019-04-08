@@ -1,8 +1,8 @@
 clear all, close all, clc
 %% Settings
-methods_gt = {'randomize_bct_U'};
-methods_target = {'randomize_braph_BU'};
-types = {Graph.BU};
+methods_gt = {'randomize_bct_D'};
+methods_target = {'randomize_braph_BD'};
+types = {Graph.BD};
 nodes = [50];
 
 %% Locate method data
@@ -64,7 +64,7 @@ for i = 1:length(methods_gt)
         for i = 1:length(target_data)
             if target_data(i).directed == dir && target_data(i).weighted == wei
                 dens = target_data(i).density;
-                fprintf('Running for density: %.2f\n', dens)
+                fprintf('Running for density: %.3f\n', dens)
                 target_measures = target_data(i).measures;
                 gt_row = node_data_row(gt_data, dens, type);
                 gt_measures = gt_data(gt_row).measures;
