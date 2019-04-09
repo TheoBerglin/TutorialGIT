@@ -1,4 +1,4 @@
-function [p_values, fdr_res, failed_tests, ones_tests] = extract_failed_permutations(file_name, nodes_to_check, excl_ass, saveon, ploton)
+function [p_values, fdr_res, failed_tests, ones_tests] = run_fdr(file_name, nodes_to_check, excl_ass, saveon, ploton)
 %EXTRACT_FAILED_PERMUTATIONS Returns a struct containing failed test
 %information. Input is a file name containing the data of interest.
 
@@ -28,10 +28,10 @@ for ni = 1:length(data)
     node_data = data(ni).node_data;
     nodes = data(ni).nodes;
     if any(nodes == nodes_to_check)
-        for row = 1:length(node_data)
+        for row = 1:length(node_data)  % loop through densities
             p_vals_all = node_data(row).p_value_vs_gt;
             fields = fieldnames(p_vals_all);
-            for fi = 1:length(fields)
+            for fi = 1:length(fields)  % loop through measures
                 p_val = p_vals_all.(fields{fi});
                 if ~any(strncmpi(fields{fi}, measures_exclude, 3))
                     if p_val == 0
@@ -78,7 +78,7 @@ if ploton
     if excl_ass
         str = sprintf('%s, relevant measures, ass excl, FDR: %.4f', file_name, fdr_res);
     else
-        str = sprintf('%s, relevant measures, ass excl, FDR: %.4f', file_name, fdr_res);
+        str = sprintf('%s, relevant measures, FDR: %.4f', file_name, fdr_res);
     end
     title(str)
     ylabel('P-value')
