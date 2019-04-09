@@ -1,10 +1,10 @@
 clear all, clc, close all
 %% Settings
 
-functions = {'randomize_combo_WD_fix', 'randomize_combo_WU_fix', 'randm_giovanni_bd_fix', 'rand_giovanni_bu_fix'};
-type = {Graph.WD, Graph.WU, Graph.BD, Graph.BU};
+functions = {'randomize_braph_BD', 'randomize_braph_BU'};
+type = {Graph.BD, Graph.BU};
 %func = 'randomize_bct_U';
-densities = [0.01 0.02 0.03 0.04 0.05 0.1, 0.2 0.3 0.4 0.5 0.6 0.7];%[0.01 0.1 0.2 0.5 0.7];%[0.01 0.02 0.03 0.04 0.05 0.1, 0.2 0.3 0.4 0.5 0.6 0.7];
+densities = [0.1];%[0.01 0.02 0.03 0.04 0.05 0.1, 0.2 0.3 0.4 0.5 0.6 0.7];%[0.01 0.1 0.2 0.5 0.7];%[0.01 0.02 0.03 0.04 0.05 0.1, 0.2 0.3 0.4 0.5 0.6 0.7];
 sizes = [50 60 100 150 200  400 800 1000 2000];
 n_randomizations = 40;
 for funci = 1:length(functions)

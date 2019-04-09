@@ -1,7 +1,7 @@
 clear all, close all, clc;
 %% Settings
-file1 = 'speed_null_model_dir_sign';
-file2 = 'speed_randomize_gio_bct_dir_sign';
+file1 = 'speed_randomize_bct_D.mat';
+file2 = 'speed_randomize_braph_BD.mat';
 data_files = {file1, file2};
 density = 0.1;
 
