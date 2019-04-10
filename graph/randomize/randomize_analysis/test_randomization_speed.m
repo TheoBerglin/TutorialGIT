@@ -1,8 +1,8 @@
 clear all, clc, close all
 %% Settings
 
-functions = {'randomize_combo_WD_fix', 'randomize_combo_WU_fix', 'randomize_braph_BD', 'randomize_braph_BU' 'randomize_bct_D' 'randomize_bct_D' 'randomize_bct_U' 'randomize_bct_U'};
-type = {Graph.WD, Graph.WU, Graph.BD, Graph.BU Graph.WD, Graph.BD, Graph.WU, Graph.BU};
+functions = {'randmio_dir_signed_edit'};
+type = {Graph.WD, Graph.BD};
 densities = [0.01 0.03 0.05 0.1, 0.2 0.4 0.7];
 sizes = [10 20 30 40 50 60 100 150 200 250 300 400 500 600 700 800];% 1000 2000];
 n_randomizations = 40;
