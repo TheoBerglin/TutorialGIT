@@ -1,11 +1,11 @@
 clear all, clc, close all;
 %% Settings
-methods = {'randomize_braph_BU'};
+methods = {'randomize_braph_BU_bias'};
 graph_types = {Graph.BU};
 nodes = [50];
 densities = [0.01 0.015 0.02 0.025 0.03 0.035 0.04 0.045 0.05 0.055 0.06 0.065 0.07 0.075 0.08 0.085...
     0.09 0.095 0.1 0.105 0.150 0.2 0.3 0.4 0.5 0.6 0.7];
-n_randomizations = 5000;
+n_randomizations = 500;
 desc_str = sprintf('%s', datestr(datetime('now')));
 load_matrix = true;
 %% Create data path for saving
@@ -73,12 +73,12 @@ for mi = 1:length(methods)
             %% run randomization
             % run randomization
             miswires_arr = zeros(1, n_randomizations);
-            %randwires_arr = zeros(1, n_randomizations);
+            randwires_arr = zeros(1, n_randomizations);
             for ri = 1:n_randomizations
-                eval(sprintf('[rA, mw] = %s(A);', method));
-                %eval(sprintf('[rA, mw, rw] = %s(A);', method));
+%                 eval(sprintf('[rA, mw] = %s(A);', method));
+                eval(sprintf('[rA, mw, rw] = %s(A);', method));
                 miswires_arr(ri) = mw;
-                %randwires_arr(ri) = rw;
+                randwires_arr(ri) = rw;
             end
 
             % add data
@@ -89,7 +89,7 @@ for mi = 1:length(methods)
             data(data_r).node_data(rowi).directed = dir;
             data(data_r).node_data(rowi).desc = desc_str;
             data(data_r).node_data(rowi).miswires = miswires_arr;
-            %data(data_r).node_data(rowi).random_wires = randwires_arr;            
+            data(data_r).node_data(rowi).random_wires = randwires_arr;            
             fprintf('Done with density %.3f in time %.3fs\n', dens, toc)
             % save data
             data_save_name = path_append(data_path, data_name);
