@@ -47,8 +47,8 @@ ITER  = ITER*n*(n-1)/2;
 maxAttempts = round(n/2);
 % actual number of successful rewirings
 eff = 0;
-edges = find(triu(W));
-n_edges = length(edges); % Real number of edges is times 2
+edges = find(W);
+n_edges = length(edges);
 for iter=1:ITER
     att=0;
     while (att<=maxAttempts)    %while not rewired
@@ -69,17 +69,16 @@ for iter=1:ITER
                 (sign(r0_ad)==sign(r0_cb)) && ...
                 (sign(r0_ab)~=sign(r0_ad)) && ...
                 b ~= c && d~=a % Self connections
-    
-            
-            
             R(a,d)=r0_ab; R(a,b)=r0_ad;
             R(d,a)=r0_ab; R(b,a)=r0_ad;
             e1 = sub2ind([n,n], a, d);
             edges(nodes(1)) = e1;
+            edges(edges == sub2ind([n,n], b,a)) = sub2ind([n,n], d,a);
             R(c,b)=r0_cd; R(c,d)=r0_cb;
             R(b,c)=r0_cd; R(d,c)=r0_cb;
             e2 = sub2ind([n,n], c, b);
             edges(nodes(2)) = e2;
+            edges(edges == sub2ind([n,n], d,c)) = sub2ind([n,n], b,c);
             eff = eff+1;
             break;
         end %rewiring condition

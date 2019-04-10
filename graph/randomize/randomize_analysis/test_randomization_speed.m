@@ -1,10 +1,10 @@
 clear all, clc, close all
 %% Settings
 
-functions = {'randmio_dir_signed_edit'};
-type = {Graph.WD, Graph.BD};
-densities = [0.01 0.03 0.05 0.1, 0.2 0.4 0.7];
-sizes = [10 20 30 40 50 60 100 150 200 250 300 400 500 600 700 800];% 1000 2000];
+functions = {'randmio_und_signed'};
+type = {Graph.BU};
+densities = [0.01 0.03 0.4 0.7];
+sizes = [50 100 150 200 500 600 700 800 1000 2000];
 n_randomizations = 40;
 
 %% Data path

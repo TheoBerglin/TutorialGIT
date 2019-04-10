@@ -33,6 +33,9 @@ function [R,eff] = randmio_und_signed(W, ITER)
 %             algorithm allows positive-positive/negative-negative
 %             rewirings, in addition to the previous positive-positive/0-0
 %             and negative-negative/0-0 rewirings (Mika Rubinov). 
+if ~exist('ITER', 'var')
+    ITER = 5;
+end
 
 if nargin('randperm')==1
     warning('This function requires a recent (>2011) version of MATLAB.')

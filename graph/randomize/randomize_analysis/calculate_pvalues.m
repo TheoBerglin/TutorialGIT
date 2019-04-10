@@ -1,8 +1,8 @@
 clear all, close all, clc
 %% Settings
-methods_gt = {'randomize_bct_D'};
-methods_target = {'randmio_dir_signed_edit'};
-types = {Graph.BD};
+methods_gt = {'randomize_bct_U'};
+methods_target = {'randmio_und_signed_edit'};
+types = {Graph.BU};
 nodes = [50];
 
 %% Locate method data
