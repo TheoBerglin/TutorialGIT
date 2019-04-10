@@ -1,6 +1,9 @@
-function [p_values, fdr_res, failed_tests, ones_tests] = run_fdr(file_name, nodes_to_check, excl_ass, saveon, ploton)
-%EXTRACT_FAILED_PERMUTATIONS Returns a struct containing failed test
-%information. Input is a file name containing the data of interest.
+function [p_values, fdr_res, failed_tests, ones_tests] = run_fdr(file_name, nodes_to_check, excl_ass, ploton, saveon)
+%RUN_FDR Gets all p_values from a specific randomization run specified by
+%FILE_NAME and NODES_TO_CHECK, and performs an FDR check on these. EXCL_ASS
+%defines whether to exclude assortativity or not (default = false), PLOTON
+%defines whether to plot the results(default = false) and SAVEON whether 
+%to save it (default = false).
 
 if ~exist('excl_ass', 'var')
     excl_ass = false;
@@ -24,7 +27,7 @@ else
     measures_exclude = {'deg', 'den', 'str', 'nr_e'};
 end
 
-for ni = 1:length(data)
+for ni = 1:length(data)  % loop through nodes
     node_data = data(ni).node_data;
     nodes = data(ni).nodes;
     if any(nodes == nodes_to_check)
