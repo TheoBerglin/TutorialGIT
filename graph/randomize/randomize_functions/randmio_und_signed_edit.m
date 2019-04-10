@@ -37,7 +37,7 @@ function [R,eff] = randmio_und_signed_edit(W)
 if nargin('randperm')==1
     warning('This function requires a recent (>2011) version of MATLAB.')
 end
-
+org = W;
 ITER =5;
 R     = double(W);              % sign function requires double input
 n     = size(R,1);
@@ -49,7 +49,6 @@ maxAttempts = round(n/2);
 eff = 0;
 edges = find(triu(W));
 n_edges = length(edges); % Real number of edges is times 2
-%ITER = ITER*n_edges; % Better number of iterations with new algo
 for iter=1:ITER
     att=0;
     while (att<=maxAttempts)    %while not rewired
@@ -68,7 +67,9 @@ for iter=1:ITER
         %rewiring condition
         if      (sign(r0_ab)==sign(r0_cd)) && ...
                 (sign(r0_ad)==sign(r0_cb)) && ...
-                (sign(r0_ab)~=sign(r0_ad))
+                (sign(r0_ab)~=sign(r0_ad)) && ...
+                b ~= c && d~=a % Self connections
+    
             
             
             R(a,d)=r0_ab; R(a,b)=r0_ad;
@@ -84,4 +85,6 @@ for iter=1:ITER
         end %rewiring condition
         att=att+1;
     end %while not rewired
+           
+    
 end %iterations

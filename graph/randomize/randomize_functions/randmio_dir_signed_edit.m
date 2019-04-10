@@ -42,7 +42,8 @@ end
 ITER =5;
 R = double(W);              % sign function requires double input
 n = size(R,1);
-%ITER=ITER*n*(n-1);
+ITER=ITER*n*(n-1);
+org = R;
 
 % maximal number of rewiring attempts per 'iter'
 maxAttempts=n;
@@ -69,7 +70,9 @@ for iter=1:ITER
         %rewiring condition
         if      (sign(r0_ab)==sign(r0_cd)) && ...
                 (sign(r0_ad)==sign(r0_cb)) && ...
-                (sign(r0_ab)~=sign(r0_ad))
+                (sign(r0_ab)~=sign(r0_ad)) && ...
+            a ~= d && c~=b
+                
             
             R(a,d)=r0_ab;
             e1 = sub2ind([n,n], a, d);
@@ -85,4 +88,7 @@ for iter=1:ITER
         end %rewiring condition
         att=att+1;
     end %while not rewired
+    if att == maxAttempts
+        disp('Max attempts reached');
+    end
 end %iterations

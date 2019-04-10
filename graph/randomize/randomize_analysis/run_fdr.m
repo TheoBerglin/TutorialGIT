@@ -36,6 +36,7 @@ for ni = 1:length(data)  % loop through nodes
             fields = fieldnames(p_vals_all);
             for fi = 1:length(fields)  % loop through measures
                 p_val = p_vals_all.(fields{fi});
+                %dens = node_data(row).density;
                 if ~any(strncmpi(fields{fi}, measures_exclude, 3))
                     if p_val == 0
                         f_struct = struct('nodes', nodes,'density',node_data(row).density,...
@@ -66,7 +67,9 @@ for ni = 1:length(data)  % loop through nodes
                 end
             end
         end
-        p_values = [p_values p_values_node];
+        if exist('p_values_node', 'var')
+            p_values = [p_values p_values_node];
+        end
     end
 end
 
