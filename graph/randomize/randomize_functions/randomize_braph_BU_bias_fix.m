@@ -1,13 +1,13 @@
-function [E,mw,rw] = randomize_braph_BU_bias(A,I,error)
+function [E,mw,rw] = randomize_braph_BU_bias_fix(A,I,error)
 % RANDOMIZE_BRAPH_BU calculates a random binary undirected matrix
 %
 % E = RANDOMIZE_BRAPH_BU(A) calculates a random binary undirected matrix
 %   preserving the degree of each node.
 %   Therefore, also the degree distribution is preserved.
-%   
+%
 % [E,MW] = RANDOMIZE_BRAPH_BU(A,I,ERROR) permits one to set
-%   the maximum number of iterations I (default I=100) and 
-%   the maximum fraction of miswired edges ERROR (default ERROR = 1e-4, 
+%   the maximum number of iterations I (default I=100) and
+%   the maximum fraction of miswired edges ERROR (default ERROR = 1e-4,
 %   i.e. at most one edge out of 10000 is miswired).
 %   MW is the number of miswired edges that are eliminated.
 %
@@ -27,7 +27,7 @@ function [E,mw,rw] = randomize_braph_BU_bias(A,I,error)
 %   cycles. Half of the one-directional edges are eliminated and the other
 %   hals is transformed into bi-directional edges. In case of negative
 %   networks, half of the unequal edges are made positive and half are made
-%   negative. 
+%   negative.
 %   Some minor corrections might need to be applied at the end for a very
 %   limited numebr of nodes.
 %
@@ -75,7 +75,7 @@ end
 % binary directed random matrix
 B = randomize_braph_BD(A,I,error);
 
-% find where 2 non-zero edges create zero-sum cycles 
+% find where 2 non-zero edges create zero-sum cycles
 B_pos = B == 1;
 B_neg = B == -1;
 B_double_sign = transpose(B_pos) & (B_neg);
@@ -110,30 +110,64 @@ for i = [1 2]
     C_curr = C{i};
     counter = sum(C_curr(:)); % number of one-directional edges that need to be corrected
     D_curr = D{i};
+    max_iter = nnz(C_curr) * 5;
+    overall_counter = 0;
     while counter
+        overall_counter = overall_counter +1;
+        
         r = randi(N); % choose a random row (start node)
         cs = find(C_curr(r,:)); % select all the corresponding end nodes
-        
-        % move along a cycle (i.e. a series of nodes connected by forward connections)
-        % (1) when counter is odd, erase the edge
-        % (2) when counter is even, make the edge bidirectional
-        while ~isempty(cs)
-            
-            % select random end node
-            c = cs(1); % c = cs(randi(length(cs))); % for computational efficiency
-            
-            % erase edge or make it bi-directional
-            D_curr(r,c) = mod(counter,2);
-            D_curr(c,r) = mod(counter,2);
-            
-            % erase edge from C matrix
-            C_curr(r,c) = 0;
-            
-            counter = counter-1;
-            
-            r = c; % update row (start node)
-            cs = find(C_curr(r,:)); % select all the corresponding end nodes
-            
+        if overall_counter > max_iter
+            while ~isempty(cs)
+                % select random end node
+                c = cs(1); % c = cs(randi(length(cs))); % for computational efficiency
+                
+                % erase edge or make it bi-directional
+                D_curr(r,c) = mod(counter,2);
+                D_curr(c,r) = mod(counter,2);
+                
+                % erase edge from C matrix
+                C_curr(r,c) = 0;
+                
+                counter = counter-1;
+                
+                r = c; % update row (start node)
+                cs = find(C_curr(r,:)); % select all the corresponding end nodes
+                
+            end
+        else
+            node_path = zeros(1, N+1);
+            node_path(1) = r;
+            index = 1;
+
+            % move along a cycle (i.e. a series of nodes connected by forward connections)
+            % (1) when counter is odd, erase the edge
+            % (2) when counter is even, make the edge bidirectional
+            C_curr_temp = C_curr;
+            while ~isempty(cs)
+                index = index + 1;
+                % select random end node
+                c = cs(1); % c = cs(randi(length(cs))); % for computational efficiency
+                node_path(index) = c;
+
+                % erase edge from C matrix
+                C_curr_temp(r,c) = 0;
+
+                r = c; % update row (start node)
+                cs = find(C_curr_temp(r,:)); % select all the corresponding end nodes
+            end
+
+            if mod(nnz(node_path), 2) && nnz(node_path) > 1
+                C_curr = C_curr_temp;
+                node_path = node_path(node_path>0);
+                for j=1:length(node_path)-1
+                    % erase edge or make it bi-directional
+                    D_curr(node_path(j),node_path(j+1)) = mod(counter,2);
+                    D_curr(node_path(j+1),node_path(j)) = mod(counter,2);
+
+                    counter = counter-1;
+                end
+            end
         end
     end
     D{i} = D_curr;
@@ -151,10 +185,10 @@ rw = 0;
 for i = 1:1:10
     
     dev = sum(E~=0)-sum(A~=0);
-
+    
     indp = find(dev>0);
     indm = find(dev<0);
-
+    
     if isempty(indp) || isempty(indp)
         break
     end

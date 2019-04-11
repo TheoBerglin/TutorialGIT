@@ -1,5 +1,5 @@
 clear all, close all;
-file_name = 'bias_braph_randomize_braph_BU_bias.mat';
+file_name = 'bias_braph_randomize_braph_BU_bias_fix.mat';
 nodes = 50;
 data = load(file_name);
 data = data.data;
