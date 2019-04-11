@@ -41,7 +41,7 @@ org = W;
 ITER =5;
 R     = double(W);              % sign function requires double input
 n     = size(R,1);
-ITER  = ITER*n*(n-1)/2;
+%ITER  = ITER*n*(n-1)/2;
 
 % maximal number of rewiring attempts per 'iter'
 maxAttempts = round(n/2);
@@ -49,6 +49,7 @@ maxAttempts = round(n/2);
 eff = 0;
 edges = find(W);
 n_edges = length(edges);
+ITER =ITER*n_edges;
 for iter=1:ITER
     att=0;
     while (att<=maxAttempts)    %while not rewired
