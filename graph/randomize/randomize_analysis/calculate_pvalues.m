@@ -1,8 +1,8 @@
 clear all, close all, clc
 %% Settings
-methods_gt = {'randomize_bct_D'};
-methods_target = {'randomize_braph_BD'};
-types = {Graph.BD};
+methods_gt = {'randomize_braph_BU'};
+methods_target = {'randomize_braph_BU_bias_fix'};
+types = {Graph.BU};
 nodes = [50];
 
 %% Locate method data
@@ -69,7 +69,7 @@ for i = 1:length(methods_gt)
                 gt_row = node_data_row(gt_data, dens, type);
                 gt_measures = gt_data(gt_row).measures;
                 comparison = calculate_pvalue_struct(gt_measures, target_measures);
-                target_data(i).p_value_vs_gt = comparison;
+                target_data(i).p_value_vs_orig = comparison;
                 if node == 10
                     target_data(i).p_value_gt = gt_data(gt_row).pValues;
                 else
