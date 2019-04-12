@@ -72,6 +72,7 @@ if ~all(A(1:N+1:end) == 0)
     A = remove_diagonal(A);
 end
 
+
 % binary directed random matrix
 B = randomize_braph_BD(A,I,error);
 
@@ -106,6 +107,7 @@ C = {C_pos, C_neg};
 % correct the one-directional edges
 % it relies on the fact that the number of incoming and outgoing edges is
 % conserved and therefore the edges are arranged in cycles
+rerun = false;
 for i = [1 2]
     C_curr = C{i};
     counter = sum(C_curr(:)); % number of one-directional edges that need to be corrected
@@ -118,23 +120,8 @@ for i = [1 2]
         r = randi(N); % choose a random row (start node)
         cs = find(C_curr(r,:)); % select all the corresponding end nodes
         if overall_counter > max_iter
-            while ~isempty(cs)
-                % select random end node
-                c = cs(1); % c = cs(randi(length(cs))); % for computational efficiency
-                
-                % erase edge or make it bi-directional
-                D_curr(r,c) = mod(counter,2);
-                D_curr(c,r) = mod(counter,2);
-                
-                % erase edge from C matrix
-                C_curr(r,c) = 0;
-                
-                counter = counter-1;
-                
-                r = c; % update row (start node)
-                cs = find(C_curr(r,:)); % select all the corresponding end nodes
-                
-            end
+            rerun = true;
+            break;
         else
             node_path = zeros(1, N+1);
             node_path(1) = r;
@@ -178,9 +165,16 @@ E = zeros(size(B));
 E(logical(D{1})) = 1;
 E(logical(D{2})) = -1;
 
+rw = 0;
+mw = 0;
+
+
+if rerun
+    [E, mw, rw] = randomize_braph_BU_bias_fix(A);
+end
+
 % correct the remaining wrong edges (typically < 10 for a number of nodes up to 1000)
 % these are due to the fact that some cycle have odd numbers
-rw = 0;
 
 for i = 1:1:10
     
@@ -192,7 +186,7 @@ for i = 1:1:10
     if isempty(indp) || isempty(indp)
         break
     end
-    
+    disp('Miswire')
     rw = rw+1;
     rp = indp(randi(length(indp)));
     rm = indm(randi(length(indm)));
@@ -211,5 +205,5 @@ for i = 1:1:10
 end
 
 % calculate number of miswired edges
-mw = sum(abs(sum(A)-sum(E)))/2;
+mw = mw + sum(abs(sum(A)-sum(E)))/2;
 end
