@@ -88,7 +88,4 @@ for iter=1:ITER
         end %rewiring condition
         att=att+1;
     end %while not rewired
-    if att == maxAttempts
-        disp('Max attempts reached');
-    end
 end %iterations
