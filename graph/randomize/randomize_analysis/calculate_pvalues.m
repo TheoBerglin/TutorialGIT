@@ -1,7 +1,8 @@
 clear all, close all, clc
 %% Settings
 methods_gt = {'randomize_bct_D'};
-methods_target = {'randmio_dir_signed_edit'};
+methods_target = {'randomize_bct_D_low_attempts'};
+pval_save_string = 'p_value_vs_bct';
 types = {Graph.BD};
 nodes = [50];
 
@@ -70,7 +71,7 @@ for mi = 1:length(methods_gt)
                 if gt_row <= length(gt_data)  % if gt data exists
                     gt_measures = gt_data(gt_row).measures;
                     comparison = calculate_pvalue_struct(gt_measures, target_measures);
-                    target_data(i).p_value_vs_bct = comparison;
+                    target_data(i).(pval_save_string) = comparison;
                     if node == 10
                         target_data(i).p_value_gt = gt_data(gt_row).pValues;
                     else

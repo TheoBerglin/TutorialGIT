@@ -1,4 +1,4 @@
-function [p_values, fdr_res, failed_tests, ones_tests] = run_fdr(file_name, nodes_to_check, excl_ass, ploton, saveon)
+function [p_values, fdr_res, failed_tests, ones_tests] = run_fdr(file_name, nodes_to_check, pval_string, excl_ass, ploton, saveon)
 %RUN_FDR Gets all p_values from a specific randomization run specified by
 %FILE_NAME and NODES_TO_CHECK, and performs an FDR check on these. EXCL_ASS
 %defines whether to exclude assortativity or not (default = false), PLOTON
@@ -32,7 +32,7 @@ for ni = 1:length(data)  % loop through nodes
     nodes = data(ni).nodes;
     if any(nodes == nodes_to_check)
         for row = 1:length(node_data)  % loop through densities
-            p_vals_all = node_data(row).p_value_vs_bct;  % CHANGE HERE
+            p_vals_all = node_data(row).(pval_string);  % CHANGE HERE
             if ~isempty(p_vals_all)
                 fields = fieldnames(p_vals_all);
                 for fi = 1:length(fields)  % loop through measures
