@@ -75,6 +75,15 @@ for ni = 1:length(data)  % loop through nodes
     end
 end
 
+if ~exist('failed_tests', 'var')
+    failed_tests = struct();
+end
+
+if ~exist('ones_tests', 'var')
+    ones_tests = struct();
+end
+
+
 fdr_res = fdr(p_values);
 if ploton
     x = 1:1:length(p_values);
