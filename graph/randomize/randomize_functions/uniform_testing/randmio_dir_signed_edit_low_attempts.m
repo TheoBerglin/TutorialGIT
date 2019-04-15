@@ -42,14 +42,15 @@ end
 ITER =5;
 R = double(W);              % sign function requires double input
 n = size(R,1);
-ITER=ITER*n*(n-1);
+%ITER=ITER*n*(n-1);
+%ITER = 1;
 org = R;
 
 % maximal number of rewiring attempts per 'iter'
 % actual number of successful rewirings
 edges = find(W);
 n_edges = length(edges);
-%ITER =ITER*n_edges; % Better number of iterations
+ITER =ITER*n_edges; % Better number of iterations
 for iter=1:ITER
     %select four distinct vertices
     

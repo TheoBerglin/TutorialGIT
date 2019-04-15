@@ -48,7 +48,6 @@ ITER=ITER*n*(n-1);
 maxAttempts=n;
 % actual number of successful rewirings
 eff = 0;
-
 for iter=1:ITER
     att=0;
     while (att<=maxAttempts)                                     %while not rewired
