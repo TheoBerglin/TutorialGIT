@@ -1,6 +1,9 @@
-function [p_values, fdr_res, failed_tests, ones_tests] = extract_failed_permutations(file_name, nodes_to_check, excl_ass, saveon, ploton)
-%EXTRACT_FAILED_PERMUTATIONS Returns a struct containing failed test
-%information. Input is a file name containing the data of interest.
+function [p_values, fdr_res, failed_tests, ones_tests] = run_fdr(file_name, nodes_to_check, excl_ass, ploton, saveon)
+%RUN_FDR Gets all p_values from a specific randomization run specified by
+%FILE_NAME and NODES_TO_CHECK, and performs an FDR check on these. EXCL_ASS
+%defines whether to exclude assortativity or not (default = false), PLOTON
+%defines whether to plot the results(default = false) and SAVEON whether 
+%to save it (default = false).
 
 if ~exist('excl_ass', 'var')
     excl_ass = false;
@@ -24,15 +27,16 @@ else
     measures_exclude = {'deg', 'den', 'str', 'nr_e'};
 end
 
-for ni = 1:length(data)
+for ni = 1:length(data)  % loop through nodes
     node_data = data(ni).node_data;
     nodes = data(ni).nodes;
     if any(nodes == nodes_to_check)
-        for row = 1:length(node_data)
+        for row = 1:length(node_data)  % loop through densities
             p_vals_all = node_data(row).p_value_vs_gt;
             fields = fieldnames(p_vals_all);
-            for fi = 1:length(fields)
+            for fi = 1:length(fields)  % loop through measures
                 p_val = p_vals_all.(fields{fi});
+                %dens = node_data(row).density;
                 if ~any(strncmpi(fields{fi}, measures_exclude, 3))
                     if p_val == 0
                         f_struct = struct('nodes', nodes,'density',node_data(row).density,...
@@ -63,7 +67,9 @@ for ni = 1:length(data)
                 end
             end
         end
-        p_values = [p_values p_values_node];
+        if exist('p_values_node', 'var')
+            p_values = [p_values p_values_node];
+        end
     end
 end
 
@@ -78,7 +84,7 @@ if ploton
     if excl_ass
         str = sprintf('%s, relevant measures, ass excl, FDR: %.4f', file_name, fdr_res);
     else
-        str = sprintf('%s, relevant measures, ass excl, FDR: %.4f', file_name, fdr_res);
+        str = sprintf('%s, relevant measures, FDR: %.4f', file_name, fdr_res);
     end
     title(str)
     ylabel('P-value')

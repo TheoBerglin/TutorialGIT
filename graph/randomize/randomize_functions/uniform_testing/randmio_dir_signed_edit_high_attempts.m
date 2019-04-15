@@ -1,15 +1,17 @@
-function [R,eff] = randmio_und_signed(W, ITER)
-% RANDMIO_UND_SIGNED	Random graph with preserved signed degree distribution
+function [R,eff] = randmio_dir_signed_edit_high_attempts(W)
+% RANDMIO_DIR_SIGNED        Random directed graph with preserved signed
+%                           in/out degree distribution
 %
-%   R       = randmio_und_signed(W,ITER);
-%   [R,eff] = randmio_und_signed(W,ITER);
+%   R       = randmio_dir(W, ITER);
+%   [R,eff] = randmio_dir(W, ITER);
 %
-%   This function randomizes an undirected network with positively and
+%   This function randomizes a directed weighted network with positively and
 %   negatively signed connections, while preserving the positively and
-%   negatively signed degree distribution. The function does not preserve
-%   the strength distribution in weighted networks.
+%   negatively signed in- and out-degree distributions. In weighted
+%   networks, the function preserves the out-strength but not the
+%   in-strength distributions.
 %
-%   Input:      W,      undirected (binary/weighted) connection matrix
+%   Input:      W,      directed (binary/weighted) connection matrix
 %               ITER,   rewiring parameter
 %                       (each edge is rewired approximately ITER times)
 %
@@ -33,32 +35,32 @@ function [R,eff] = randmio_und_signed(W, ITER)
 %             algorithm allows positive-positive/negative-negative
 %             rewirings, in addition to the previous positive-positive/0-0
 %             and negative-negative/0-0 rewirings (Mika Rubinov). 
-if ~exist('ITER', 'var')
-    ITER = 5;
-end
 
 if nargin('randperm')==1
     warning('This function requires a recent (>2011) version of MATLAB.')
 end
-
-R     = double(W);              % sign function requires double input
-n     = size(R,1);
-ITER  = ITER*n*(n-1)/2;
+ITER =5;
+R = double(W);              % sign function requires double input
+n = size(R,1);
+ITER=ITER*n*(n-1);
+org = R;
 
 % maximal number of rewiring attempts per 'iter'
-maxAttempts = round(n/2);
+maxAttempts=10*n;
 % actual number of successful rewirings
 eff = 0;
-
+edges = find(W);
+n_edges = length(edges);
+%ITER =ITER*n_edges; % Better number of iterations
 for iter=1:ITER
     att=0;
-    while (att<=maxAttempts)    %while not rewired
+    while (att<=maxAttempts)                                     %while not rewired
         %select four distinct vertices
-        nodes = randperm(n,4);
-        a = nodes(1);
-        b = nodes(2);
-        c = nodes(3);
-        d = nodes(4);
+      
+        nodes = randperm(n_edges,2);
+        
+        [a, b] = ind2sub([n,n],edges(nodes(1)));
+        [c, d] = ind2sub([n,n],edges(nodes(2)));
         
         r0_ab = R(a,b);
         r0_cd = R(c,d);
@@ -68,12 +70,18 @@ for iter=1:ITER
         %rewiring condition
         if      (sign(r0_ab)==sign(r0_cd)) && ...
                 (sign(r0_ad)==sign(r0_cb)) && ...
-                (sign(r0_ab)~=sign(r0_ad))
+                (sign(r0_ab)~=sign(r0_ad)) && ...
+            a ~= d && c~=b
+                
             
-            R(a,d)=r0_ab; R(a,b)=r0_ad;
-            R(d,a)=r0_ab; R(b,a)=r0_ad;
-            R(c,b)=r0_cd; R(c,d)=r0_cb;
-            R(b,c)=r0_cd; R(d,c)=r0_cb;
+            R(a,d)=r0_ab;
+            e1 = sub2ind([n,n], a, d);
+            edges(nodes(1)) = e1;
+            R(a,b)=r0_ad;
+            R(c,b)=r0_cd;
+            e2 = sub2ind([n,n], c, b);
+            edges(nodes(2)) = e2;
+            R(c,d)=r0_cb;
             
             eff = eff+1;
             break;

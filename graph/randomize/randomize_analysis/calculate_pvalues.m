@@ -1,8 +1,8 @@
 clear all, close all, clc
 %% Settings
-methods_gt = {'randomize_bct_D'};
-methods_target = {'randomize_braph_BD'};
-types = {Graph.BD};
+methods_gt = {'randomize_bct_U'};
+methods_target = {'randmio_und_signed_edit'};
+types = {Graph.BU};
 nodes = [50];
 
 %% Locate method data
@@ -11,10 +11,10 @@ data_path = path_append(current_loc, 'data');
 addpath(data_path);
 
 %% Method loop
-for i = 1:length(methods_gt)
-    method_gt = methods_gt{i};
-    method_target = methods_target{i};
-    type = types{i};
+for mi = 1:length(methods_gt)
+    method_gt = methods_gt{mi};
+    method_target = methods_target{mi};
+    type = types{mi};
     fprintf('Running for method: %s\n', method_target)
     
     %% Load data

@@ -1,4 +1,4 @@
-function [R,eff] = randmio_und_signed(W, ITER)
+function [R,eff] = randmio_und_signed_high_attempts(W, ITER)
 % RANDMIO_UND_SIGNED	Random graph with preserved signed degree distribution
 %
 %   R       = randmio_und_signed(W,ITER);
@@ -46,7 +46,7 @@ n     = size(R,1);
 ITER  = ITER*n*(n-1)/2;
 
 % maximal number of rewiring attempts per 'iter'
-maxAttempts = round(n/2);
+maxAttempts = round(10*n/2);
 % actual number of successful rewirings
 eff = 0;
 
