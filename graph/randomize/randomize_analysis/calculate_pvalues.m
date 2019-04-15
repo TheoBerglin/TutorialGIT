@@ -1,8 +1,8 @@
 clear all, close all, clc
 %% Settings
-methods_gt = {'randomize_bct_U'};
-methods_target = {'randmio_und_signed_edit'};
-types = {Graph.BU};
+methods_gt = {'randomize_bct_D'};
+methods_target = {'randmio_dir_signed_edit'};
+types = {Graph.BD};
 nodes = [50];
 
 %% Locate method data
@@ -67,13 +67,15 @@ for mi = 1:length(methods_gt)
                 fprintf('Running for density: %.3f\n', dens)
                 target_measures = target_data(i).measures;
                 gt_row = node_data_row(gt_data, dens, type);
-                gt_measures = gt_data(gt_row).measures;
-                comparison = calculate_pvalue_struct(gt_measures, target_measures);
-                target_data(i).p_value_vs_gt = comparison;
-                if node == 10
-                    target_data(i).p_value_gt = gt_data(gt_row).pValues;
-                else
-                    target_data(i).p_value_gt = gt_data(gt_row).p_value_self;
+                if gt_row <= length(gt_data)  % if gt data exists
+                    gt_measures = gt_data(gt_row).measures;
+                    comparison = calculate_pvalue_struct(gt_measures, target_measures);
+                    target_data(i).p_value_vs_bct = comparison;
+                    if node == 10
+                        target_data(i).p_value_gt = gt_data(gt_row).pValues;
+                    else
+                        target_data(i).p_value_gt = gt_data(gt_row).p_value_self;
+                    end
                 end
             end
         end
