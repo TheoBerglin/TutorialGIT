@@ -1,9 +1,9 @@
 clear all, close all, clc
 %% Settings
-methods_gt = {'randomize_bct_D'};
-methods_target = {'randomize_bct_D_low_attempts'};
-pval_save_string = 'p_value_vs_bct';
-types = {Graph.BD};
+methods_gt = {'randomize_bct_U'};
+methods_target = {'randomize_braph_BU_no_mw'};
+pval_save_string = 'p_value_vs_braph_bct_original';
+types = {Graph.BU};
 nodes = [50];
 
 %% Locate method data

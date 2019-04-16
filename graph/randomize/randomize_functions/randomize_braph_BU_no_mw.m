@@ -31,6 +31,7 @@ function [E,mw] = randomize_braph_BU(A,I,error)
 %   Some minor corrections might need to be applied at the end for a very
 %   limited numebr of nodes.
 %
+
 % Version 1:
 %   - Author: Giovanni Volpe
 %   - Date: 2016/04/01
@@ -72,8 +73,7 @@ if ~all(A(1:N+1:end) == 0)
 end
 
 % binary directed random matrix
-B = randomize_braph_BD(A,I,error);
-
+B = randomize_braph_BD_no_mw(A,I,error);
 
 % find where 2 non-zero edges create zero-sum cycles 
 B_pos = B == 1;
@@ -120,8 +120,8 @@ for i = [1 2]
         while ~isempty(cs)
             
             % select random end node
-            %c = cs(1); % c = cs(randi(length(cs))); % for computational efficiency
-            c = cs(randi(length(cs)));
+            c = cs(1); % c = cs(randi(length(cs))); % for computational efficiency
+            
             % erase edge or make it bi-directional
             D_curr(r,c) = mod(counter,2);
             D_curr(c,r) = mod(counter,2);
@@ -143,6 +143,7 @@ end
 E = zeros(size(B));
 E(logical(D{1})) = 1;
 E(logical(D{2})) = -1;
+
 % correct the remaining wrong edges (typically < 10 for a number of nodes up to 1000)
 % these are due to the fact that some cycle have odd numbers
 for i = 1:1:10
@@ -152,7 +153,7 @@ for i = 1:1:10
     indp = find(dev>0);
     indm = find(dev<0);
 
-    if isempty(indm) || isempty(indp)
+    if isempty(indp) || isempty(indp)
         break
     end
     
@@ -165,6 +166,7 @@ for i = 1:1:10
     if E(rm,c)==0 && rm~=c && rp~=c && rp~=rm
         E(rm,c) = E(rp,c);
         E(c,rm) = E(c, rp);
+        
         E(rp,c) = 0;
         E(c,rp) = 0;
     end
