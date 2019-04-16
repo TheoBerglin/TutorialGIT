@@ -1,17 +1,26 @@
 %% Settings
 clear all, clc, close all
 multiple_originals = false;
-load_matrix = struct('load', false, 'type', Graph.BU, 'density', 0.1, 'nodes', 7, 'give_name', false);
-n_runs = 100000;
-methods ={'randomize_braph_BU' };% 'randomize_braph_BU_bias_fix'}; %{'randomize_braph_BD' 'randmio_dir_signed_edit_low_attempts' 'randomize_bct_D_low_attempts' 'randomize_bct_D_high_attempts' 'randmio_dir_signed_edit_high_attempts'...
+load_matrix = struct('load', true, 'type', Graph.BU, 'density', 0.003, 'nodes', 50, 'give_name', false);
+n_runs = 10000;
+methods ={'randomize_braph_BD' 'randomize_braph_BD_no_mw' 'randomize_bct_D' };% 'randomize_braph_BU_bias_fix'}; %{'randomize_braph_BD' 'randmio_dir_signed_edit_low_attempts' 'randomize_bct_D_low_attempts' 'randomize_bct_D_high_attempts' 'randmio_dir_signed_edit_high_attempts'...
     %'randomize_bct_D' 'randmio_dir_signed_edit'};
 give_name = multiple_originals;
 %% Select first matrix
 A_org = [0 0 1 0;1 0 0 1;1 0 0 1;0 1 0 0]; % Directed
+% Directed aswell, density 5.5
+A_org_10 = [0 0 0 0 0 0 0 1 0 0;0 0 0 0 0 0 0 0 0 0;0 1 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 1 0;0 0 0 0 0 0 0 0 0 0;1 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0;0 0 0 0 1 0 0 0 0 0];
+% Directed density 14.5, not valid. Self connections
+A_org_10 = [0 1 0 0 0 0 0 0 0 0;0 0 0 0 1 1 0 0 0 0;0 0 0 0 0 0 0 0 0 1;1 0 0 0 1 0 0 0 0 0;0 0 0 0 0 1 0 0 0 0;0 0 0 0 0 0 0 0 0 0;0 1 0 1 0 0 0 0 0 0;0 0 0 1 0 1 0 1 1 0;0 0 0 0 0 0 0 0 0 0;0 1 0 0 0 0 0 0 0 0];
 %A_org_7 = [0 0 0 0 0 1 0;0 0 0 1 0 0 1;0 0 0 1 1 0 0;0 1 1 0 0 0 0;0 0 1 0 0 0 0;1 0 0 0 0 0 0;0 1 0 0 0 0 0];
 %A_org = A_org_7;
-A_org = [0 0 1 0 1;0 0 0 1 0;1 0 0 0 0;0 1 0 0 1;1 0 0 1 0];
+% 15 density
+A_org_7 = [0 0 1 1 0 0 0;0 0 0 0 0 0 0;0 0 0 1 0 0 0;0 0 0 0 0 0 1;0 0 0 0 0 0 1;0 0 0 0 0 0 0;0 0 1 0 0 0 0];
+% 35 density fully connected
+A_org_7 = [0 0 1 0 0 1 1;0 0 1 0 0 0 1;0 1 0 0 1 0 0;0 1 0 0 1 0 0;0 0 0 1 0 1 1;1 0 0 0 0 0 0;0 0 1 0 1 0 0];
+%A_org = [0 0 1 0 1;0 0 0 1 0;1 0 0 0 0;0 1 0 0 1;1 0 0 1 0];
 %A_org = [0 1 0 0;1 0 0 0;0 0 0 1;0 0 1 0];
+A_org = A_org_7;
 if load_matrix.load
     give_name = load_matrix.give_name;
     dir = Graph.is_directed(load_matrix.type);

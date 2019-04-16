@@ -78,14 +78,15 @@ permutation(1:1:E)
 % try to rewire the miswired edges until the maximum number of iterations
 % or the acceptable maximum fraction of miswired edges is reached.
 ind_mw = miswired();
-while ind_mw>0
+counter = 0;
+while all(ind_mw>0 & counter < 2e4)
     %disp('apa')
     permutation(1:1:E)
+    ind_mw = miswired();
     if length(ind_mw)<E*error
         break
     end
-    ind_mw = miswired();
-   
+    counter = counter +1;
 end
 
 % find remaining miswired edges and their col. index in A
@@ -136,8 +137,8 @@ random_rewiring(ind_col)
     end
 
     function random_rewiring(ind)
-        % rewires the row (out-going) index of the edges specified by ind 
-        % to a randomly chosen available row (node). 
+        % rewires the row (out-going) index of the edges specified by ind
+        % to a randomly chosen available row (node).
         
         % this random rewiring doesn't work for very dense matrices, since it looks for
         % nodes that doesn't have an edge to the node in question, and in dense

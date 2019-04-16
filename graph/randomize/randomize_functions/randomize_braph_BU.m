@@ -96,7 +96,6 @@ end
 D_pos = floor((B_pos+transpose(B_pos))/2);
 D_neg = floor((B_neg+transpose(B_neg))/2);
 D = {D_pos, D_neg};
-
 % matrix with the one-directional edges
 % antisymmetric, i.e. C = -transpose(C)
 C_pos = B_pos-transpose(B_pos)==1;
