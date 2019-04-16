@@ -7,17 +7,17 @@ function [gm_list, gm_list2] = run_randomization(A, type, randomize_function, n_
 
 gm = calculate_global_measures(zeros(5), zeros(5), type); % For initialization of gm_list
 gm_list = repmat(gm, 1, n_randomizations); % Initialization
-gm_list2 = gm_list;
+
 % Lets run randomization
 for i = 1:n_randomizations
     eval(sprintf('rA = %s(A);', randomize_function));
     gm = calculate_global_measures(rA, A, type);
     gm_list(i) = gm;
     
-    eval(sprintf('rA = %s(A);', randomize_function));
-    gm = calculate_global_measures(rA, A, type);
-    gm_list2(i) = gm;
+    %eval(sprintf('rA = %s(A);', randomize_function));
+    %gm = calculate_global_measures(rA, A, type);
+    %gm_list2(i) = gm;
 end
-
+gm_list2 = gm_list;
 end
 

@@ -1,10 +1,10 @@
 clear all, clc, close all;
 %% Settings
-methods = {'randomize_braph_BU_no_mw'};
-graph_types = {Graph.BU};
+methods = {'randomize_braph_BU' 'randomize_bct_U' 'randomize_braph_BD' 'randomize_bct_D'};
+graph_types = {Graph.BU Graph.BU Graph.BD Graph.BD};
 
-nodes = [50];
-densities = [0.01 0.02 0.03 0.04 0.05 0.06];% 0.08 0.09 0.1 0.2 0.3 0.4 0.5 0.6 0.7];
+nodes = [100];
+densities = 0.001:0.003:0.1;
 rerun_existing = true;
 n_randomizations = 500;
 desc_str = sprintf('%s', datestr(datetime('now')));
