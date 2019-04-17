@@ -66,9 +66,9 @@ n_measures = size(measures,2);
 for i = 1:n_measures
     func = strrep(measures{i}, '.m', '');
     if isequal(measures{i}, 'validate_randomization')
-        eval(sprintf('gm.%s = %s(A, A_orig);', out_var{i}, func))
+        eval(sprintf('gm.%s = full(%s(A, A_orig));', out_var{i}, func))
     else
-        eval(sprintf('gm.%s = %s(A, type);', out_var{i}, func))
+        eval(sprintf('gm.%s = full(%s(A, type));', out_var{i}, func))
     end
 end
 end
