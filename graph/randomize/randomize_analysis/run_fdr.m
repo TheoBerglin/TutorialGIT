@@ -100,7 +100,7 @@ if ploton
     if excl_ass
         str = sprintf('%s, relevant measures, ass excl, FDR: %.4f', file_name, fdr_res);
     else
-        str = sprintf('%s, relevant measures, FDR: %.4f', file_name, fdr_res);
+        str = sprintf('%s vs BCT, %.3f <= density < %.3f, FDR: %.4f', file_name, density_limit_lower, density_limit_upper, fdr_res);
     end
     title(str)
     ylabel('P-value')
