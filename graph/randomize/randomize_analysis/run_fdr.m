@@ -5,6 +5,9 @@ function [p_values, fdr_res, failed_tests, ones_tests] = run_fdr(file_name, node
 %defines whether to plot the results(default = false) and SAVEON whether 
 %to save it (default = false).
 
+density_limit_upper = 1;
+density_limit_lower = 0.035;
+
 if ~exist('excl_ass', 'var')
     excl_ass = false;
 end
@@ -32,38 +35,40 @@ for ni = 1:length(data)  % loop through nodes
     nodes = data(ni).nodes;
     if any(nodes == nodes_to_check)
         for row = 1:length(node_data)  % loop through densities
-            p_vals_all = node_data(row).(pval_string);  % CHANGE HERE
-            if ~isempty(p_vals_all)
-                fields = fieldnames(p_vals_all);
-                for fi = 1:length(fields)  % loop through measures
-                    p_val = p_vals_all.(fields{fi});
-                    %dens = node_data(row).density;
-                    if ~any(strncmpi(fields{fi}, measures_exclude, 3))
-                        if p_val == 0
-                            f_struct = struct('nodes', nodes,'density',node_data(row).density,...
-                                'weighted',node_data(row).weighted, ...
-                                'directed',node_data(row).directed,...
-                                'measure', fields{fi});
-                            if ~exist('failed_tests', 'var')
-                                failed_tests(1) = f_struct;
-                            else
-                                failed_tests(end+1) = f_struct;
+            dens = node_data(row).density;
+            if dens >= density_limit_lower && dens < density_limit_upper
+                p_vals_all = node_data(row).(pval_string);  % CHANGE HERE
+                if ~isempty(p_vals_all)
+                    fields = fieldnames(p_vals_all);
+                    for fi = 1:length(fields)  % loop through measures
+                        p_val = p_vals_all.(fields{fi});
+                        if ~any(strncmpi(fields{fi}, measures_exclude, 3))
+                            if p_val == 0
+                                f_struct = struct('nodes', nodes,'density',node_data(row).density,...
+                                    'weighted',node_data(row).weighted, ...
+                                    'directed',node_data(row).directed,...
+                                    'measure', fields{fi});
+                                if ~exist('failed_tests', 'var')
+                                    failed_tests(1) = f_struct;
+                                else
+                                    failed_tests(end+1) = f_struct;
+                                end
+                            elseif p_val == 1
+                                f_struct = struct('nodes', nodes,'density',node_data(row).density,...
+                                    'weighted',node_data(row).weighted, ...
+                                    'directed',node_data(row).directed,...
+                                    'measure', fields{fi});
+                                if ~exist('ones_tests', 'var')
+                                    ones_tests(1) = f_struct;
+                                else
+                                    ones_tests(end+1) = f_struct;
+                                end
                             end
-                        elseif p_val == 1
-                            f_struct = struct('nodes', nodes,'density',node_data(row).density,...
-                                'weighted',node_data(row).weighted, ...
-                                'directed',node_data(row).directed,...
-                                'measure', fields{fi});
-                            if ~exist('ones_tests', 'var')
-                                ones_tests(1) = f_struct;
+                            if ~exist('p_values_node', 'var')
+                                p_values_node(1) = p_val;
                             else
-                                ones_tests(end+1) = f_struct;
+                                p_values_node(end+1) = p_val;
                             end
-                        end
-                        if ~exist('p_values_node', 'var')
-                            p_values_node(1) = p_val;
-                        else
-                            p_values_node(end+1) = p_val;
                         end
                     end
                 end
