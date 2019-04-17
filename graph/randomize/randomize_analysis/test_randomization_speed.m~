@@ -2,8 +2,8 @@ clear all, clc, close all
 %% Settings
 functions = {'randomize_braph_BD' 'randomize_braph_BU' 'randomize_combo_WD_fix' 'randomize_combo_WU_fix'};
 type = {Graph.BD, Graph.BU, Graph.WD, Graph.WU};
-densities = [0.0001 0.001 0.01]; % 0.05 0.1 %, 0.2 0.4 0.7];
-sizes = [1000 5000 10000 50000 100000];
+densities = [00.001 0.01 % 0.05 0.1 %, 0.2 0.4 0.7];
+sizes = [1000 10000 50000];
 n_randomizations = 40;
 
 %% Data path
@@ -64,10 +64,10 @@ for di = 1:length(densities)
                 times(i) = toc;
             end
             speed_data.(wei_str).(dir_str).(func)(speed_ind) = struct('nodes', s, 'density', d, 'times', times);
-            fprintf('Size: %d Density: %.4f Time per run: %.7f\n', s, d, mean(times))
+            fprintf('Size: %d Density: %.2f Time per run: %.7f\n', s, d, mean(times))
         catch
             speed_data.(wei_str).(dir_str).(func)(speed_ind) = struct('nodes', nan, 'density', nan, 'times', times);
-            fprintf('ERROROR: Size: %d Density: %.4f did not finish\n', s, d)
+            fprintf('ERROROR: Size: %d Density: %.2f did not finish\n', s, d)
         end
         speed_ind = speed_ind+1;
     end

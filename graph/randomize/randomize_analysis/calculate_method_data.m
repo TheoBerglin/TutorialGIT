@@ -1,7 +1,7 @@
 clear all, clc, close all;
 %% Settings
-methods = {'randomize_braph_BU' 'randomize_bct_U' 'randomize_braph_BD' 'randomize_bct_D'};
-graph_types = {Graph.BU Graph.BU Graph.BD Graph.BD};
+methods = {'randomize_combo_WU_fix' 'randomize_bct_U' 'randomize_combo_WD_fix' 'randomize_bct_D'};
+graph_types = {Graph.WU Graph.WU Graph.WD Graph.WD};
 
 nodes = [100];
 densities = 0.001:0.003:0.1;

@@ -3,7 +3,7 @@ s = nodes*nodes;
 possible_connections = nodes*(nodes-1);
 dens = density/100;
 threshold = 0.3;
-A = zeros(nodes, nodes);
+A = sparse(nodes, nodes);
     
     if dir
         % generate edges as long as desired density is not met
