@@ -50,7 +50,7 @@ An = W<0;                                                   %negative adjacency 
 Ap_r = connections>0; % Randomized positive adjacency matrix
 An_r = connections<0; % Randomized positive adjacency matrix
 n = size(W, 1); % number of nodes
-W0=zeros(n);                                                %null model network
+W0=sparse(n, n);                                                %null model network
 for s=[1 -1]
     switch s                                                %switch sign (positive/negative)
         case 1

@@ -54,9 +54,9 @@ if ~isequal(size(A,1), size(A,2))
 end
 
 % check "binarism"
-if ~all(all(A == 0 | A == 1 | A == -1))
-    error('Input matrix does not consist of -1, 1 or 0');
-end
+%if ~all(all(A == 0 | A == 1 | A == -1))
+ %   error('Input matrix does not consist of -1, 1 or 0');
+%end
 
 % check for symmetry
 if ~isequal(A, A.')

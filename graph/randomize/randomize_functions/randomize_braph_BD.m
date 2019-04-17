@@ -48,9 +48,9 @@ if ~isequal(size(A,1), size(A,2))
 end
 
 % check "binarism"
-if ~all(all(A == 0 | A == 1 | A == -1))
-    error('Input matrix does not consist of -1, 1 or 0');
-end
+%if any(find(A ~= 0 & A ~= 1 & A ~= -1))
+%    error('Input matrix does not consist of -1, 1 or 0');
+%end
 
 % number of nodes
 N = length(A);
@@ -161,7 +161,7 @@ random_rewiring(ind_col)
     end
 
 % construct the connectivity matrix B with rewired edges
-B = zeros(size(A));
+B = sparse(size(A,1), size(A,2));
 B(sub2ind(size(B),r,c)) = e_val;
 
 end
