@@ -1,9 +1,9 @@
 %% Settings
 clear all, clc, close all
-multiple_originals = false;
-load_matrix = struct('load', true, 'type', Graph.BU, 'density', 0.003, 'nodes', 50, 'give_name', false);
-n_runs = 10000;
-methods ={'randomize_braph_BD' 'randomize_braph_BD_no_mw' 'randomize_bct_D' };% 'randomize_braph_BU_bias_fix'}; %{'randomize_braph_BD' 'randmio_dir_signed_edit_low_attempts' 'randomize_bct_D_low_attempts' 'randomize_bct_D_high_attempts' 'randmio_dir_signed_edit_high_attempts'...
+multiple_originals = true;
+load_matrix = struct('load', false, 'type', Graph.BU, 'density', 0.003, 'nodes', 50, 'give_name', false);
+n_runs = 100000;
+methods ={'randomize_braph_BU'};%{'randomize_braph_BD' 'randomize_braph_BD_no_mw' 'randomize_bct_D' };% 'randomize_braph_BU_bias_fix'}; %{'randomize_braph_BD' 'randmio_dir_signed_edit_low_attempts' 'randomize_bct_D_low_attempts' 'randomize_bct_D_high_attempts' 'randmio_dir_signed_edit_high_attempts'...
     %'randomize_bct_D' 'randmio_dir_signed_edit'};
 give_name = multiple_originals;
 %% Select first matrix
@@ -21,6 +21,7 @@ A_org_7 = [0 0 1 0 0 1 1;0 0 1 0 0 0 1;0 1 0 0 1 0 0;0 1 0 0 1 0 0;0 0 0 1 0 1 1
 %A_org = [0 0 1 0 1;0 0 0 1 0;1 0 0 0 0;0 1 0 0 1;1 0 0 1 0];
 %A_org = [0 1 0 0;1 0 0 0;0 0 0 1;0 0 1 0];
 A_org = A_org_7;
+A_org = [0 1 0 0;1 0 0 0;0 0 0 0;0 0 0 0];
 if load_matrix.load
     give_name = load_matrix.give_name;
     dir = Graph.is_directed(load_matrix.type);

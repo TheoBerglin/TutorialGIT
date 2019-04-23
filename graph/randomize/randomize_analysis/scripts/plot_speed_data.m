@@ -74,7 +74,7 @@ for i = 1:length(fields)
    loglog(x_data, y_data,'DisplayName', replace(fields{i}, '_', ' '))
    hold on
 end
-xlabel('Nodes')
-ylabel('Time per randomization [s]')
-title('Some title')
-legend()
+xlabel('Number of nodes');%, 'interpreter', 'latex', 'FontSize', 14)
+ylabel('Time per randomization [s]');%, 'interpreter', 'latex', 'FontSize', 14)
+title(sprintf('Time comparison, density: %.2f', densities(1)));%, 'interpreter', 'latex', 'FontSize', 14)
+legend('Location', 'best')
