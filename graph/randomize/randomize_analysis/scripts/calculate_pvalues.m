@@ -1,13 +1,14 @@
 clear all, close all, clc
 %% Settings
 methods_gt = {'randomize_bct_U'};
-methods_target = {'randomize_braph_BU_no_mw'};
-pval_save_string = 'p_value_vs_braph_bct_original';
-types = {Graph.BU};
+methods_target = {'randomize_combo_WU_fix'};
+pval_save_string = 'p_value_vs_bct';
+types = {Graph.WU};
 nodes = [50];
 
 %% Locate method data
-current_loc = fileparts(which('calculate_pvalues.m'));
+folder = what('randomize_analysis');
+current_loc = folder.path;
 data_path = path_append(current_loc, 'data');
 addpath(data_path);
 

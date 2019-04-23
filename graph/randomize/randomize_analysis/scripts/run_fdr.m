@@ -7,7 +7,7 @@ function [p_values, fdr_res, failed_tests, ones_tests] = run_fdr(file_name, node
 
 density_limit_upper = 1;
 density_limit_lower = 0.002;
-type = 'BD';
+type = 'BU';
 
 if ~exist('excl_ass', 'var')
     excl_ass = false;
@@ -101,7 +101,7 @@ if ploton
     if excl_ass
         str = sprintf('%s, relevant measures, ass excl, FDR: %.4f', file_name, fdr_res);
     else
-        str = ['BRAPH ' type ' vs BCT, size:' num2str(nodes_to_check) 'x' num2str(nodes_to_check)...
+        str = ['BCT mod ' type ' vs BCT, size:' num2str(nodes_to_check) 'x' num2str(nodes_to_check)...
             ', ' num2str(density_limit_lower) ' $\leq$ density $<$ ' num2str(density_limit_upper) ', FDR: ' num2str(fdr_res)];
     end
     title(str)
