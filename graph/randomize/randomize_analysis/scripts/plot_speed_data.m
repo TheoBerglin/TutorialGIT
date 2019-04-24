@@ -3,7 +3,7 @@ clear all, close all, clc;
 %% Settings
 run_all = -999;
 sizes = [run_all];
-densities = [0.01]; %All densities
+densities = [0.1]; %All densities
 
 %%
 load('speed.mat');
@@ -74,7 +74,7 @@ for i = 1:length(fields)
    loglog(x_data, y_data,'DisplayName', replace(fields{i}, '_', ' '))
    hold on
 end
-xlabel('Number of nodes');%, 'interpreter', 'latex', 'FontSize', 14)
-ylabel('Time per randomization [s]');%, 'interpreter', 'latex', 'FontSize', 14)
-title(sprintf('Time comparison, density: %.2f', densities(1)));%, 'interpreter', 'latex', 'FontSize', 14)
+xlabel('Density', 'interpreter', 'latex', 'FontSize', 12)
+ylabel('Time per randomization [s]', 'interpreter', 'latex', 'FontSize', 12)
+title(sprintf('Time comparison, nodes: %d', sizes(1)), 'interpreter', 'latex', 'FontSize', 14)
 legend('Location', 'best')

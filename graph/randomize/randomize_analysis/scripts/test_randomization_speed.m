@@ -1,9 +1,12 @@
 clear all, clc, close all
 %% Settings
-functions = {'randomize_braph_BD' 'randomize_braph_BU' 'randomize_combo_WD_fix' 'randomize_combo_WU_fix'};
-type = {Graph.BD, Graph.BU, Graph.WD, Graph.WU};
-densities = [0.0001 0.001 0.01]; % 0.05 0.1 %, 0.2 0.4 0.7];
-sizes = [1000 5000 10000 50000 100000];
+functions = {'randomize_braph_BD' 'randomize_braph_BU' 'randomize_combo_WD_fix' 'randomize_combo_WU_fix',...
+    'randomize_bct_D' 'randomize_bct_U' 'randomize_bct_D' 'randomize_bct_U'};
+type = {Graph.BD, Graph.BU, Graph.WD, Graph.WU, Graph.BD, Graph.BU, Graph.WD, Graph.WU};
+densities = [0.0001];% 0.001 0.01]; % 0.05 0.1 %, 0.2 0.4 0.7];
+small_size = [150 200 300 400];
+large_size = [small_size, 800 1000 5000 10000 50000 100000];
+size_vec = {large_size, large_size, large_size, large_size, small_size, small_size, small_size, small_size};
 n_randomizations = 40;
 
 %% Data path
@@ -52,6 +55,7 @@ for di = 1:length(densities)
     else
         speed_ind = length(speed_data.(wei_str).(dir_str).(func))+1;
     end
+    sizes = size_vec{funci};
     for si = 1:length(sizes)
         d = densities(di); % Density
         s = sizes(si); % Size of matrix2
