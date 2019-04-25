@@ -23,6 +23,7 @@ function [B, mw] = randomize_braph_BD(A,I,error)
 %   The algorithm iteratively rewires these miswired edges
 %   until the maximum number of iterations (I) or the acceptable maximum
 %   fraction of miswired edges (number of edges * ERROR) is reached.
+%   At the end, the miswired edges are eliminated.
 %
 
 % Version 1:
@@ -60,7 +61,7 @@ if ~all(A(1:N+1:end) == 0)
     A = remove_diagonal(A);
 end
 
-% find edge indexes and edge values
+% find edge indexes
 e = find(A); % e = (c-1)*N+r
 
 % find column (incoming) and row (outgoing) indexes of the edges
