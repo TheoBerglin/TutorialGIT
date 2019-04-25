@@ -1,16 +1,16 @@
 clear all, clc, close all;
 %% Settings
-methods = {'randomize_combo_WU_fix' 'randomize_bct_U' 'randomize_combo_WD_fix' 'randomize_bct_D'};
-graph_types = {Graph.WU Graph.WU Graph.WD Graph.WD};
-
-nodes = [100];
-densities = 0.001:0.003:0.1;
+methods = {'randomize_braph_BU_bajs'};
+graph_types = {Graph.BU};
+nodes = [50];
+densities = [0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1];
 rerun_existing = true;
 n_randomizations = 500;
 desc_str = sprintf('%s', datestr(datetime('now')));
 load_matrix = true;
 %% Create data path for saving
-current_loc = fileparts(which('calculate_method_data.m'));
+folder = what('randomize_analysis');
+current_loc = folder.path;
 data_path = path_append(current_loc, 'data');
 exist_create_dir(data_path);
 addpath(data_path);
