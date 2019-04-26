@@ -2,13 +2,12 @@
 clear all, close all, clc;
 %% Settings
 run_all = -999;
-sizes = [run_all];
-densities = [0.1]; %All densities
+sizes = [200];
+densities = [run_all]; %All densities
 
 %%
 load('speed.mat');
 type_bin_fields = fieldnames(speed_data);
-
 plot_data = struct();
 
 for bin_i = 1:length(type_bin_fields)
@@ -39,14 +38,20 @@ for bin_i = 1:length(type_bin_fields)
             end
             
             if contains(func_fields{func_i}, 'bct')
-               method_name = 'BCT'; 
+                
+                method_name = 'BCT';
+                plot_style = '-';
+            elseif contains(func_fields{func_i}, 'randmio')
+                method_name = 'BCT_edit';
+                plot_style = '-[]';
             else
                 method_name = 'BRAPH';
+                plot_style = '-*';
             end
             method_name = sprintf('%s %s',method_name, type_dir_fields{dir_i});
             field_name = replace(method_name, ' ', '_');
             plot_data.(type_bin_fields{bin_i}).(field_name) = speed_data.(type_bin_fields{bin_i}).(type_dir_fields{dir_i}).(func_fields{func_i})(indices);
-          %  plot_data.(type_bin_fields{bin_i}).(field_name).name = method_name;
+            %  plot_data.(type_bin_fields{bin_i}).(field_name).name = method_name;
             
         end
     end
@@ -56,25 +61,32 @@ end
 % change these to select which plot
 bin = 'binary';
 %bin = 'weighted';
-%plot_over = 'density';
-plot_over = 'nodes';
+plot_over = 'density';
+%plot_over = 'nodes';
 data = plot_data.(bin);
 fields = fieldnames(data);
 figure()
 for i = 1:length(fields)
     if length(data.(fields{i})) ==0
-       continue 
+        continue
     end
-   x_data = extractfield(data.(fields{i}), plot_over);
-   n = length(data.(fields{i}));
-   y_data = zeros(1, n);
-   for j = 1:n
-      y_data(j) = min(data.(fields{i})(j).times);
-   end
-   loglog(x_data, y_data,'DisplayName', replace(fields{i}, '_', ' '))
-   hold on
+    x_data = extractfield(data.(fields{i}), plot_over);
+    n = length(data.(fields{i}));
+    y_data = zeros(1, n);
+    for j = 1:n
+        y_data(j) = min(data.(fields{i})(j).times);
+    end
+    if contains(fields{i}, 'BCT_edit')
+        plot_style = '-o';
+    elseif contains(fields{i}, 'BCT')
+        plot_style = '-';
+    else
+        plot_style = '-*';
+    end
+    loglog(x_data, y_data,plot_style,'DisplayName', replace(fields{i}, '_', ' '))
+    hold on
 end
 xlabel('Density', 'interpreter', 'latex', 'FontSize', 12)
 ylabel('Time per randomization [s]', 'interpreter', 'latex', 'FontSize', 12)
-title(sprintf('Time comparison, nodes: %d', sizes(1)), 'interpreter', 'latex', 'FontSize', 14)
+title(sprintf('Time comparison, density: %.2f', densities(1)), 'interpreter', 'latex', 'FontSize', 14)
 legend('Location', 'best')
