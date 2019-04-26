@@ -16,7 +16,7 @@ if ~exist('saveon', 'var')
     saveon = false;
 end
 if ~exist('ploton', 'var')
-    ploton = false;
+    ploton = true;
 end
 
 load(file_name)
@@ -99,9 +99,10 @@ if ploton
     plot(x, 0.05*x/length(p_values));
     legend('P-values', 'q*x', 'Location', 'best')
     if excl_ass
-        str = sprintf('%s, relevant measures, ass excl, FDR: %.4f', file_name, fdr_res);
+        str = ['BRAPH ' type ' vs BCT, assortativity excluded, size:' num2str(nodes_to_check) 'x' num2str(nodes_to_check)...
+            ', ' num2str(density_limit_lower) ' $\leq$ density $<$ ' num2str(density_limit_upper) ', FDR: ' num2str(fdr_res)];
     else
-        str = ['BCT mod ' type ' vs BCT, size:' num2str(nodes_to_check) 'x' num2str(nodes_to_check)...
+        str = ['BRAPH ' type ' vs BCT, size:' num2str(nodes_to_check) 'x' num2str(nodes_to_check)...
             ', ' num2str(density_limit_lower) ' $\leq$ density $<$ ' num2str(density_limit_upper) ', FDR: ' num2str(fdr_res)];
     end
     title(str)
