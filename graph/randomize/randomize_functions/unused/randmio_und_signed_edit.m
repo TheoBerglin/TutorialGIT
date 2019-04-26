@@ -32,7 +32,7 @@ function [R,eff] = randmio_und_signed_edit(W)
 %             unbiased exploration of all network configurations. The new
 %             algorithm allows positive-positive/negative-negative
 %             rewirings, in addition to the previous positive-positive/0-0
-%             and negative-negative/0-0 rewirings (Mika Rubinov). 
+%             and negati'/chalmers/users/theob/Documents/MATLAB/TutorialGIT/graph/randomize/randomize_analysis/speed/speed.mat')ve-negative/0-0 rewirings (Mika Rubinov). 
 
 if nargin('randperm')==1
     warning('This function requires a recent (>2011) version of MATLAB.')

@@ -1,16 +1,16 @@
 clear all, clc, close all
 %% Settings
-functions = {'randomize_braph_BD' 'randomize_braph_BU' 'randomize_combo_WD_fix' 'randomize_combo_WU_fix',...
-    'randomize_bct_D' 'randomize_bct_U' 'randomize_bct_D' 'randomize_bct_U'};
-type = {Graph.BD, Graph.BU, Graph.WD, Graph.WU, Graph.BD, Graph.BU, Graph.WD, Graph.WU};
-densities = [0.0001];% 0.001 0.01]; % 0.05 0.1 %, 0.2 0.4 0.7];
-small_size = [150 200 300 400];
-large_size = [small_size, 800 1000 5000 10000 50000 100000];
-size_vec = {large_size, large_size, large_size, large_size, small_size, small_size, small_size, small_size};
+functions = {'randmio_dir_signed_edit'};
+type = {Graph.BD};
+densities = [0.01];% 0.001 0.01]; % 0.05 0.1 %, 0.2 0.4 0.7];
+small_size = [10 20 30 40 50 60 70 80 100 150 200 300 400];
+large_size = [small_size, 600 800 1000];
+size_vec = {large_size};
 n_randomizations = 40;
 
 %% Data path
-current_loc = fileparts(which('test_randomization_speed.m'));
+folder = what('randomize_analysis');
+current_loc = folder.path;
 %% Save path and file save variables
 % Names of folders for test functions
 save_path = sprintf('%s%sspeed', current_loc, filesep); % data_path/function
