@@ -1,11 +1,10 @@
-function [W0,R] = randomize_bct_U_edit(W,bin_swaps,wei_freq)
+function [W0,R] = randomize_bct_U_edit(W,wei_freq)
 %NULL_MODEL_UND_SIGN     Random graphs with preserved weight, degree and
 %                        strength distributions
 %
 %   W0 = null_model_und_sign(W);
-%   W0 = null_model_und_sign(W,bin_swaps);
-%   W0 = null_model_und_sign(W,bin_swaps,wei_freq);
-%   [W0 R] = null_model_und_sign(W,bin_swaps,wei_freq);
+%   W0 = null_model_und_sign(W,wei_freq);
+%   [W0 R] = null_model_und_sign(W,wei_freq);
 %
 %   This function randomizes an undirected network with positive and
 %   negative weights, while preserving the degree and strength
@@ -80,9 +79,6 @@ function [W0,R] = randomize_bct_U_edit(W,bin_swaps,wei_freq)
 
 %#ok<*ASGLU>
 
-if ~exist('bin_swaps','var')
-    bin_swaps=5;
-end
 if ~exist('wei_freq','var')
     if nargin('randperm')==1
         wei_freq=1;
@@ -105,7 +101,7 @@ Ap = W>0;                                                   %positive adjacency 
 An = W<0;                                                   %negative adjacency matrix
 
 if nnz(Ap)<(n*(n-1))                                        %if Ap is not full
-    W_r  = randmio_und_signed_edit(W,bin_swaps);
+    W_r  = randmio_und_signed_edit(W);
     Ap_r = W_r>0;
     An_r = W_r<0;
 else

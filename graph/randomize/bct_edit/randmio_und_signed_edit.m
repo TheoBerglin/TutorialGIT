@@ -37,11 +37,9 @@ function [R,eff] = randmio_und_signed_edit(W)
 if nargin('randperm')==1
     warning('This function requires a recent (>2011) version of MATLAB.')
 end
-org = W;
-ITER =5;
+ITER = 5;
 R     = double(W);              % sign function requires double input
 n     = size(R,1);
-%ITER  = ITER*n*(n-1)/2;
 
 % maximal number of rewiring attempts per 'iter'
 maxAttempts = round(n/2);

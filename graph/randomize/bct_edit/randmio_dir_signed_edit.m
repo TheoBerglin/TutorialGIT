@@ -39,11 +39,9 @@ function [R,eff] = randmio_dir_signed_edit(W)
 if nargin('randperm')==1
     warning('This function requires a recent (>2011) version of MATLAB.')
 end
-ITER =5;
+ITER = 5;
 R = double(W);              % large_sizesign function requires double input
 n = size(R,1);
-%ITER=ITER*n*(n-1);
-org = R;
 
 % maximal number of rewiring attempts per 'iter'
 maxAttempts=n;

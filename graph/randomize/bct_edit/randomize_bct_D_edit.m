@@ -1,20 +1,16 @@
-function [W0, R] = randomize_bct_D_edit(W,bin_swaps,wei_freq)
+function [W0, R] = randomize_bct_D_edit(W,wei_freq)
 %NULL_MODEL_DIR_SIGN     Directed random graphs with preserved weight,
 %                        degree and strength distributions
 %
 %   W0 = null_model_dir_sign(W);
-%   W0 = null_model_dir_sign(W,bin_swaps);
-%   W0 = null_model_dir_sign(W,bin_swaps,wei_freq);
-%   [W0 R] = null_model_dir_sign(W,bin_swaps,wei_freq);
+%   W0 = null_model_dir_sign(W,wei_freq);
+%   [W0 R] = null_model_dir_sign(W,wei_freq);
 %
 %   This function randomizes an directed network with positive and
 %   negative weights, while preserving the degree and strength
 %   distributions. This function calls randmio_dir_signed.m
 %
 %   Inputs: W,          Directed weighted connection matrix
-%           bin_swaps,  Average number of swaps of each edge in binary randomization.
-%                           bin_swap=5 is the default (each edge rewired 5 times)
-%                           bin_swap=0 implies no binary randomization 
 %           wei_freq,   Frequency of weight sorting in weighted randomization
 %                           wei_freq must be in the range of: 0 < wei_freq <= 1
 %                           wei_freq=1 implies that weights are sorted at each step
@@ -80,9 +76,6 @@ function [W0, R] = randomize_bct_D_edit(W,bin_swaps,wei_freq)
 
 %#ok<*ASGLU>
 
-if ~exist('bin_swaps','var')
-    bin_swaps=5;
-end
 if ~exist('wei_freq','var')
     if nargin('randperm')==1
         wei_freq=1;
@@ -105,7 +98,7 @@ Ap = W>0;                                               %positive adjacency matr
 An = W<0;                                               %negative adjacency matrix
 
 if nnz(Ap)<(n*(n-1))                                    %if Ap is not full
-    W_r  = randmio_dir_signed_edit(W,bin_swaps);
+    W_r  = randmio_dir_signed_edit(W);
     Ap_r = W_r>0;
     An_r = W_r<0;
 else
