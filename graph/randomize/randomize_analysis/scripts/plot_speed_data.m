@@ -2,8 +2,8 @@
 clear all, close all, clc;
 %% Settings
 run_all = -999;
-sizes = [200];
-densities = [run_all]; %All densities
+sizes = [run_all];
+densities = [0.0001]; %All densities
 
 %%
 load('speed.mat');
@@ -61,8 +61,8 @@ end
 % change these to select which plot
 bin = 'binary';
 %bin = 'weighted';
-plot_over = 'density';
-%plot_over = 'nodes';
+%plot_over = 'density';
+plot_over = 'nodes';
 data = plot_data.(bin);
 fields = fieldnames(data);
 figure()
@@ -86,7 +86,7 @@ for i = 1:length(fields)
     loglog(x_data, y_data,plot_style,'DisplayName', replace(fields{i}, '_', ' '))
     hold on
 end
-xlabel('Density', 'interpreter', 'latex', 'FontSize', 12)
+xlabel('Nodes', 'interpreter', 'latex', 'FontSize', 12)
 ylabel('Time per randomization [s]', 'interpreter', 'latex', 'FontSize', 12)
-title(sprintf('Time comparison, density: %.2f', densities(1)), 'interpreter', 'latex', 'FontSize', 14)
+title(sprintf('Time comparison, density: %.4f', densities(1)), 'interpreter', 'latex', 'FontSize', 14)
 legend('Location', 'best')
