@@ -1,6 +1,17 @@
 function Ar_reweighed = randomize_braph_WD( A )
-%RANDOMIZE_GIO_REWEIGH Summary of this function goes here
-%   Detailed explanation goes here
+%RANDOMIZE_BRAPH_WD Directed random graphs with preserved weight,
+%                   degree and strength distributions
+%
+%   This function randomizes a directed network with positive and
+%   negative weights, while preserving the degree and strength
+%   distributions. 
+%
+%   Returns a randomization adjacency matrix AR_REWEIGHTED of the original 
+%   adjacency matrix A 
+%
+% Authors: Adam Liberda, Theo Berglin, Mite Mijalkov, Ehsan Kakaei, Giovanni Volpe
+% Date: 2019/05/03
+% http://braph.org/
 
 A = remove_diagonal(A);
 A_bin = sign(A);
