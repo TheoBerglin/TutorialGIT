@@ -1,8 +1,9 @@
 function [R,eff] = randmio_und_signed_edit(W)
-% RANDMIO_UND_SIGNED	Random graph with preserved signed degree distribution
+% RANDMIO_UND_SIGNED_EDIT Random graph with preserved signed degree 
+% distribution
 %
-%   R       = randmio_und_signed(W,ITER);
-%   [R,eff] = randmio_und_signed(W,ITER);
+%   R       = randmio_und_signed_edit(W);
+%   [R,eff] = randmio_und_signed_edit(W);
 %
 %   This function randomizes an undirected network with positively and
 %   negatively signed connections, while preserving the positively and
@@ -10,8 +11,6 @@ function [R,eff] = randmio_und_signed_edit(W)
 %   the strength distribution in weighted networks.
 %
 %   Input:      W,      undirected (binary/weighted) connection matrix
-%               ITER,   rewiring parameter
-%                       (each edge is rewired approximately ITER times)
 %
 %   Output:     R,      randomized network
 %               eff,    number of actual rewirings carried out
@@ -23,6 +22,9 @@ function [R,eff] = randmio_und_signed_edit(W)
 %   Dani Bassett, UCSB
 %   Olaf Sporns,  Indiana U
 %   Mika Rubinov, U Cambridge
+%
+%   2019
+%   Adam Liberda & Theo Berglin, Chalmers U
 
 %   Modification History:
 %   Mar 2011: Original (Dani Bassett, based on randmio_und.m)
@@ -32,13 +34,17 @@ function [R,eff] = randmio_und_signed_edit(W)
 %             unbiased exploration of all network configurations. The new
 %             algorithm allows positive-positive/negative-negative
 %             rewirings, in addition to the previous positive-positive/0-0
-%             and negati'/chalmers/users/theob/Documents/MATLAB/TutorialGIT/graph/randomize/randomize_analysis/speed/speed.mat')ve-negative/0-0 rewirings (Mika Rubinov). 
+%             and negative-negative/0-0 rewirings (Mika Rubinov). 
+%   May 2019: Rewritten the algorithm to randomly select two edges instead
+%             of randomly selecting four nodes and checking for connections
+%             between these. (Adam Liberda, Theo Berglin)
 
 if nargin('randperm')==1
     warning('This function requires a recent (>2011) version of MATLAB.')
 end
+
 ITER = 5;
-R     = double(W);              % sign function requires double input
+R     = double(W); % sign function requires double input
 n     = size(R,1);
 
 % maximal number of rewiring attempts per 'iter'
@@ -48,11 +54,11 @@ eff = 0;
 edges = find(W);
 n_edges = length(edges);
 ITER =ITER*n_edges;
+
 for iter=1:ITER
     att=0;
-    while (att<=maxAttempts)    %while not rewired
-        %select four distinct vertices
-        
+    while (att<=maxAttempts) %while not rewired
+        %select two edges        
         nodes = randperm(n_edges,2);
         
         [a, b] = ind2sub([n,n],edges(nodes(1)));
@@ -83,6 +89,4 @@ for iter=1:ITER
         end %rewiring condition
         att=att+1;
     end %while not rewired
-           
-    
 end %iterations
