@@ -39,7 +39,8 @@ classdef GraphWU < Graph
     %   calculate_structure_fixed   -   calculates a community structure
     %                                   using the fixed algorithm < Graph
     %   calculate_measure           -   calculates a specific measure < Graph
-    %   randomize                   -   randomize graph while preserving degree distribution < Graph
+    %   randomize_braph             -   randomize graph using braph algo < Graph
+    %   randomize_bct_edit          -   randomize graph using edited bct algo < Graph
     %
     % GraphWU methods (Static):
     %   measurelist         -   list of measures valid for a weighted undirected graph

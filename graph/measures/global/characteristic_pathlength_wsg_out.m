@@ -22,5 +22,5 @@ function cplout_wsg = characteristic_pathlength_wsg_out( A, type)
 % Authors: Adam Liberda, Theo Berglin, Mite Mijalkov, Ehsan Kakaei, Giovanni Volpe
 % Date: 2019/03/01
 % http://braph.org/
-
-cplout_wsg = mean(pathlength_wsg_out(A, type));
+pl_wsg_out = pathlength_wsg_out(A, type);
+cplout_wsg = mean(pl_wsg_out(~isnan(pl_wsg_out)));
