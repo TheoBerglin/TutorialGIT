@@ -1,5 +1,5 @@
 function Ar_reweighed = randomize_braph_WD( A )
-%RANDOMIZE_BRAPH_WD Directed random graphs with preserved weight,
+% RANDOMIZE_BRAPH_WD Directed random graphs with preserved weight,
 %                   degree and strength distributions
 %
 %   This function randomizes a directed network with positive and

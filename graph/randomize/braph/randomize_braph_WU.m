@@ -1,5 +1,5 @@
 function Ar_reweighed = randomize_braph_WU( A )
-%RANDOMIZE_BRAPH_WU Undirected random graphs with preserved weight,
+% RANDOMIZE_BRAPH_WU Undirected random graphs with preserved weight,
 %                   degree and strength distributions
 %
 %   This function randomizes an undirected network with positive and
