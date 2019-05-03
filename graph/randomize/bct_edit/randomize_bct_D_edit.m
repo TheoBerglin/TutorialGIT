@@ -1,14 +1,14 @@
 function [W0, R] = randomize_bct_D_edit(W,wei_freq)
-%NULL_MODEL_DIR_SIGN     Directed random graphs with preserved weight,
+% RANDOMIZE_BCT_D_EDIT   Directed random graphs with preserved weight,
 %                        degree and strength distributions
 %
-%   W0 = null_model_dir_sign(W);
-%   W0 = null_model_dir_sign(W,wei_freq);
-%   [W0 R] = null_model_dir_sign(W,wei_freq);
+%   W0 = randomize_bct_D_edit(W);
+%   W0 = randomize_bct_D_edit(W,wei_freq);
+%   [W0 R] = randomize_bct_D_edit(W,wei_freq);
 %
 %   This function randomizes an directed network with positive and
 %   negative weights, while preserving the degree and strength
-%   distributions. This function calls randmio_dir_signed.m
+%   distributions. This function calls randmio_dir_signed_edit.m
 %
 %   Inputs: W,          Directed weighted connection matrix
 %           wei_freq,   Frequency of weight sorting in weighted randomization
@@ -23,11 +23,8 @@ function [W0, R] = randomize_bct_D_edit(W,wei_freq)
 %                           of input and output connection matrices
 %
 %   Notes:
-%       The value of bin_swaps is ignored when binary topology is fully
-%   connected (e.g. when the network has no negative weights).
 %       Randomization may be better (and execution time will be slower) for
-%   higher values of bin_swaps and wei_freq. Higher values of bin_swaps may
-%   enable a more random binary organization, and higher values of wei_freq
+%   higher values of wei_freq. Higher values of wei_freq
 %   may enable a more accurate conservation of strength sequences.
 %       R are the correlation coefficients between positive and negative
 %   in-strength and out-strength sequences of input and output connection
@@ -36,45 +33,18 @@ function [W0, R] = randomize_bct_D_edit(W,wei_freq)
 %   measure of strength-sequence accuracy and one could implement more
 %   formal tests (such as the Kolmogorov-Smirnov test) if desired.
 %
-%   Example usage:
-%
-%   %Create random directed weights matrix
-%
-%   W=randn(100);
-%
-%   %Compute one instance of null model (slow execution time):
-%   %bin_swaps=5,   rewire each binary edge 5 times on average
-%   %wei_freq=1,    sort all edges at every step
-%
-%   tic; [W0_slow R_slow]=null_model_dir_sign(W,5,1); R_slow, toc
-%
-%   R_slow =
-%       0.9795    0.9724    0.9772    0.9773
-%   Elapsed time is 3.485388 seconds.
-%
-%   %Compute another instance of of null model (fast execution time):
-%   %bin_swaps=5,   rewire each binary edge 5 times on average
-%   %wei_freq=0.1,  sort all edges at every 10th step (10=1/0.1)
-%
-%   tic; [W0_fast R_fast]=null_model_dir_sign(W,5,0.1); R_fast, toc
-%
-%   R_fast =
-%       0.9655    0.9652    0.9717    0.9804
-%   Elapsed time is 0.763831 seconds.
-%
-%
 %   Reference: Rubinov and Sporns (2011) Neuroimage 56:2068-79
 %
 %
 %   2011-2015, Mika Rubinov, U Cambridge
+%   2019, Adam Liberda & Theo Berglin, Chalmers U
 
 %   Modification History
 %   Mar 2011: Original.
 %   Sep 2012: Edge-sorting acceleration.
 %   Dec 2015: Enforce preservation of negative degrees in sparse
 %             networks with negative weights (thanks to Andrew Zalesky).
-
-%#ok<*ASGLU>
+%   May 2019: Use edited function for rewiring graph.
 
 if ~exist('wei_freq','var')
     if nargin('randperm')==1
