@@ -1,9 +1,9 @@
 function [R,eff] = randmio_dir_signed_edit(W)
-% RANDMIO_DIR_SIGNED        Random directed graph with preserved signed
-%                           in/out degree distribution
+% RANDMIO_DIR_SIGNED_EDIT Random directed graph with preserved signed
+% in/out degree distribution
 %
-%   R       = randmio_dir(W, ITER);
-%   [R,eff] = randmio_dir(W, ITER);
+%   R       = randmio_dir_signed_edit(W);
+%   [R,eff] = randmio_dir_signed_edit(W);
 %
 %   This function randomizes a directed weighted network with positively and
 %   negatively signed connections, while preserving the positively and
@@ -12,8 +12,6 @@ function [R,eff] = randmio_dir_signed_edit(W)
 %   in-strength distributions.
 %
 %   Input:      W,      directed (binary/weighted) connection matrix
-%               ITER,   rewiring parameter
-%                       (each edge is rewired approximately ITER times)
 %
 %   Output:     R,      randomized network
 %               eff,    number of actual rewirings carried out
@@ -25,6 +23,9 @@ function [R,eff] = randmio_dir_signed_edit(W)
 %   Dani Bassett, UCSBlarge_size
 %   Olaf Sporns,  Indiana U
 %   Mika Rubinov, U Cambridge
+%
+%   2019
+%   Adam Liberda & Theo Berglin, Chalmers U
 
 %   Modification History:
 %   Mar 2011: Original (Dani Bassett, based on randmio_und.m)
@@ -35,18 +36,20 @@ function [R,eff] = randmio_dir_signed_edit(W)
 %             algorithm allows positive-positive/negative-negative
 %             rewirings, in addition to the previous positive-positive/0-0
 %             and negative-negative/0-0 rewirings (Mika Rubinov). 
+%   May 2019: Rewritten the algorithm to randomly select two edges instead
+%             of randomly selecting four nodes and checking for connections
+%             between these. (Adam Liberda, Theo Berglin)
 
 if nargin('randperm')==1
     warning('This function requires a recent (>2011) version of MATLAB.')
 end
-ITER =5;
-R = double(W);              % large_sizesign function requires double input
+ITER = 5;
+R = double(W); % large_sizesign function requires double input
 n = size(R,1);
-%ITER=ITER*n*(n-1);
-org = R;
 
 % maximal number of rewiring attempts per 'iter'
 maxAttempts=n;
+
 % actual number of successful rewirings
 eff = 0;
 edges = find(W);
@@ -54,9 +57,8 @@ n_edges = length(edges);
 ITER =ITER*n_edges; % Better number of iterations
 for iter=1:ITER
     att=0;
-    while (att<=maxAttempts)                                     %while not rewired
-        %select four distinct vertices
-      
+    while (att<=maxAttempts) %while not rewired
+        %select two edges
         nodes = randperm(n_edges,2);
         
         [a, b] = ind2sub([n,n],edges(nodes(1)));

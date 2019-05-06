@@ -49,7 +49,7 @@ Ap_r = connections>0; % Randomized positive adjacency matrix
 An_r = connections<0; % Randomized negative adjacency matrix
 
 n = size(W,1); %Number of nodes
-W0=sparse(n,n);                                            %null model network
+W0=zeros(n);                                            %null model network
 for s=[1 -1]
     % Grap indices of interest
     switch s                                            %switch sign (positive/negative)

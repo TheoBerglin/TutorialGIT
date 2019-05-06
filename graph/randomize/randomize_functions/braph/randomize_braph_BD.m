@@ -49,9 +49,9 @@ if ~isequal(size(A,1), size(A,2))
 end
 
 % check "binarism"
-%if any(find(A ~= 0 & A ~= 1))
-%    error('Input matrix is not binary');
-%end
+if any(find(A ~= 0 & A ~= 1))
+   error('Input matrix is not binary');
+end
 
 % number of nodes
 N = length(A);
@@ -136,7 +136,7 @@ mw = length(ind_mw);
     end
 
 % construct the connectivity matrix B with rewired edges
-B = sparse(size(A,1), size(A,2));
+B = zeros(size(A));
 B(sub2ind(size(B),r,c)) = 1;
 
 end

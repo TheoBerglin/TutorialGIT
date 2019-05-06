@@ -1,7 +1,7 @@
-function rA = randomize(A, type, wei_freq)
-% RANDOMIZE randomizes a matrix
+function rA = randomize_braph(A, type, wei_freq)
+% RANDOMIZE_BRAPH randomizes a matrix
 %
-% rA = RANDOMIZE( A, type, wei_freq) randomizes the matrix A while 
+% rA = RANDOMIZE_BRAPH( A, type, wei_freq) randomizes the matrix A while 
 %   preserving the in-and out-degree.
 %   TYPE specifies the type of graph:
 %   Graph.BD = Binary Directed
