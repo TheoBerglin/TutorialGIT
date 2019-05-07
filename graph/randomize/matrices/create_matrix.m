@@ -1,7 +1,7 @@
 function A = create_matrix(density, nodes, dir, wei)
 s = nodes*nodes;
 possible_connections = nodes*(nodes-1);
-dens = density/100;
+dens = density;
 threshold = 0.3;
 A = zeros(nodes, nodes);
 
