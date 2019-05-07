@@ -16,7 +16,7 @@ dir_arr = extractfield(data, 'directed');
 dir_arr = cell2mat(dir_arr);
 wei_arr = extractfield(data, 'weighted');
 wei_arr = cell2mat(wei_arr);
-dens_i = find(dens_arr == dens);
+dens_i = find(abs(dens_arr - dens) < 0.0001);
 dir_i = find(dir_arr == dir);
 wei_i = find(wei_arr == wei);
 
