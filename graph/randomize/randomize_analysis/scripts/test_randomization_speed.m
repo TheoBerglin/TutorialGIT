@@ -1,12 +1,12 @@
 clear all, clc, close all
 %% Settings
-functions = {'randmio_dir_signed_edit'};
-type = {Graph.BD};
-densities = [0.01];% 0.001 0.01]; % 0.05 0.1 %, 0.2 0.4 0.7];
-small_size = [10 20 30 40 50 60 70 80 100 150 200 300 400];
+functions = {'randomize_bct_D' 'randomize_bct_U'};
+type = {Graph.BD Graph.BD};
+densities = [0.0001];% 0.001 0.01]; % 0.05 0.1 %, 0.2 0.4 0.7];
+small_size = [300 400 500 700s];
 large_size = [small_size, 600 800 1000];
-size_vec = {large_size};
-n_randomizations = 40;
+size_vec = {small_size small_size};
+n_randomizations = 5;
 
 %% Data path
 folder = what('randomize_analysis');
@@ -59,7 +59,7 @@ for di = 1:length(densities)
     for si = 1:length(sizes)
         d = densities(di); % Density
         s = sizes(si); % Size of matrix2
-        A = create_matrix(d*100, s, dir, wei);
+        A = create_matrix(d, s, dir, wei);
         try
             times = zeros(1, n_randomizations);
             for i = 1:n_randomizations
