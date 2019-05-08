@@ -1,11 +1,11 @@
 clear all, clc, close all
 %% Settings
-functions = {'randomize_bct_D' 'randomize_bct_U'};
-type = {Graph.BD Graph.BD};
+functions = {'randomize_bct_U'};
+type = {Graph.BU};
 densities = [0.0001];% 0.001 0.01]; % 0.05 0.1 %, 0.2 0.4 0.7];
-small_size = [300 400 500 700s];
+small_size = [300 400 500];
 large_size = [small_size, 600 800 1000];
-size_vec = {small_size small_size};
+size_vec = {small_size};
 n_randomizations = 5;
 
 %% Data path
