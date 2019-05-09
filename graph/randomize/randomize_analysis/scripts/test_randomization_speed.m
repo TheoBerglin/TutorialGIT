@@ -1,13 +1,13 @@
 clear all, clc, close all
 %% Settings
-functions = {'randomize_bct_U'};
-type = {Graph.BU};
+functions = {'randomize_bct_D' 'randomize_bct_U'};
+type = {Graph.BD Graph.BU};
 densities = [0.0001];% 0.001 0.01]; % 0.05 0.1 %, 0.2 0.4 0.7];
-small_size = [300 400 500];
+small_size = [150 200 300 400 500];
 large_size = [small_size, 600 800 1000];
-size_vec = {small_size};
-n_randomizations = 5;
-
+size_vec = {small_size small_size};
+n_randomizations = 20;
+n_rand_vec = [20 20 10 5 5];
 %% Data path
 folder = what('randomize_analysis');
 current_loc = folder.path;
@@ -61,6 +61,7 @@ for di = 1:length(densities)
         s = sizes(si); % Size of matrix2
         A = create_matrix(d, s, dir, wei);
         try
+            n_randomizations = n_rand_vec(si);
             times = zeros(1, n_randomizations);
             for i = 1:n_randomizations
                 tic
