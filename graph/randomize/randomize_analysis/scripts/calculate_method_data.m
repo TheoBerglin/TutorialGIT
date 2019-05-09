@@ -1,10 +1,13 @@
 clear all, clc, close all;
 %% Settings
-methods = {'randomize_braph_BU'};
-graph_types = {Graph.BU};
-nodes = [50 60 70 80 90 100 120 140 150];
-densities = [0.005 0.0075 0.01 0.015 0.02 0.025 0.03 0.035 0.04 0.045 0.05 0.06 0.07 0.08 0.09 0.1 0.12 0.14 0.16 0.18 0.2];
-rerun_existing = false;
+methods = {'randomize_braph_BU' 'randomize_braph_BD',...
+     'randomize_bct_U' 'randomize_bct_D',...
+      'randomize_bct_U_edit'  'randomize_bct_D_edit'};
+graph_types = {Graph.BU Graph.BD...
+    Graph.BU Graph.BD Graph.BU Graph.BD};
+nodes = [100 110 120 130 140 150 160 170 180 190];
+densities = [0.01];
+rerun_existing = true;
 n_randomizations = 500;
 desc_str = sprintf('%s', datestr(datetime('now')));
 load_matrix = true;
@@ -65,7 +68,7 @@ for mi = 1:length(methods)
             dens = densities(di);
             rowi = node_data_row(data(data_r).node_data, dens, type);
             tic
-            if rowi <= length(data(data_r).node_data) && rowi ~= 1
+            if rowi <= length(data(data_r).node_data)
                 % This measure already exist
                 if ~rerun_existing
                     % If we don't want to rerun existing, continue with
@@ -80,30 +83,18 @@ for mi = 1:length(methods)
                     A = load(load_file);
                 else
                     fprintf('Did not load matrix dens: %.3f %s %s\n', dens, type_bin, type_dir)
-                    
+                   
                     A = create_matrix(dens, n, dir, wei);
-                    % Save matrix
-                    save_loc = fileparts(which('create_random_matrices.m'));
-                    file_name = sprintf('dens_%.3f_nodes_%d_%s_%s.txt', dens, n, type_bin, type_dir);
-                    save_loc = sprintf('%s%snodes_%d', save_loc, filesep, n);%filesep, file_name);
-                    exist_create_dir(save_loc);
-                    save_file = sprintf('%s%s%s', save_loc, filesep, file_name);
-                    save(save_file, 'A', '-ascii', '-double', '-tabs');
-                    disp('Saved created matrix')
                 end
             else
                 A = create_matrix(dens, n, dir, wei);
             end
-            disp('Calculating randomization data')
+            
             %% run randomization
             % run randomization
             [gm_struct1, gm_struct2] = run_randomization(A, type, method, n_randomizations);
             % add data
-            if rowi >1
-                data(data_r).node_data(rowi) = data(data_r).node_data(rowi-1);
-            %else
-             %   data(data_r).node_data(rowi) = rand_structure; % initialize the structure
-            end
+            data(data_r).node_data(rowi) = rand_structure; % initialize the structure
             % Add information
             data(data_r).node_data(rowi).density = dens;
             data(data_r).node_data(rowi).weighted = wei;

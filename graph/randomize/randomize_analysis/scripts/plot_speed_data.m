@@ -74,10 +74,15 @@ for i = 1:length(fields)
     n = length(data.(fields{i}));
     y_data = zeros(1, n);
     for j = 1:n
-        y_data(j) = min(data.(fields{i})(j).times);
+        y_data(j) = median(data.(fields{i})(j).times);
     end
     if contains(fields{i}, 'BCT_edit')
-        plot_style = '-o';
+        color = 'r';
+        if contains(fields{i}, 'undirected')
+            plot_style = '-o';
+        else
+            plot_style = '^';
+        end
     elseif contains(fields{i}, 'BCT')
         plot_style = '-';
     else
