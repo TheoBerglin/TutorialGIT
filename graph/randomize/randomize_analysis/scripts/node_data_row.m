@@ -24,7 +24,7 @@ row =intersect(intersect(dens_i, dir_i),wei_i);
 if isempty(row)
     row = length(data)+1;
 end
-
+row = row(end);
 
 end
 
