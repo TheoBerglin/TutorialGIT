@@ -62,6 +62,8 @@ end
 bin = 'binary';
 %bin = 'weighted';
 %plot_over = 'density';
+dir_type = 'undirected';
+dir_type_opposite = 'apa';
 plot_over = 'nodes';
 data = plot_data.(bin);
 fields = fieldnames(data);
@@ -70,23 +72,30 @@ for i = 1:length(fields)
     if length(data.(fields{i})) ==0
         continue
     end
-    x_data = extractfield(data.(fields{i}), plot_over);
-    n = length(data.(fields{i}));
-    y_data = zeros(1, n);
-    for j = 1:n
-        y_data(j) = min(data.(fields{i})(j).times);
+    if contains(fields{i}, dir_type)  && ~contains(fields{i}, dir_type_opposite)
+        
+        x_data = extractfield(data.(fields{i}), plot_over);
+        n = length(data.(fields{i}));
+        y_data = zeros(1, n);
+        for j = 1:n
+            y_data(j) = median(data.(fields{i})(j).times);
+        end
+        
+        if contains(fields{i}, 'BCT_edit')
+            plot_style = 'o';
+            plot_color = 'r';
+        elseif contains(fields{i}, 'BCT')
+            plot_style = '^';
+            plot_color = 'b';
+        else
+            plot_style = '*';
+            plot_color = 'k';
+        end
+        loglog(x_data, y_data,plot_style,'DisplayName', replace(replace(replace(fields{i},'un',''), 'directed', ''), '_', ' '))
+        hold on
     end
-    if contains(fields{i}, 'BCT_edit')
-        plot_style = '-o';
-    elseif contains(fields{i}, 'BCT')
-        plot_style = '-';
-    else
-        plot_style = '-*';
-    end
-    loglog(x_data, y_data,plot_style,'DisplayName', replace(fields{i}, '_', ' '))
-    hold on
 end
 xlabel('Nodes', 'interpreter', 'latex', 'FontSize', 12)
 ylabel('Time per randomization [s]', 'interpreter', 'latex', 'FontSize', 12)
-title(sprintf('Time comparison, density: %.4f', densities(1)), 'interpreter', 'latex', 'FontSize', 14)
+title(sprintf('Time comparison for %s graph of density: %.4f',dir_type, densities(1)), 'interpreter', 'latex', 'FontSize', 14)
 legend('Location', 'best')

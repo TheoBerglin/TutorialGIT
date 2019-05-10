@@ -60,9 +60,11 @@ for di = 1:length(densities)
         d = densities(di); % Density
         s = sizes(si); % Size of matrix2
         A = create_matrix(d, s, dir, wei);
+        pause(1)
         try
             n_randomizations = n_rand_vec(si);
             times = zeros(1, n_randomizations);
+            pause(1)
             for i = 1:n_randomizations
                 tic
                 eval(sprintf('%s(A);', func))
