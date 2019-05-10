@@ -1,10 +1,7 @@
 clear all, clc, close all;
 %% Settings
-methods = {'randomize_braph_BU' 'randomize_braph_BD',...
-     'randomize_bct_U' 'randomize_bct_D',...
-      'randomize_bct_U_edit'  'randomize_bct_D_edit'};
-graph_types = {Graph.BU Graph.BD...
-    Graph.BU Graph.BD Graph.BU Graph.BD};
+methods = {'randomize_bct_U_edit'  'randomize_bct_D_edit'};
+graph_types = {Graph.BU Graph.BD};
 nodes = [100 110 120 130 140 150 160 170 180 190];
 densities = [0.01];
 rerun_existing = true;
