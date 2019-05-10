@@ -1,10 +1,10 @@
 clear all, close all, clc
 %% Settings
 methods_gt = {'randomize_bct_U'};
-methods_target = {'randomize_combo_WU_fix'};
+methods_target = {'randomize_braph_BU'};
 pval_save_string = 'p_value_vs_bct';
-types = {Graph.WU};
-nodes = [50];
+types = {Graph.BU};
+nodes = [150];
 
 %% Locate method data
 folder = what('randomize_analysis');
