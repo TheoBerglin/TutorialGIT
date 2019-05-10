@@ -3,11 +3,11 @@ clear all, clc, close all
 functions = {'randmio_und_signed_edit'};
 type = {Graph.BU};
 densities = [0.0001];% 0.001 0.01]; % 0.05 0.1 %, 0.2 0.4 0.7];
-small_size = [150 ];%200 300 400 500];
+small_size = [300 400];%200 300 400 500];
 large_size = [small_size, 600 800 1000];
 size_vec = {small_size};
 n_randomizations = 40;
-n_rand_vec = [60];
+n_rand_vec = [1000];
 %% Data path
 folder = what('randomize_analysis');
 current_loc = folder.path;

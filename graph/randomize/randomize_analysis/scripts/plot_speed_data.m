@@ -78,7 +78,11 @@ for i = 1:length(fields)
         n = length(data.(fields{i}));
         y_data = zeros(1, n);
         for j = 1:n
-            y_data(j) = median(data.(fields{i})(j).times);
+            if contains(fields{i}, 'BCT_edit')
+                y_data(j) = mean(data.(fields{i})(j).times);
+            else
+                y_data(j) = mean(data.(fields{i})(j).times);
+            end
         end
         
         if contains(fields{i}, 'BCT_edit')
