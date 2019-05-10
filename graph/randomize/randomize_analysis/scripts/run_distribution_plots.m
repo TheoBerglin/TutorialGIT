@@ -80,7 +80,6 @@ for mi=1:length(methods)
                 out_v = out_var{mj};
                 eval(sprintf('orig_val = %s(A, type);', meas))
                 fprintf('------ Running for measure: %s\n', out_v)
-                subplot(2, 2, mj)
 
                 %% Extract distributions
                 d_gt = extractfield(node_data_gt(rowi_gt).measures, out_v);
@@ -89,47 +88,61 @@ for mi=1:length(methods)
                 d_gt = d_gt(isfinite(d_gt));
                 d_gt_edit = d_gt_edit(isfinite(d_gt_edit));
                 d_comp = d_comp(isfinite(d_comp));
+                fprintf('Size of bct data: %d\nSize of bct edit data: %d\nSize of braph data: %d\n', length(d_gt), length(d_gt_edit), length(d_comp))
+                
                 %% Plot figure
-                %Braph
-                h1 =histfit(d_comp);
-                h1(2).Color = 'b';
-                % delete(h1(1));
-                h1(1).FaceColor = 'b';
-                h1(1).FaceAlpha = 0.5;
-                hold on
+                %Edge bins
+                end_value = max([max(d_gt), max(d_gt_edit), max(d_comp)]);
+                start_value = min([min(d_gt), min(d_gt_edit), min(d_comp)]);
+                edges = linspace(start_value, end_value, 25);
                 
                 %BCT
-                h2 =histfit(d_gt);
-                h2(2).Color = 'r';
-                % delete(h2(1));
-                h2(1).FaceColor = 'r';
-                h2(1).FaceAlpha = 0.5;
+                h_gt = histogram(d_gt, edges);
+                hold on
                 
                 %BCT edit
-                % h3 =histfit(d_gt_edit);
-                % h3(2).Color = 'r';
-                % % delete(h3(1));
-                % h3(1).FaceColor = 'r';
-                % h3(1).FaceAlpha = 0.5;
+                h_gt_edit = histogram(d_gt_edit, edges);
                 
+                %BRAPH
+                h_braph = histogram(d_comp, edges);
+                
+                %Original value
+                max_value = max([max(h_gt.Values), max(h_gt_edit.Values), max(h_braph.Values)]);
+                plot(orig_val, linspace(0,max_value), '-g.', 'LineWidth', 20);
+                                
                 %Normalize
-                % max_value = max([max(h1(2).YData), max(h2(2).YData), max(h3(2).YData)]);
-                % h1(2).YData = h1(2).YData./max_value;
-                % h2(2).YData = h2(2).YData./max_value;
-                % h3(2).YData = h3(2).YData./max_value;
+                gt_values = h_gt.Values./500;
+                gt_edit_values = h_gt_edit.Values./500;
+                braph_values = h_braph.Values./500;
+                x_values = h_gt.BinEdges(1:end-1) + h_gt.BinWidth/2;
                 
-                % plot(orig_val, linspace(0,max([max(h1(2).YData), max(h2(2).YData), max(h3(2).YData)])), '-g.', 'LineWidth', 20);
-                plot(orig_val, linspace(0,max([max(h1(2).YData), max(h2(2).YData)])), '-g.', 'LineWidth', 20);
+                clf;
+
                 
-                % xmin = min([min(h1(2).XData), min(h2(2).XData), min(h3(2).XData)]);
-                % xmax = max([max(h1(2).XData), max(h2(2).XData), max(h3(2).XData)]);
-                xmin = min([min(h1(2).XData), min(h2(2).XData)]);
-                xmax = max([max(h1(2).XData), max(h2(2).XData)]);
-                xlim([xmin xmax])
+                plot(x_values, smooth(gt_values), '-d')
+                hold on
+                plot(x_values, smooth(gt_edit_values), '-s')
+                plot(x_values, smooth(braph_values), '-^')
+                maxis2d([0 5], [0 10])
+%                 maxis2d([0 65],[0 80]*1/factory,...
+%     'XTicks',xticks,...
+%     'XTickLabels','',...
+%     'X0',0,...
+%     'xlim',[-1.5 68],...
+%     'yticks',[0.05 0.25 0.45],...
+%     'YTickLabels',{'$\mathrm{0.05}$','$\mathrm{0.25}$','$\mathrm{0.45}$'},...
+%     'Y0',0,...
+%     'ylim',[-3 81]*1/factory,...
+%     'xlabel','','XLabelPosition',[75 -11],...
+%     'ylabel','$\mathrm{clustering}~\mathrm{coefficient}$','YLabelPosition',[-11 40*1/factory],...
+%     'StemWidth',0.5,...
+%     'HeadLength',8,...
+%     'HeadWidth',4,...
+%     'HeadNode',5,...
+%     'TickFontSize',12,...
+%     'labelfontsize',15);
+                
                 xlabel(sprintf('%s' , out_v))
-                % fprintf('Size of ground truth data: %d\nSize of compare data: %d\n', length(d_gt), length(d_comp))
-                % fprintf('Mean of ground truth data: %.4f\nMean of compare data: %.4f\n', mean(d_gt), mean(d_comp))
-                % fprintf('Standard deviation of ground truth data: %.4f\nStandard deviation of compare data: %.4f\n', std(d_gt), std(d_comp))
                 fprintf('Original value: %.4f\n', orig_val)
             end
             suptitle(sprintf('Type: %s, %s, Size: %d, Density: %.4f', type_bin, type_dir, n, dens))
