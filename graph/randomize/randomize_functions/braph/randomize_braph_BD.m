@@ -43,15 +43,15 @@ if nargin<3 || isempty(error)
     error = 1e-4;
 end
 
-% check squareness
-if ~isequal(size(A,1), size(A,2))
-    error('Input matrix needs to be square');
-end
-
-% check "binarism"
-if any(find(A ~= 0 & A ~= 1))
-   error('Input matrix is not binary');
-end
+% % check squareness
+% if ~isequal(size(A,1), size(A,2))
+%     error('Input matrix needs to be square');
+% end
+% 
+% % check "binarism"
+% if any(find(A ~= 0 & A ~= 1))
+%    error('Input matrix is not binary');
+% end
 
 % number of nodes
 N = length(A);
@@ -136,7 +136,7 @@ mw = length(ind_mw);
     end
 
 % construct the connectivity matrix B with rewired edges
-B = zeros(size(A));
+B = sparse(size(A,1), size(A,2));
 B(sub2ind(size(B),r,c)) = 1;
 
 end

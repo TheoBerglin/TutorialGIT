@@ -4,11 +4,11 @@ functions = {'randmio_und_signed_edit' 'randmio_und_signed_edit'...
             'randomize_braph_BU' 'randomize_braph_BD'};
 type = {Graph.BU Graph.BD Graph.BU Graph.BD};
 densities = [0.0001];% 0.001 0.01]; % 0.05 0.1 %, 0.2 0.4 0.7];
-small_size = [150 200 300 400 500];
+small_size = [200 300 400 500];
 large_size = [small_size, 600 800 1000 10000 50000];
-size_vec = {small_size};
+size_vec = {large_size large_size large_size large_size};
 n_randomizations = 40;
-n_rand_vec = [1000 1000 1000 1000 1000 1000 500 500 100 40];
+n_rand_vec = [1000 1000 1000 1000 1000 500 500 100 40];
 %% Data path
 folder = what('randomize_analysis');
 current_loc = folder.path;
@@ -40,6 +40,7 @@ if wei
 else
     wei_str = 'binary';
 end
+save(save_file, 'speed_data');
 
 if dir
     dir_str = 'directed';
@@ -65,18 +66,19 @@ for di = 1:length(densities)
         try
             n_randomizations = n_rand_vec(si);
             times = zeros(1, n_randomizations);
-            pause(1)
+            pause(2)
             for i = 1:n_randomizations
                 tic
                 eval(sprintf('%s(A);', func))
                 times(i) = toc;
             end
             speed_data.(wei_str).(dir_str).(func)(speed_ind) = struct('nodes', s, 'density', d, 'times', times);
-            fprintf('Size: %d Density: %.4f Time per run: %.7f\n', s, d, mean(times))
+            fprintf('Size: %d Density: %.4f Time per run: %.7f\n', s, d, median(times))
         catch
             speed_data.(wei_str).(dir_str).(func)(speed_ind) = struct('nodes', nan, 'density', nan, 'times', times);
             fprintf('ERROROR: Size: %d Density: %.4f did not finish\n', s, d)
         end
+        save(save_file, 'speed_data');
         speed_ind = speed_ind+1;
     end
 end

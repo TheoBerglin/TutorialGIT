@@ -53,14 +53,14 @@ if ~isequal(size(A,1), size(A,2))
 end
 
 % check "binarism"
-if ~all(all(A == 0 | A == 1))
-   error('Input matrix is not binary');
-end
+%if ~all(all(A == 0 | A == 1))
+%   error('Input matrix is not binary');
+%end
 
 % check for symmetry
-if ~isequal(A, A.')
-    error('Input matrix is not symmetric');
-end
+%if ~isequal(A, A.')
+%    error('Input matrix is not symmetric');
+%end
 
 % number of nodes
 N = length(A);
