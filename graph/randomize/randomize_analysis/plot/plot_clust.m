@@ -8,8 +8,8 @@ axes(curr_axes);
 
 xlab = {'$\mathrm{Clustering}~\mathrm{global}$'};
 colors = {[255 185 22]./255,[255 22 162]./255,[22 255 220]./255};
-xlabposx = 0.015;
-xlabposy = -0.1;
+xlabposx = 0.017;
+xlabposy = -0.13;
 ylabposx = 0.004;
 ylabposy = 0.78;
 
@@ -64,7 +64,7 @@ gt_edit_values = N_gt_edit./500;
 braph_values = N_comp./500;
 
 y_max_value = max([max(gt_values), max(gt_edit_values), max(braph_values)]);
-y_min_value = 0;
+y_min_value = 0.15;
 
 hold on
 
@@ -91,7 +91,7 @@ end
 % plot(x_values, braph_values, '-^', 'Color', colors{3})
 
 xticks = linspace(x_start_value, x_end_value, 5);
-yticks = linspace(y_min_value, 0.6, 5);
+yticks = linspace(y_min_value, 0.6, 4);
 
 
 plot(x_end_value*0.65, y_max_value*0.91, 's', 'Color', colors{1}, 'MarkerFaceColor', colors{1}, 'MarkerSize', 10)
@@ -107,8 +107,7 @@ h_max = maxis2d([x_start_value-0.005 x_end_value*1.1], [-0.03 y_max_value*1.5],.
     sprintf('$%.2f$', xticks(5)),},...
     'YTicks',yticks,...
     'YTickLabels',{sprintf('$%.2f$', yticks(1)),sprintf('$%.2f$', ...
-    yticks(2)),sprintf('$%.2f$', yticks(3)),sprintf('$%.2f$', yticks(4)),...
-    sprintf('$%.2f$', yticks(5)),},...
+    yticks(2)),sprintf('$%.2f$', yticks(3)),sprintf('$%.2f$', yticks(4))},...
     'xlabel', xlab,...
     'XLabelPosition',[xlabposx xlabposy],...
     'ylabel', '$pdf$',...
