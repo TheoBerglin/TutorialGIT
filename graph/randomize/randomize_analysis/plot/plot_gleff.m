@@ -20,26 +20,6 @@ end_value = max([max(d_gt), max(d_gt_edit), max(d_comp)]);
 start_value = min([min(d_gt), min(d_gt_edit), min(d_comp)]);
 edges = linspace(start_value, end_value, 25);
 
-%     %BCT
-%     h_gt = histogram(d_gt, edges);
-%     hold on
-%
-%     %BCT edit
-%     h_gt_edit = histogram(d_gt_edit, edges);
-%
-%     %BRAPH
-%     h_braph = histogram(d_comp, edges);
-%
-%     %Original value
-%     max_value = max([max(h_gt.Values), max(h_gt_edit.Values), max(h_braph.Values)]);
-%
-%
-%     %Normalize
-%     gt_values = h_gt.Values./500;
-%     gt_edit_values = h_gt_edit.Values./500;
-%     braph_values = h_braph.Values./500;
-%     x_values = h_gt.BinEdges(1:end-1) + h_gt.BinWidth/2;
-
 % Hist data
 N_gt = histcounts(d_gt, edges);
 N_gt_edit = histcounts(d_gt_edit, edges);
@@ -64,8 +44,6 @@ xticks = linspace(start_value, end_value, 5);
 yticks = linspace(0, max_value, 5);
 
 marker = {'d','s','^'};
-marker_size = 1;
-line_width = 1;
 
 
 plot(end_value*0.93, max_value*0.9, marker{1}, 'Color', colors{1})
@@ -93,9 +71,6 @@ h_max = maxis2d([start_value*0.95 end_value*1.1], [-0.01 max_value*1.1],...
     'HeadNode',5,...
     'TickFontSize',12,...
     'labelfontsize',15);
-
-y_pos1 = -6*1/100;
-y_pos2 = y_pos1 - 4.75*1/100;
 
 
 text(end_value*0.95, max_value*0.9, ...
