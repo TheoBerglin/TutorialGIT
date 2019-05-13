@@ -1,7 +1,7 @@
 clear all, close all, clc
 %% Settings
 methods_gt = {'randomize_bct_U'};
-methods_target = {'randomize_braph_BU'};
+methods_target = {'randomize_bct_U_edit'};
 pval_save_string = 'p_value_vs_bct';
 types = {Graph.BU};
 nodes = [150];
