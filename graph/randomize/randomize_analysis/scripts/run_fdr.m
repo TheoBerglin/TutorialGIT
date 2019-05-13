@@ -77,6 +77,7 @@ for ni = 1:length(data)  % loop through nodes
         end
         if exist('p_values_node', 'var')
             p_values = [p_values p_values_node];
+            clear p_values_node;
         end
     end
 end
