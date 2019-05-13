@@ -1,14 +1,14 @@
 clear all, clc, close all
 %% Settings
-functions = {'randmio_und_signed_edit' 'randmio_und_signed_edit'...
-            'randomize_braph_BU' 'randomize_braph_BD'};
-type = {Graph.BU Graph.BD Graph.BU Graph.BD};
+functions = {'randomize_braph_BU' 'randomize_braph_BD' 'randomizer_bin_und'};
+type = {Graph.BU Graph.BD Graph.BU};
 densities = [0.0001];% 0.001 0.01]; % 0.05 0.1 %, 0.2 0.4 0.7];
 small_size = [200 300 400 500];
+medium_size = [small_size, 600, 800, 1000];
 large_size = [small_size, 600 800 1000 10000 50000];
-size_vec = {large_size large_size large_size large_size};
+size_vec = {large_size large_size medium_size};
 n_randomizations = 40;
-n_rand_vec = [1000 1000 1000 1000 1000 500 500 100 40];
+n_rand_vec = [1000 1000 1000 1000 1000 500 500 100 5];
 %% Data path
 folder = what('randomize_analysis');
 current_loc = folder.path;
