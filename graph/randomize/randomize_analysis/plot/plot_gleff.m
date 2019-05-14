@@ -6,12 +6,12 @@ load('distr_gleff.mat')
 fprintf('Size of bct data: %d\nSize of bct edit data: %d\nSize of braph data: %d\n', length(d_gt), length(d_gt_edit), length(d_comp))
 axes(curr_axes);
 
-xlab = {'$\mathrm{Global}~\mathrm{efficiency}~\mathrm{average}$'};
+xlab = {'$\mathrm{Global}~\mathrm{efficiency}$'};
 colors = {[255 185 22]./255,[255 22 162]./255,[22 255 220]./255};
 xlabposx = 0.12;
 xlabposy = -0.12;
 ylabposx = 0.11;
-ylabposy= 0.5;
+ylabposy = 0.52;
 
 
 %% Plot figure
