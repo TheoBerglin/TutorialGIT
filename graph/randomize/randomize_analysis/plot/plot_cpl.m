@@ -11,7 +11,7 @@ colors = {[255 185 22]./255,[255 22 162]./255,[22 255 220]./255};
 xlabposx = 6.5;
 xlabposy = -0.12;
 ylabposx = 5.6;
-ylabposy = 0.51;
+ylabposy = 0.525;
 
 %% Plot figure
 %Edge bins
@@ -89,12 +89,11 @@ end
 % plot(x_values, gt_edit_values, '-s', 'Color', colors{2})
 % plot(x_values, braph_values, '-^', 'Color', colors{3})
 
-xticks = linspace(x_start_value, x_end_value, 5);
 yticks = linspace(0.1, 0.4, 4);
 
-plot(x_end_value*0.99, y_max_value*0.9, 's', 'Color', colors{1}, 'MarkerFaceColor', colors{1}, 'MarkerSize', 10)
-plot(x_end_value*0.99, y_max_value*0.79, 's', 'Color', colors{2}, 'MarkerFaceColor', colors{2}, 'MarkerSize', 10)
-plot(x_end_value*0.99, y_max_value*0.69, 's', 'Color', colors{3}, 'MarkerFaceColor', colors{3}, 'MarkerSize', 10)
+% plot(x_end_value*0.99, y_max_value*0.9, 's', 'Color', colors{1}, 'MarkerFaceColor', colors{1}, 'MarkerSize', 10)
+% plot(x_end_value*0.99, y_max_value*0.79, 's', 'Color', colors{2}, 'MarkerFaceColor', colors{2}, 'MarkerSize', 10)
+% plot(x_end_value*0.99, y_max_value*0.69, 's', 'Color', colors{3}, 'MarkerFaceColor', colors{3}, 'MarkerSize', 10)
 
 
 h_max = maxis2d([x_start_value*0.9 x_end_value*1.04], [-0.02 y_max_value*1.5],...
@@ -117,25 +116,25 @@ h_max = maxis2d([x_start_value*0.9 x_end_value*1.04], [-0.02 y_max_value*1.5],..
     'HeadNode',5,...
     'TickFontSize',14,...
     'labelfontsize',18);
-
-text(x_end_value*0.95, y_max_value*0.9, ...
-    '$\mathrm{BCT}$','Interpreter','latex',...
-    'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
-text(x_end_value*0.95, y_max_value*0.82, ...
-    '$\mathrm{BCT}~\mathrm{edit}$','Interpreter','latex',...
-    'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
-text(x_end_value*0.95, y_max_value*0.74, ...
-    '$\mathrm{BRAPH}$','Interpreter','latex',...
-    'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
+% 
+% text(x_end_value*0.95, y_max_value*0.9, ...
+%     '$\mathrm{BCT}$','Interpreter','latex',...
+%     'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
+% text(x_end_value*0.95, y_max_value*0.82, ...
+%     '$\mathrm{BCT}~\mathrm{edit}$','Interpreter','latex',...
+%     'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
+% text(x_end_value*0.95, y_max_value*0.74, ...
+%     '$\mathrm{BRAPH}$','Interpreter','latex',...
+%     'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
 
 % set(h_max.ylabel,'Rotation',90);
 for h1 = h_max.yticklabels
-    set(h1,'Position',get(h1,'Position')-[0.1 .0 0]);
+    set(h1,'Position',get(h1,'Position')-[0.15 .0 0]);
 end
 h2 = h_max.yticks;
 for h2_loop = 1:1:length(h2)
     a = h2(h2_loop);
-    set(a,'XData',a.XData - 0.1)
+    set(a,'XData',a.XData - 0.08)
 end
 h3 = h_max.xticks;
 for h3_loop = 1:1:length(h3)

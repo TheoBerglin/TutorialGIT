@@ -90,13 +90,12 @@ end
 % plot(x_values, gt_edit_values, '-s', 'Color', colors{2})
 % plot(x_values, braph_values, '-^', 'Color', colors{3})
 
-xticks = linspace(x_start_value, x_end_value, 5);
 yticks = linspace(y_min_value, 0.6, 4);
 
 
-plot(x_end_value*0.65, y_max_value*0.91, 's', 'Color', colors{1}, 'MarkerFaceColor', colors{1}, 'MarkerSize', 10)
-plot(x_end_value*0.65, y_max_value*0.81, 's', 'Color', colors{2}, 'MarkerFaceColor', colors{2}, 'MarkerSize', 10)
-plot(x_end_value*0.65, y_max_value*0.71, 's', 'Color', colors{3}, 'MarkerFaceColor', colors{3}, 'MarkerSize', 10)
+% plot(x_end_value*0.65, y_max_value*0.91, 's', 'Color', colors{1}, 'MarkerFaceColor', colors{1}, 'MarkerSize', 10)
+% plot(x_end_value*0.65, y_max_value*0.81, 's', 'Color', colors{2}, 'MarkerFaceColor', colors{2}, 'MarkerSize', 10)
+% plot(x_end_value*0.65, y_max_value*0.71, 's', 'Color', colors{3}, 'MarkerFaceColor', colors{3}, 'MarkerSize', 10)
 
 
 h_max = maxis2d([x_start_value-0.005 x_end_value*1.1], [-0.03 y_max_value*1.5],...
@@ -121,16 +120,16 @@ h_max = maxis2d([x_start_value-0.005 x_end_value*1.1], [-0.03 y_max_value*1.5],.
     'labelfontsize',18);
 
 
-
-text(x_end_value*0.7, y_max_value*0.9, ...
-    '$\mathrm{BCT}$','Interpreter','latex',...
-    'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
-text(x_end_value*0.7, y_max_value*0.8, ...
-    '$\mathrm{BCT}~\mathrm{edit}$','Interpreter','latex',...
-    'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
-text(x_end_value*0.7, y_max_value*0.7, ...
-    '$\mathrm{BRAPH}$','Interpreter','latex',...
-    'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
+% 
+% text(x_end_value*0.7, y_max_value*0.9, ...
+%     '$\mathrm{BCT}$','Interpreter','latex',...
+%     'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
+% text(x_end_value*0.7, y_max_value*0.8, ...
+%     '$\mathrm{BCT}~\mathrm{edit}$','Interpreter','latex',...
+%     'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
+% text(x_end_value*0.7, y_max_value*0.7, ...
+%     '$\mathrm{BRAPH}$','Interpreter','latex',...
+%     'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
 
 % set(h_max.ylabel,'Rotation',90);
 for h1 = h_max.yticklabels
