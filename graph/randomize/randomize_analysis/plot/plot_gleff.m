@@ -8,7 +8,7 @@ axes(curr_axes);
 
 xlab = {'$\mathrm{Global}~\mathrm{efficiency}~\mathrm{average}$'};
 colors = {[255 185 22]./255,[255 22 162]./255,[22 255 220]./255};
-xlabposx = 0.125;
+xlabposx = 0.12;
 xlabposy = -0.08;
 ylabposx = 0.108;
 ylabposy= 0.5;
