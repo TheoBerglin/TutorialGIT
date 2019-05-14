@@ -1,5 +1,7 @@
 clc, clear all, close all;
 
+% Data for BU, size: 200, dens:0.01
+
 f1 = figure();
 set(f1,'Color','w','Position',[100 40 700 730])
 %% global parameters
