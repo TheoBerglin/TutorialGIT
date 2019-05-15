@@ -1,10 +1,9 @@
-function plot_cpl( curr_axes )
+function plot_cpl(  )
 %PLOT_CPL Summary of this function goes here
 %   Detailed explanation goes here
 
 load('distr_cpl.mat')
 fprintf('Size of bct data: %d\nSize of bct edit data: %d\nSize of braph data: %d\n', length(d_gt), length(d_gt_edit), length(d_comp))
-axes(curr_axes);
 
 xlab = {'$\mathrm{Characteristic}~\mathrm{pathlength}$'};
 colors = {[255 185 22]./255,[255 22 162]./255,[22 255 220]./255};
