@@ -1,14 +1,15 @@
-%% Plot speed data
-clear all, close all, clc;
+function plot_speed_data_func(bin, dir_type, dir_type_opposite)
+%bin = 'binary';
+%bin = 'weighted';
+%plot_over = 'density';
+%dir_type = 'undirected';
+%dir_type_opposite = 'apa';
 %% Settings
 run_all = -999;
 sizes = [run_all];
 densities = [0.0001]; %All densities
 
 %%
-color_bct = [255 185 22]./255;
-color_bct_edit = [255 22 162]./255;
-color_braph = [22 255 220]./255;
 load('speed.mat');
 type_bin_fields = fieldnames(speed_data);
 plot_data = struct();
@@ -65,16 +66,9 @@ end
 
 %% Run this section seperate
 % change these to select which plot
-bin = 'binary';
-%bin = 'weighted';
-%plot_over = 'density';
-dir_type = 'undirected';
-dir_type_opposite = 'apa';
-plot_over = 'nodes';
 data = plot_data.(bin);
 fields = fieldnames(data);
-f1 = figure();
-set(f1,'Color','w','Position',[100 40 700 300])
+plot_over = 'nodes';
 for i = 1:length(fields)
     if length(data.(fields{i})) ==0
         continue
@@ -94,25 +88,23 @@ for i = 1:length(fields)
         
         if contains(fields{i}, 'BCT_edit')
             plot_style = 'o';
-            plot_color = color_bct_edit;
+            plot_color = 'r';
         
         elseif  contains(fields{i}, 'BCT_special')
             plot_style = 's';
             plot_color = 'y';
-            continue
         elseif contains(fields{i}, 'BCT')
             plot_style = '^';
-            plot_color = color_bct;
+            plot_color = 'b';
         else
-            plot_style = 'd';
-            plot_color = color_braph;
+            plot_style = '*';
+            plot_color = 'k';
         end
-        loglog(x_data, y_data,plot_style,'DisplayName', replace(replace(replace(fields{i},'un',''), 'directed', ''), '_', ' '), ...
-            'MarkerFaceColor', plot_color, 'MarkerEdgeColor', 'k')
+        loglog(x_data, y_data,plot_style,'DisplayName', replace(replace(replace(fields{i},'un',''), 'directed', ''), '_', ' '))
         hold on
     end
 end
-xlabel('Nodes', 'interpreter', 'latex', 'FontSize', 12)
-ylabel('Time per randomization [s]', 'interpreter', 'latex', 'FontSize', 12)
-title(sprintf('Time comparison for %s graph of density: %d',dir_type, densities(1)), 'interpreter', 'latex', 'FontSize', 14)
-legend('Location', 'best')
+%xlabel('Nodes', 'interpreter', 'latex', 'FontSize', 12)
+%ylabel('Time per randomization [s]', 'interpreter', 'latex', 'FontSize', 12)
+%title(sprintf('Time comparison for %s graph of density: %d',dir_type, densities(1)), 'interpreter', 'latex', 'FontSize', 14)
+%legend('Location', 'best')
