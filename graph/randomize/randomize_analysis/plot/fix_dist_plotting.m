@@ -1,4 +1,4 @@
-clc, clear all, close all;
+clc, clear all, clf, close all;
 
 % Data for BU, size: 200, dens:0.01
 
@@ -37,7 +37,7 @@ text_xpos_alg = xpos_col2 + size_x_axes/2;
 text_ypos_alg = ypos_row1 - dist_y_bottom;
 
 
-%% create an axes: plot clustering
+%% create an axes: plot cpl
 Res_cpl_x = xpos_col1;
 Res_cpl_y = ypos_row1;
 Res_cpl_size_x = size_x_axes;
@@ -45,20 +45,21 @@ Res_cpl_size_y = size_y_axes;
 Res_cpl_pos = [Res_cpl_x Res_cpl_y Res_cpl_size_x Res_cpl_size_y];
 ax1 = axes('Parent',f1,'Units','pixels','Position',Res_cpl_pos);
 
-Res_transitivity_x = xpos_col2;
-Res_transitivity_y = ypos_row1;
-Res_transitivity_size_x = size_x_axes;
-Res_transitivity_size_y = size_y_axes;
-Res_transitivity_pos = [Res_transitivity_x Res_transitivity_y Res_transitivity_size_x Res_transitivity_size_y];
-ax2 = axes('Parent',f1,'Units','pixels','Position',Res_transitivity_pos);
+%% create an axes: plot clustering
+Res_clust_x = xpos_col2;
+Res_clust_y = ypos_row1;
+Res_clust_size_x = size_x_axes;
+Res_clust_size_y = size_y_axes;
+Res_clust_pos = [Res_clust_x Res_clust_y Res_clust_size_x Res_clust_size_y];
+ax2 = axes('Parent',f1,'Units','pixels','Position',Res_clust_pos);
 
-%% create an axes: plot path length
-Res_pl_x = xpos_col1;
-Res_pl_y = ypos_row2;
-Res_pl_size_x = size_x_axes;
-Res_pl_size_y = size_y_axes;
-Res_pl_pos = [Res_pl_x Res_pl_y Res_pl_size_x Res_pl_size_y];
-ax3 = axes('Parent',f1,'Units','pixels','Position',Res_pl_pos);
+%% create an axes: plot trans
+Res_trans_x = xpos_col1;
+Res_trans_y = ypos_row2;
+Res_trans_size_x = size_x_axes;
+Res_trans_size_y = size_y_axes;
+Res_trans_pos = [Res_trans_x Res_trans_y Res_trans_size_x Res_trans_size_y];
+ax3 = axes('Parent',f1,'Units','pixels','Position',Res_trans_pos);
 %
 %% create an axes: plot global efficiency
 Res_ge_x = xpos_col2;
@@ -68,9 +69,7 @@ Res_ge_size_y = size_y_axes;
 Res_ge_pos = [Res_ge_x Res_ge_y Res_ge_size_x Res_ge_size_y];
 ax4 = axes('Parent',f1,'Units','pixels','Position',Res_ge_pos);
 
-axlar = [ax1, ax2, ax3, ax4];%
-
-
+%% Plot stuff
 plot_cpl(ax1);
 plot_clust(ax2);
 plot_trans(ax3);
@@ -82,8 +81,6 @@ ax_text_lengthy = .5;
 ax_text = axes('Parent',f1,'Units','pixels','Position',[0 0 ax_text_lengthx ax_text_lengthy]);
 
 hold on
-
-
 
 text(text_xpos_c, text_ypos_c, ...
     '$\mathrm{(a)}$','Interpreter','latex',...
