@@ -29,8 +29,15 @@ end
 
 %% Binary/weight settings
 if wei
-    W = threshold + (1-threshold).*rand(nodes);
-    A = A.*W;
+    A = sprand(nodes,nodes,density);
+    %% Directed/undirected settings
+    if ~dir
+    %Symmetrize if undirected
+        A = triu(A);
+        A = A+A.';
+    end
+    %W = sparse(threshold + (1-threshold).*rand(nodes));
+    %A = A.*W;
 end
 
 %% Directed/undirected settings

@@ -68,7 +68,7 @@ Ap = W>0;                                               %positive adjacency matr
 An = W<0;                                               %negative adjacency matrix
 
 if nnz(Ap)<(n*(n-1))                                    %if Ap is not full
-    W_r  = randmio_dir_signed_edit(W);
+    W_r  = randmio_dir_signed_edit(sign(W));
     Ap_r = W_r>0;
     An_r = W_r<0;
 else
