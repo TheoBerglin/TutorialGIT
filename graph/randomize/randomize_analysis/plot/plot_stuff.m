@@ -18,17 +18,18 @@ ypos_row1 = 55;
 dist_y = -10;
 dist_y_bottom = 18;
 dist_x = 29;
+dist_x_snd_col = 40;
 font_size = 26;
 text_xpos_a = xpos_col1 - dist_x;
 text_ypos_a = ypos_row3 + size_y_axes + dist_y;
-text_xpos_b = xpos_col2 - dist_x;
+text_xpos_b = xpos_col2 - dist_x_snd_col;
 text_ypos_b = text_ypos_a;
 text_xpos_c = text_xpos_a;
 text_ypos_c = ypos_row2  + size_y_axes +  dist_y;
 text_xpos_d = text_xpos_b;
 text_ypos_d = text_ypos_c;
 text_xpos_e = text_xpos_a;
-text_ypos_e = ypos_row1  + size_y_axes +  dist_y;
+text_ypos_e = ypos_row1  + size_y_axes +  dist_y;   
 text_xpos_f = text_xpos_b;
 text_ypos_f = text_ypos_e;
 text_xpos_struct = xpos_col1 + size_x_axes/2;
@@ -37,7 +38,7 @@ text_xpos_alg = xpos_col2 + size_x_axes/2;
 text_ypos_alg = ypos_row1 - dist_y_bottom;
 % 
 % 
-%% create an axes: plot cpl
+%% create an axes: plot degree
 Res_deg_x = xpos_col1;
 Res_deg_y = ypos_row2;
 Res_deg_size_x = size_x_axes;
@@ -45,7 +46,16 @@ Res_deg_size_y = size_y_axes;
 Res_deg_pos = [Res_deg_x Res_deg_y Res_deg_size_x Res_deg_size_y];
 ax1 = axes('Parent',f1,'Units','pixels','Position',Res_deg_pos);
 plot_deg();
-% 
+
+%% create an axes: plot fdr
+Res_fdr_x = xpos_col2;
+Res_fdr_y = ypos_row2;
+Res_fdr_size_x = size_x_axes;
+Res_fdr_size_y = size_y_axes;
+Res_fdr_pos = [Res_fdr_x Res_fdr_y Res_fdr_size_x Res_fdr_size_y];
+ax4 = axes('Parent',f1,'Units','pixels','Position',Res_fdr_pos);
+plot_fdr();
+
 % % 
 % %% create an axes: plot clustering
 % Res_clust_x = xpos_col2;
@@ -65,15 +75,7 @@ plot_deg();
 % ax3 = axes('Parent',f1,'Units','pixels','Position',Res_trans_pos);
 % plot_trans();
 % 
-% %
-% %% create an axes: plot global efficiency
-% Res_ge_x = xpos_col2;
-% Res_ge_y = ypos_row2;
-% Res_ge_size_x = size_x_axes;
-% Res_ge_size_y = size_y_axes;
-% Res_ge_pos = [Res_ge_x Res_ge_y Res_ge_size_x Res_ge_size_y];
-% ax4 = axes('Parent',f1,'Units','pixels','Position',Res_ge_pos);
-% plot_gleff();
+
 
 
 ax_text_lengthx = .5;
