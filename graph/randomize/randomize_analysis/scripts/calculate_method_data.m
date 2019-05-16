@@ -1,13 +1,9 @@
 clear all, clc, close all;
 %% Settings
-%methods = {'randomize_braph_BD' 'randomize_braph_BU' ...
-%    'randomize_bct_D_edit' 'randomize_bct_U_edit'...
-%    'randomize_bct_D' 'randomize_bct_U'};
-%graph_types = {Graph.BD Graph.BU Graph.BD Graph.BU Graph.BD Graph.BU};
-methods = {'randomize_bct_U'};
-graph_types = {Graph.BU};
-nodes = [100 200];
-densities = [0.01 0.02];
+methods = {'randomize_braph_WU' 'randomize_bct_U_edit' 'randomize_bct_U'};
+graph_types = {Graph.WU Graph.WU Graph.WU};
+nodes = [200];
+densities = [0.01];
 rerun_existing = true;
 n_randomizations = 500;
 desc_str = sprintf('%s', datestr(datetime('now')));
