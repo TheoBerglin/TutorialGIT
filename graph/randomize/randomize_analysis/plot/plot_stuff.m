@@ -53,7 +53,7 @@ Res_fdr_y = ypos_row2;
 Res_fdr_size_x = size_x_axes;
 Res_fdr_size_y = size_y_axes;
 Res_fdr_pos = [Res_fdr_x Res_fdr_y Res_fdr_size_x Res_fdr_size_y];
-ax4 = axes('Parent',f1,'Units','pixels','Position',Res_fdr_pos);
+ax2 = axes('Parent',f1,'Units','pixels','Position',Res_fdr_pos);
 plot_fdr();
 
 % % 

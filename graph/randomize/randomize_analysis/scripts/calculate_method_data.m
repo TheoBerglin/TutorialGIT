@@ -1,8 +1,8 @@
 clear all, clc, close all;
 %% Settings
-methods = {'randomize_bct_U_edit'  'randomize_braph_WU' 'randomize_bct_U'};
-graph_types = {Graph.WU Graph.WU Graph.WU};
-nodes = [100 110 120 130 140 150 160 170 180 190];
+methods = {'randomize_bct_D'};
+graph_types = {Graph.BD};
+nodes = [140];
 densities = [0.01];
 rerun_existing = true;
 n_randomizations = 500;
