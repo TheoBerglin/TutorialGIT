@@ -1,13 +1,13 @@
 clear all, clc, close all
-densities = [0.005 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1];
-nodes_vec = [150];%[100 110 120 130 140 150 160 170 180 190];
+densities = [0.01];
+nodes_vec = [100 110 120 130 140 150 160 170 180 190];
 %% Settings
 for ni = 1:length(nodes_vec)
     
     nodes = nodes_vec(ni);
     s = nodes*nodes;
     possible_connections = nodes*(nodes-1);
-    type = Graph.BD;
+    type = Graph.WD;
     threshold = 0.3;
     directed = Graph.is_directed(type);
     binary = Graph.is_binary(type);
