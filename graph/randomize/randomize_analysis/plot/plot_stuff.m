@@ -38,14 +38,14 @@ text_xpos_alg = xpos_col2 + size_x_axes/2;
 text_ypos_alg = ypos_row1 - dist_y_bottom;
 % 
 % 
-%% create an axes: plot degree
-Res_deg_x = xpos_col1;
-Res_deg_y = ypos_row2;
-Res_deg_size_x = size_x_axes;
-Res_deg_size_y = size_y_axes;
-Res_deg_pos = [Res_deg_x Res_deg_y Res_deg_size_x Res_deg_size_y];
-ax1 = axes('Parent',f1,'Units','pixels','Position',Res_deg_pos);
-plot_deg();
+%% create an axes: plot degree bu
+Res_deg_bu_x = xpos_col1;
+Res_deg_bu_y = ypos_row2;
+Res_deg_bu_size_x = size_x_axes;
+Res_deg_bu_size_y = size_y_axes;
+Res_deg_bu_pos = [Res_deg_bu_x Res_deg_bu_y Res_deg_bu_size_x Res_deg_bu_size_y];
+ax1 = axes('Parent',f1,'Units','pixels','Position',Res_deg_bu_pos);
+plot_deg_bu();
 
 %% create an axes: plot fdr
 Res_fdr_x = xpos_col2;
@@ -56,26 +56,24 @@ Res_fdr_pos = [Res_fdr_x Res_fdr_y Res_fdr_size_x Res_fdr_size_y];
 ax2 = axes('Parent',f1,'Units','pixels','Position',Res_fdr_pos);
 plot_fdr();
 
-% % 
-% %% create an axes: plot clustering
-% Res_clust_x = xpos_col2;
-% Res_clust_y = ypos_row1;
-% Res_clust_size_x = size_x_axes;
-% Res_clust_size_y = size_y_axes;
-% Res_clust_pos = [Res_clust_x Res_clust_y Res_clust_size_x Res_clust_size_y];
-% ax2 = axes('Parent',f1,'Units','pixels','Position',Res_clust_pos);
-% plot_clust();
-% 
-% %% create an axes: plot trans
-% Res_trans_x = xpos_col1;
-% Res_trans_y = ypos_row2;
-% Res_trans_size_x = size_x_axes;
-% Res_trans_size_y = size_y_axes;
-% Res_trans_pos = [Res_trans_x Res_trans_y Res_trans_size_x Res_trans_size_y];
-% ax3 = axes('Parent',f1,'Units','pixels','Position',Res_trans_pos);
-% plot_trans();
-% 
+%% create an axes: plot trans
+Res_deg_bd_x = xpos_col1;
+Res_deg_bd_y = ypos_row1;
+Res_deg_bd_size_x = size_x_axes;
+Res_deg_bd_size_y = size_y_axes;
+Res_deg_bd_pos = [Res_deg_bd_x Res_deg_bd_y Res_deg_bd_size_x Res_deg_bd_size_y];
+ax3 = axes('Parent',f1,'Units','pixels','Position',Res_deg_bd_pos);
+plot_deg_bd();
 
+
+% % create an axes: plot degree bd
+% Res_deg_bd_x = xpos_col2;
+% Res_deg_bd_y = ypos_row1;
+% Res_deg_bd_size_x = size_x_axes;
+% Res_deg_bd_size_y = size_y_axes;
+% Res_deg_bd_pos = [Res_deg_bd_x Res_deg_bd_y Res_deg_bd_size_x Res_deg_bd_size_y];
+% ax3 = axes('Parent',f1,'Units','pixels','Position',Res_deg_bd_pos);
+% plot_deg_bu();
 
 
 ax_text_lengthx = .5;
