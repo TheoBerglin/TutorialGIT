@@ -1,41 +1,49 @@
-function plot_deg_bu(  )
+function plot_wei_wu(  )
 %PLOT_DEG Summary of this function goes here
 %   Detailed explanation goes here
 
-load('deg_bu_200_001.mat')
-fprintf('Size of bct data: %d\nSize of bct edit data: %d\nSize of braph data: %d\n', length(bct_deg), length(bct_edit_deg), length(braph_deg))
+load('deg_wu_200_001.mat')
+fprintf('Size of bct data: %d\nSize of bct edit data: %d\nSize of braph data: %d\n', length(bct_wei), length(bct_edit_wei), length(braph_wei))
 
-xlab = {'$\mathrm{Nodal}~\mathrm{degree}$'};
+xlab = {'$\mathrm{Edge}~\mathrm{weights}$'};
 colors = {[255 185 22]./255,[255 22 162]./255,[22 255 220]./255};
-xlabposx = 4;
-xlabposy = -0.12;
-ylabposx = 1.9;
-ylabposy = 0.57;
-
-nbr_of_vals = length(bct_deg);
+xlabposx = 0.6;
+xlabposy = -0.08;
+ylabposx = 0.25;
+ylabposy = 0.4;
+nbr_of_vals = length(bct_wei);
 %% Plot figure
 %Edge bins
 nbr_of_bins = 8;
-x_end_value = 7.5;
-x_start_value = .5;
+x_end_value = 1;
+x_start_value = .3;
 edges = linspace(x_start_value, x_end_value, nbr_of_bins);
 x_values = edges(1:end-1) + (edges(2)-edges(1))/2;
 
 %Sampling
 nbr_of_groups = 10;
-indices = randperm(length(bct_deg), length(bct_deg));
-d_gt_shuffle = bct_deg(indices);
-d_gt_edit_shuffle = bct_edit_deg(indices);
-d_comp_shuffle = braph_deg(indices);
-elem_in_set = length(bct_deg)/nbr_of_groups;
+indices = randperm(length(bct_wei), length(bct_wei));
+d_gt_shuffle = bct_wei(indices);
+d_gt_edit_shuffle = bct_edit_wei(indices);
+d_comp_shuffle = braph_wei(indices);
+elem_in_set = ceil(length(bct_wei)/nbr_of_groups);
 gt_mean = zeros(nbr_of_groups, length(x_values));  % Each row is one sample
 gt_edit_mean = zeros(nbr_of_groups, length(x_values));
 braph_mean = zeros(nbr_of_groups, length(x_values));
+elems_left = length(bct_wei);
 
 for i=1:nbr_of_groups
-    subset_gt = d_gt_shuffle((i-1)*elem_in_set+1: i*elem_in_set);
-    subset_gt_edit = d_gt_edit_shuffle((i-1)*elem_in_set+1: i*elem_in_set);
-    subset_braph = d_comp_shuffle((i-1)*elem_in_set+1: i*elem_in_set);
+    if elems_left < elem_in_set
+        subset_gt = d_gt_shuffle((i-1)*elem_in_set+1: end);
+        subset_gt_edit = d_gt_edit_shuffle((i-1)*elem_in_set+1: end);
+        subset_braph = d_comp_shuffle((i-1)*elem_in_set+1: end);
+        elem_in_set = elems_left;
+    else
+        subset_gt = d_gt_shuffle((i-1)*elem_in_set+1: i*elem_in_set);
+        subset_gt_edit = d_gt_edit_shuffle((i-1)*elem_in_set+1: i*elem_in_set);
+        subset_braph = d_comp_shuffle((i-1)*elem_in_set+1: i*elem_in_set);
+        elems_left = elems_left - elem_in_set;
+    end
     
     % Histcounts
     N_gt = histcounts(subset_gt, edges);
@@ -54,9 +62,9 @@ gt_edit_std = std(gt_edit_mean);
 braph_std = std(braph_mean);
 
 % Hist data
-N_gt = histcounts(bct_deg, edges);
-N_gt_edit = histcounts(bct_edit_deg, edges);
-N_comp = histcounts(braph_deg, edges);
+N_gt = histcounts(bct_wei, edges);
+N_gt_edit = histcounts(bct_edit_wei, edges);
+N_comp = histcounts(braph_wei, edges);
 
 % Normalize
 gt_values = N_gt./nbr_of_vals;
@@ -86,18 +94,18 @@ end
 
 yticks = linspace(0.1, 0.4, 4);
 
-plot(x_end_value*0.6, 0.445, 's', 'Color', colors{1}, 'MarkerFaceColor', colors{1}, 'MarkerSize', 10)
-plot(x_end_value*0.6, 0.405, 's', 'Color', colors{2}, 'MarkerFaceColor', colors{2}, 'MarkerSize', 10)
-plot(x_end_value*0.6, 0.365, 's', 'Color', colors{3}, 'MarkerFaceColor', colors{3}, 'MarkerSize', 10)
+% plot(x_end_value*0.6, 0.445, 's', 'Color', colors{1}, 'MarkerFaceColor', colors{1}, 'MarkerSize', 10)
+% plot(x_end_value*0.6, 0.405, 's', 'Color', colors{2}, 'MarkerFaceColor', colors{2}, 'MarkerSize', 10)
+% plot(x_end_value*0.6, 0.365, 's', 'Color', colors{3}, 'MarkerFaceColor', colors{3}, 'MarkerSize', 10)
 
 
 h_max = maxis2d([x_start_value*0.6 x_end_value*1.1], [-0.02 y_max_value*1.7],...
     'X0', x_start_value,...
     'XTicks',x_values,...
-    'XTickLabels',{sprintf('$%.0f$', x_values(1)),sprintf('$%.0f$', x_values(2)),...
-    sprintf('$%.0f$', x_values(3)),sprintf('$%.0f$', x_values(4)),...
-    sprintf('$%.0f$', x_values(5)),sprintf('$%.0f$', x_values(6)),...
-    sprintf('$%.0f$', x_values(7))},...
+    'XTickLabels',{sprintf('$%.2f$', x_values(1)),sprintf('$%.2f$', x_values(2)),...
+    sprintf('$%.2f$', x_values(3)),sprintf('$%.2f$', x_values(4)),...
+    sprintf('$%.2f$', x_values(5)),sprintf('$%.2f$', x_values(6)),...
+    sprintf('$%.2f$', x_values(7))},...
     'YTicks',yticks,...
     'YTickLabels',{sprintf('$%.1f$', yticks(1)),sprintf('$%.1f$', ...
     yticks(2)),sprintf('$%.1f$', yticks(3)),sprintf('$%.1f$', yticks(4))},...
@@ -112,24 +120,24 @@ h_max = maxis2d([x_start_value*0.6 x_end_value*1.1], [-0.02 y_max_value*1.7],...
     'TickFontSize',14,...
     'labelfontsize',18);
 
-text(x_end_value*0.65, .44, ...
-    '$\mathrm{BCT}$','Interpreter','latex',...
-    'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
-text(x_end_value*0.65, .4, ...
-    '$\mathrm{BCT}~\mathrm{edit}$','Interpreter','latex',...
-    'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
-text(x_end_value*0.65, .36, ...
-    '$\mathrm{BRAPH}$','Interpreter','latex',...
-    'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
+% text(x_end_value*0.65, .44, ...
+%     '$\mathrm{BCT}$','Interpreter','latex',...
+%     'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
+% text(x_end_value*0.65, .4, ...
+%     '$\mathrm{BCT}~\mathrm{edit}$','Interpreter','latex',...
+%     'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
+% text(x_end_value*0.65, .36, ...
+%     '$\mathrm{BRAPH}$','Interpreter','latex',...
+%     'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
 
 % set(h_max.ylabel,'Rotation',90);
 for h1 = h_max.yticklabels
-    set(h1,'Position',get(h1,'Position')-[0.4 .0 0]);
+    set(h1,'Position',get(h1,'Position')-[0.15 .0 0]);
 end
 h2 = h_max.yticks;
 for h2_loop = 1:1:length(h2)
     a = h2(h2_loop);
-    set(a,'XData',a.XData - 0.2)
+    set(a,'XData',a.XData - 0.1)
 end
 h3 = h_max.xticks;
 for h3_loop = 1:1:length(h3)

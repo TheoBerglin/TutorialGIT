@@ -1,8 +1,8 @@
-function plot_deg_bu(  )
+function plot_deg_wu(  )
 %PLOT_DEG Summary of this function goes here
 %   Detailed explanation goes here
 
-load('deg_bu_200_001.mat')
+load('deg_wu_200_001.mat')
 fprintf('Size of bct data: %d\nSize of bct edit data: %d\nSize of braph data: %d\n', length(bct_deg), length(bct_edit_deg), length(braph_deg))
 
 xlab = {'$\mathrm{Nodal}~\mathrm{degree}$'};
