@@ -7,10 +7,10 @@ fprintf('Size of bct data: %d\nSize of bct edit data: %d\nSize of braph data: %d
 
 xlab = {'$\mathrm{Edge}~\mathrm{weights}$'};
 colors = {[255 185 22]./255,[255 22 162]./255,[22 255 220]./255};
-xlabposx = 0.6;
-xlabposy = -0.08;
-ylabposx = 0.25;
-ylabposy = 0.4;
+xlabposx = 0.65;
+xlabposy = -0.07;
+ylabposx = 0.45;
+ylabposy = 0.345;
 nbr_of_vals = length(bct_wei);
 %% Plot figure
 %Edge bins
@@ -92,14 +92,14 @@ for i=1:length(x_values)
     plot([x_values(i) + 2*w, x_values(i) + 2*w], [braph_values(i)-braph_std(i), braph_values(i)+braph_std(i)], 'black', 'LineWidth', .1)
 end
 
-yticks = linspace(0.1, 0.4, 4);
+yticks = linspace(0.1, 0.3, 3);
 
 % plot(x_end_value*0.6, 0.445, 's', 'Color', colors{1}, 'MarkerFaceColor', colors{1}, 'MarkerSize', 10)
 % plot(x_end_value*0.6, 0.405, 's', 'Color', colors{2}, 'MarkerFaceColor', colors{2}, 'MarkerSize', 10)
 % plot(x_end_value*0.6, 0.365, 's', 'Color', colors{3}, 'MarkerFaceColor', colors{3}, 'MarkerSize', 10)
 
 
-h_max = maxis2d([x_start_value*0.6 x_end_value*1.1], [-0.02 y_max_value*1.7],...
+h_max = maxis2d([x_start_value*0.9 x_end_value*1.1], [-0.01 y_max_value*1.7],...
     'X0', x_start_value,...
     'XTicks',x_values,...
     'XTickLabels',{sprintf('$%.2f$', x_values(1)),sprintf('$%.2f$', x_values(2)),...
@@ -108,7 +108,7 @@ h_max = maxis2d([x_start_value*0.6 x_end_value*1.1], [-0.02 y_max_value*1.7],...
     sprintf('$%.2f$', x_values(7))},...
     'YTicks',yticks,...
     'YTickLabels',{sprintf('$%.1f$', yticks(1)),sprintf('$%.1f$', ...
-    yticks(2)),sprintf('$%.1f$', yticks(3)),sprintf('$%.1f$', yticks(4))},...
+    yticks(2)),sprintf('$%.1f$', yticks(3))},...
     'xlabel', xlab,...
     'XLabelPosition',[xlabposx xlabposy],...
     'ylabel', '$\mathrm{pdf}~\mathrm{(n.u)}$',...
@@ -132,21 +132,21 @@ h_max = maxis2d([x_start_value*0.6 x_end_value*1.1], [-0.02 y_max_value*1.7],...
 
 % set(h_max.ylabel,'Rotation',90);
 for h1 = h_max.yticklabels
-    set(h1,'Position',get(h1,'Position')-[0.15 .0 0]);
+    set(h1,'Position',get(h1,'Position')-[0.05 .0 0]);
 end
 h2 = h_max.yticks;
 for h2_loop = 1:1:length(h2)
     a = h2(h2_loop);
-    set(a,'XData',a.XData - 0.1)
+    set(a,'XData',a.XData - 0.02)
 end
 h3 = h_max.xticks;
 for h3_loop = 1:1:length(h3)
     a = h3(h3_loop);
-    set(a,'YData',a.YData - 0.016)
+    set(a,'YData',a.YData - 0.009)
 end
 for h4 = h_max.xticklabels
-    set(h4,'Position',get(h4,'Position')-[0 .025 0]);
+    set(h4,'Position',get(h4,'Position')-[0 .035 0]);
 end
-% set(h_max.xticklabels,'Rotation',45);
+set(h_max.xticklabels,'Rotation',45);
 
 end

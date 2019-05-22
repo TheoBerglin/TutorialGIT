@@ -8,9 +8,9 @@ fprintf('Size of bct data: %d\nSize of bct edit data: %d\nSize of braph data: %d
 xlab = {'$\mathrm{Nodal}~\mathrm{degree}$'};
 colors = {[255 185 22]./255,[255 22 162]./255,[22 255 220]./255};
 xlabposx = 4;
-xlabposy = -0.12;
-ylabposx = 1.9;
-ylabposy = 0.57;
+xlabposy = -0.1;
+ylabposx = 1.95;
+ylabposy = 0.5;
 
 nbr_of_vals = length(bct_deg);
 %% Plot figure
@@ -134,7 +134,7 @@ end
 h3 = h_max.xticks;
 for h3_loop = 1:1:length(h3)
     a = h3(h3_loop);
-    set(a,'YData',a.YData - 0.016)
+    set(a,'YData',a.YData - 0.014)
 end
 for h4 = h_max.xticklabels
     set(h4,'Position',get(h4,'Position')-[0 .025 0]);

@@ -9,7 +9,7 @@ size_x_axes = 250;
 size_y_axes = 250;
 % 
 xpos_col1 = 55;
-xpos_col2 = 575;
+xpos_col2 = 500;
 xpos_col3 = 950;
 
 ypos_row3 = 540;
@@ -22,11 +22,11 @@ dist_x = 29;
 dist_x_snd_col = 40;
 font_size = 26;
 text_xpos_a = xpos_col1 - dist_x;
-text_ypos_a = ypos_row3 + size_y_axes + dist_y;
+text_ypos_a = ypos_row1 + size_y_axes + dist_y;
 text_xpos_b = xpos_col2 - dist_x_snd_col;
 text_ypos_b = text_ypos_a;
-text_xpos_c = text_xpos_a;
-text_ypos_c = ypos_row1  + size_y_axes +  dist_y;
+text_xpos_c = xpos_col3 - dist_x_snd_col;
+text_ypos_c = text_ypos_a;
 text_xpos_d = text_xpos_b;
 text_ypos_d = text_ypos_c;
 text_xpos_e = text_xpos_a;
@@ -93,11 +93,14 @@ ax_text = axes('Parent',f1,'Units','pixels','Position',[0 0 ax_text_lengthx ax_t
 
 hold on
 
-text(text_xpos_c, text_ypos_c, ...
+text(text_xpos_a, text_ypos_a, ...
     '$\mathrm{(a)}$','Interpreter','latex',...
     'HorizontalAlignment','center','VerticalAlignment','middle','FontSize',font_size)
-text(text_xpos_d, text_ypos_d, ...
+text(text_xpos_b, text_ypos_b, ...
     '$\mathrm{(b)}$','Interpreter','latex',...
+    'HorizontalAlignment','center','VerticalAlignment','middle','FontSize',font_size)
+text(text_xpos_c, text_ypos_c, ...
+    '$\mathrm{(apa)}$','Interpreter','latex',...
     'HorizontalAlignment','center','VerticalAlignment','middle','FontSize',font_size)
 text(text_xpos_e, text_ypos_e, ...
     '$\mathrm{(c)}$','Interpreter','latex',...
