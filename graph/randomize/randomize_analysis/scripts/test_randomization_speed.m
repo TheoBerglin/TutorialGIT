@@ -1,16 +1,16 @@
 clear all, clc, close all
 %% Settings
-functions = {'randomize_braph_WD'};
-type = {Graph.WD };
+functions = {'randomize_bct_D' 'randomize_bct_U'};
+type = {Graph.WD Graph.WU};
 densities = [0.0001];% 0.001 0.01]; % 0.05 0.1 %, 0.2 0.4 0.7];
 small_size = [200 300 400 500];
 medium_size = [small_size, 600, 800, 1000];
 large_size = [small_size, 600 800 1000 10000];
 special_size = [10000];
-size_vec = {special_size};
+size_vec = {small_size small_size};
 n_randomizations = 40;
 n_rand_vec = [1000 1000 1000 1000 1000 500 100 100 5];
-n_rand_vec = [10];
+n_rand_vec = [40 40 10 10];
 %% Data path
 folder = what('randomize_analysis');
 current_loc = folder.path;
