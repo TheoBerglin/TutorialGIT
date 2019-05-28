@@ -2,7 +2,7 @@ function plot_trans(  )
 %PLOT_CPL Summary of this function goes here
 %   Detailed explanation goes here
 
-load('distr_trans.mat')
+load('distr_bu_trans.mat')
 fprintf('Size of bct data: %d\nSize of bct edit data: %d\nSize of braph data: %d\n', length(d_gt), length(d_gt_edit), length(d_comp))
 
 

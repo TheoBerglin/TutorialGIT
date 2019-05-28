@@ -2,7 +2,7 @@ function plot_cpl(  )
 %PLOT_CPL Summary of this function goes here
 %   Detailed explanation goes here
 
-load('distr_cpl.mat')
+load('distr_bu_cpl.mat')
 fprintf('Size of bct data: %d\nSize of bct edit data: %d\nSize of braph data: %d\n', length(d_gt), length(d_gt_edit), length(d_comp))
 
 xlab = {'$\mathrm{Characteristic}~\mathrm{pathlength}$'};
