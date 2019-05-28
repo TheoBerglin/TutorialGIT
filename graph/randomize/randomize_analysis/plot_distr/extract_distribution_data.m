@@ -1,7 +1,7 @@
 clear all, clc, close all;
 %% Settings
-methods = {'randomize_braph_WU'};  % method name in data file
-graph_types = {Graph.WU};
+methods = {'randomize_braph_BD'};  % braph name in data file
+graph_types = {Graph.BD};
 nodes = [200];
 densities = [0.01];
 
@@ -29,12 +29,22 @@ for mi=1:length(methods)
     end
     if dir
         type_dir = 'dir';
-        gt = 'randomize_bct_D';
-        gt_edit = 'randomize_bct_D_edit';
+        if wei
+            gt = 'randomize_bct_D';
+            gt_edit = 'randomize_bct_D_edit';
+        else
+            gt = 'randomize_bct_D_bin';
+            gt_edit = 'randomize_bct_D_edit_bin';
+        end
     else
         type_dir = 'undir';
-        gt = 'randomize_bct_U';
-        gt_edit = 'randomize_bct_U_edit';
+        if wei
+            gt = 'randomize_bct_U';
+            gt_edit = 'randomize_bct_U_edit';
+        else
+            gt = 'randomize_bct_U_bin';
+            gt_edit = 'randomize_bct_U_edit_bin';
+        end
     end
     
     %% Load data
