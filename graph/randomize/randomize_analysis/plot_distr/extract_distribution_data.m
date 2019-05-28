@@ -1,9 +1,10 @@
 clear all, clc, close all;
 %% Settings
-methods = {'randomize_braph_BD'};  % braph name in data file
-graph_types = {Graph.BD};
+methods = {'randomize_braph_WU'};  % braph name in data file
+graph_types = {Graph.WU};
 nodes = [200];
 densities = [0.01];
+filename_start = 'distr_wu_%s.mat';
 
 % Measures to extract
 meas = {
@@ -80,12 +81,14 @@ for mi=1:length(methods)
                 d_gt = extractfield(node_data_gt(rowi_gt).measures, out_v);
                 d_gt_edit = extractfield(node_data_gt_edit(rowi_gt_edit).measures, out_v);
                 d_braph = extractfield(node_data_braph(rowi_braph).measures, out_v);
-                d_gt = d_gt(isfinite(d_gt));
-                d_gt_edit = d_gt_edit(isfinite(d_gt_edit));
-                d_braph = d_braph(isfinite(d_braph));
-                fprintf('Size of bct data: %d\nSize of bct edit data: %d\nSize of braph data: %d\n', length(d_gt), length(d_gt_edit), length(d_braph))
+                % Replace inf values with mean
+                fprintf('Size of bct data: %d\nSize of bct edit data: %d\nSize of braph data: %d\n',...
+                    length(d_gt(isfinite(d_gt))), length(d_gt_edit(isfinite(d_gt_edit))), length(d_braph(isfinite(d_braph))))
+                d_gt(~isfinite(d_gt)) = mean(d_gt(isfinite(d_gt)));
+                d_gt_edit(~isfinite(d_gt_edit)) = mean(d_gt_edit(isfinite(d_gt_edit)));
+                d_braph(~isfinite(d_braph)) = mean(d_braph(isfinite(d_braph)));
                 
-                filename = sprintf('test_%s.mat', out_v);
+                filename = sprintf(filename_start, out_v);
                 save_path = path_append(fold, filename);
                 save(save_path, 'd_gt', 'd_gt_edit', 'd_braph')
             end

@@ -1,22 +1,23 @@
-function plot_cpl(  )
+function plot_bu_trans(  )
 %PLOT_CPL Summary of this function goes here
 %   Detailed explanation goes here
 
-load('distr_bu_cpl.mat')
+load('distr_bu_trans.mat')
 fprintf('Size of bct data: %d\nSize of bct edit data: %d\nSize of braph data: %d\n', length(d_gt), length(d_gt_edit), length(d_comp))
 
-xlab = {'$\mathrm{Characteristic}~\mathrm{pathlength}$'};
+
+xlab = {'$\mathrm{Transitivity}$'};
 colors = {[255 185 22]./255,[255 22 162]./255,[22 255 220]./255};
-xlabposx = 6.5;
-xlabposy = -0.12;
-ylabposx = 5.6;
-ylabposy = 0.525;
+xlabposx = 0.02;
+xlabposy = -0.14;
+ylabposx = 0.011;
+ylabposy = 0.575;
 
 %% Plot figure
 %Edge bins
 nbr_of_bins = 8;
-x_end_value = 7.8;
-x_start_value = 5;
+x_end_value = 0.05;
+x_start_value = 0;
 edges = linspace(x_start_value, x_end_value, nbr_of_bins);
 x_values = edges(1:end-1) + (edges(2)-edges(1))/2;
 
@@ -75,23 +76,24 @@ for i=1:length(x_values)
     plot([x_values(i) + 2*w, x_values(i) + 2*w], [braph_values(i)-braph_std(i), braph_values(i)+braph_std(i)], 'black', 'LineWidth', .1)
 end
 
-yticks = linspace(0.1, 0.4, 4);
+yticks = linspace(.1, .5, 5);
 
-% plot(x_end_value*0.935, 0.42, 's', 'Color', colors{1}, 'MarkerFaceColor', colors{1}, 'MarkerSize', 10)
-% plot(x_end_value*0.935, 0.38, 's', 'Color', colors{2}, 'MarkerFaceColor', colors{2}, 'MarkerSize', 10)
-% plot(x_end_value*0.935, 0.34, 's', 'Color', colors{3}, 'MarkerFaceColor', colors{3}, 'MarkerSize', 10)
+plot(x_end_value*0.7, 0.465, 's', 'Color', colors{1}, 'MarkerFaceColor', colors{1}, 'MarkerSize', 10)
+plot(x_end_value*0.7, 0.415, 's', 'Color', colors{2}, 'MarkerFaceColor', colors{2}, 'MarkerSize', 10)
+plot(x_end_value*0.7, 0.365, 's', 'Color', colors{3}, 'MarkerFaceColor', colors{3}, 'MarkerSize', 10)
 
 
-h_max = maxis2d([x_start_value*0.9 x_end_value*1.04], [-0.02 y_max_value*1.5],...
+h_max = maxis2d([x_start_value-0.008 x_end_value*1.1], [-0.02 y_max_value*1.6],...
     'X0', x_start_value,...
     'XTicks',x_values,...
-    'XTickLabels',{sprintf('$%.1f$', x_values(1)),sprintf('$%.1f$', x_values(2)),...
-    sprintf('$%.1f$', x_values(3)),sprintf('$%.1f$', x_values(4)),...
-    sprintf('$%.1f$', x_values(5)),sprintf('$%.1f$', x_values(6)),...
-    sprintf('$%.1f$', x_values(7))},...
+    'XTickLabels',{sprintf('$%.3f$', x_values(1)),sprintf('$%.3f$',x_values(2)),...
+    sprintf('$%.3f$', x_values(3)),sprintf('$%.3f$', x_values(4)),...
+    sprintf('$%.3f$', x_values(5)),sprintf('$%.3f$', x_values(6)),...
+    sprintf('$%.3f$', x_values(7))},...
     'YTicks',yticks,...
     'YTickLabels',{sprintf('$%.1f$', yticks(1)),sprintf('$%.1f$', ...
-    yticks(2)),sprintf('$%.1f$', yticks(3)),sprintf('$%.1f$', yticks(4))},...
+    yticks(2)),sprintf('$%.1f$', yticks(3)),sprintf('$%.1f$', yticks(4)),...
+    sprintf('$%.1f$', yticks(5)),},...
     'xlabel', xlab,...
     'XLabelPosition',[xlabposx xlabposy],...
     'ylabel', '$\mathrm{pdf}~\mathrm{(n.u)}$',...
@@ -102,35 +104,36 @@ h_max = maxis2d([x_start_value*0.9 x_end_value*1.04], [-0.02 y_max_value*1.5],..
     'HeadNode',5,...
     'TickFontSize',14,...
     'labelfontsize',18);
-% 
-% text(x_end_value*0.95, 0.415, ...
-%     '$\mathrm{BCT}$','Interpreter','latex',...
-%     'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
-% text(x_end_value*0.95, 0.375, ...
-%     '$\mathrm{BCT}~\mathrm{edit}$','Interpreter','latex',...
-%     'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
-% text(x_end_value*0.95, 0.335, ...
-%     '$\mathrm{BRAPH}$','Interpreter','latex',...
-%     'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
+
+
+text(x_end_value*0.75, 0.46, ...
+    '$\mathrm{BCT}$','Interpreter','latex',...
+    'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
+text(x_end_value*0.75, 0.41, ...
+    '$\mathrm{BCT}~\mathrm{edit}$','Interpreter','latex',...
+    'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
+text(x_end_value*0.75, 0.36, ...
+    '$\mathrm{BRAPH}$','Interpreter','latex',...
+    'HorizontalAlignment','left','VerticalAlignment','middle','FontSize',18)
 
 % set(h_max.ylabel,'Rotation',90);
 for h1 = h_max.yticklabels
-    set(h1,'Position',get(h1,'Position')-[0.15 .0 0]);
+    set(h1,'Position',get(h1,'Position')-[0.0025 .0 0]);
 end
 h2 = h_max.yticks;
 for h2_loop = 1:1:length(h2)
     a = h2(h2_loop);
-    set(a,'XData',a.XData - 0.08)
+    set(a,'XData',a.XData - 0.0015)
 end
 h3 = h_max.xticks;
 for h3_loop = 1:1:length(h3)
     a = h3(h3_loop);
-    set(a,'YData',a.YData - 0.013)
+    set(a,'YData',a.YData - 0.014)
 end
+
 for h4 = h_max.xticklabels
-    set(h4,'Position',get(h4,'Position')-[0 .04 0]);
+    set(h4,'Position',get(h4,'Position')-[0 .065 0]);
 end
 set(h_max.xticklabels,'Rotation',45);
-
 end
 
