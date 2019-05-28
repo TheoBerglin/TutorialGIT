@@ -24,4 +24,5 @@ function cplin_wsg = characteristic_pathlength_wsg_in( A, type)
 % Date: 2019/03/01
 % http://braph.org/
 
-cplin_wsg = mean(pathlength_wsg_in(A, type));
+pl_wsg_in = pathlength_wsg_in(A, type);
+cplin_wsg = mean(pl_wsg_in(~isnan(pl_wsg_in)));

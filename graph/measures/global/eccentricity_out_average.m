@@ -19,5 +19,5 @@ function res = eccentricity_out_average( A, type)
 % Authors: Adam Liberda, Theo Berglin, Mite Mijalkov, Ehsan Kakaei, Giovanni Volpe
 % Date: 2019/03/01
 % http://braph.org/
-
-res = mean(eccentricity_out(A, type));
+ecc_out = eccentricity_out(A, type);
+res = mean(ecc_out(~isnan(ecc_out)));

@@ -134,9 +134,6 @@ classdef Graph < handle & matlab.mixin.Copyable
     %                                           participation and modularity
     %   copyElement                         -   copy community structure
     %
-    % Graph methods (Abstract):
-    %   randomize    -   randomize graph while preserving degree distribution
-    %
     % Graph methods :
     %   add_measure_to_struct       -   adds measure to MS struct
     %   get_community_structure     -   returns the community structure
@@ -153,8 +150,11 @@ classdef Graph < handle & matlab.mixin.Copyable
     %                                   using the newman algorithm
     %   calculate_structure_fixed   -   calculates a community structure
     %                                   using the fixed algorithm
-    %   smallworldness              -   small-wordness of the graph
     %   calculate_measure           -   calculates a specific measure
+    %   randomize_braph             -   randomize graph while preserving
+    %                                   degree distribution using braph algo
+    %   randomize_bct_edit          -   randomize graph while preserving 
+    %                                   degree distribution using edited bct algo   
     %
     % Graph methods (Static):
     %   positivize          -   positivizes a matrix
@@ -847,9 +847,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             cp.S = copy(g.S);
         end
     end
-    methods (Abstract)
-        randomize(g)  % randomize graph while preserving degree distribution
-    end
     methods
         function add_measure_to_struct(g, m)
             % ADD_MEASURE_TO_STRUCT adds a measure to the measure struct of
@@ -1320,50 +1317,6 @@ classdef Graph < handle & matlab.mixin.Copyable
             g.CS.LAST_PARAMS = g.S.toString();
             g.MS{g.MODULARITY}.VALUE = Q/L;
         end
-        function sw = smallworldness(g,wsg)
-            % SMALLWORLDNESS small-worldness of the graph
-            %
-            % SW = SMALLWORLDNESS(G,WGS) calculated the small-worldness of the graph.
-            %   WGS = true means that it is calcualted using
-            %   the characteristic path length within connected subgraphs.
-            %
-            % SW = SMALLWORLDNESS(G) is equivalent to SW = SMALLWORLDNESS(G,false)
-            %
-            % See also Graph.
-            
-            if nargin<2
-                wsg = false;
-            end
-            
-            M = 100;  % number of random graphs
-            
-            if isempty(g.sw)
-                C = g.measure(Graph.CLUSTER);
-                if g.directed() || ~wsg
-                    L = g.measure(Graph.CPL);
-                else
-                    L = g.measure(Graph.CPL_WSG);
-                end
-                
-                Cr = zeros(1,M);
-                Lr = zeros(1,M);
-                for m = 1:1:M
-                    gr = g.randomize();
-                    Cr(m) = gr.measure(Graph.CLUSTER);
-                    if g.directed()
-                        Lr(m) = gr.measure(Graph.CPL);
-                    else
-                        Lr(m) = gr.measure(Graph.CPL_WSG);
-                    end
-                end
-                Cr = mean(Cr);
-                Lr = mean(Lr);
-                
-                g.sw = (C/Cr)/(L/Lr);
-            end
-            
-            sw = g.sw;
-        end
         function calculate_measure(g,mi)
             % CALCULATE_MEASURE calculates a given measure
             %
@@ -1396,6 +1349,62 @@ classdef Graph < handle & matlab.mixin.Copyable
             else
                 g.MS{mi}.VALUE = feval(g.MS{mi}.FUNCTION, g.get_adjacency_matrix(), g.get_type());
             end
+        end
+        function gr = randomize_braph(g, wei_freq)
+            % RANDOMIZE_BRAPH randomizes the graph
+            %
+            % GR = RANDOMIZE_BRAPH(G) randomizes the graph G using the BRAPH algorithm
+            %   and returns the new graph GR.
+            %
+            % Optional parameters that can be passed to the function:
+            %   WEI_FREQ  -    frequency of weight sorting in weighted randomization, must
+            %                  be in the range of: 0 < wei_freq <= 1
+            %                  (default) wei_freq = 1 : older [<2011] versions of MATLAB
+            %                  (default) wei_freq = .1 : newer versions of MATLAB
+            %
+            % Randomization may be better (and execution time will be slower) for
+            %   higher values wei_freq. Higher values of wei_freq
+            %   may enable a more accurate conservation of strength sequences.
+            %
+            % Reference: "Weight-conserving characterization of complex functional brain
+            %             networks", M.Rubinov and O.Sporns
+            %             "Specificity and Stability in Topology of Protein Networks", S.Maslov
+            %             and K.Sneppen
+            %
+            if exist('wei_freq','var')
+                rA = randomize_braph(g.A, g.TYPE, wei_freq);
+            else
+                rA = randomize_braph(g.A, g.TYPE);
+            end
+            eval(['gr = ' class(g) '(rA);'])
+        end
+        function gr = randomize_bct_edit(g, wei_freq)
+            % RANDOMIZE_BCT_EDIT randomizes the graph
+            %
+            % GR = RANDOMIZE_BCT_EDIT(G) randomizes the graph G using the edited BCT algorithm
+            %   and returns the new graph GR.
+            %
+            % Optional parameters that can be passed to the function:
+            %   WEI_FREQ  -    frequency of weight sorting in weighted randomization, must
+            %                  be in the range of: 0 < wei_freq <= 1
+            %                  (default) wei_freq = 1 : older [<2011] versions of MATLAB
+            %                  (default) wei_freq = .1 : newer versions of MATLAB
+            %
+            % Randomization may be better (and execution time will be slower) for
+            %   higher values wei_freq. Higher values of wei_freq
+            %   may enable a more accurate conservation of strength sequences.
+            %
+            % Reference: "Weight-conserving characterization of complex functional brain
+            %             networks", M.Rubinov and O.Sporns
+            %             "Specificity and Stability in Topology of Protein Networks", S.Maslov
+            %             and K.Sneppen
+            %
+            if exist('wei_freq','var')
+                rA = randomize_bct_edit(g.A, g.TYPE, wei_freq);
+            else
+                rA = randomize_bct_edit(g.A, g.TYPE);
+            end
+            eval(['gr = ' class(g) '(rA);'])
         end
     end
     methods (Static)
