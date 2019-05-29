@@ -1,9 +1,9 @@
-function res = clustering_average( A, type)
-% CLUSTERING_AVERAGE average of the clustering graph measure
+function res = clustering_global( A, type)
+% CLUSTERING_GLOBAL global clustering measure
 %
-% RES = CLUSTERING_AVERAGE(A, TYPE) calculates the average of the 
+% RES = CLUSTERING_GLOBAL(A, TYPE) calculates the average of the 
 %   cluster coefficient of each node of the graph represented by 
-%   the adjacency matrix A.
+%   the adjacency matrix A. This is the global clustering coefficient.
 %   TYPE specifies the type of graph:
 %   Graph.BD = Binary Directed
 %   Graph.BU = Binary Undirected
