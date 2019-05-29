@@ -1,4 +1,4 @@
-function plot_speed_data_func(bin, dir_type, dir_type_opposite)
+function y_max = plot_speed_data_func(bin, dir_type, dir_type_opposite, save_name)
 %bin = 'binary';
 %bin = 'weighted';
 %plot_over = 'density';
@@ -41,13 +41,14 @@ for bin_i = 1:length(type_bin_fields)
                 end
             end
             
-            if contains(func_fields{func_i}, 'bct')
+            if  contains(func_fields{func_i}, 'randmio') || contains(func_fields{func_i}, 'edit')
+                method_name = 'BCT_edit';
+                plot_style = '-[]';
+                
+            elseif  contains(func_fields{func_i}, 'bct')
                 
                 method_name = 'BCT';
                 plot_style = '-';
-            elseif contains(func_fields{func_i}, 'randmio')
-                method_name = 'BCT_edit';
-                plot_style = '-[]';
             elseif  contains(func_fields{func_i}, 'randomizer_bin_und')
                 method_name = 'BCT_special';
                 plot_style = '-*';
@@ -69,6 +70,9 @@ end
 data = plot_data.(bin);
 fields = fieldnames(data);
 plot_over = 'nodes';
+y_max = -inf;
+save_data(1) = struct('x', [], 'y', [], 'DisplayName', []);
+ind = 1;
 for i = 1:length(fields)
     if length(data.(fields{i})) ==0
         continue
@@ -89,7 +93,7 @@ for i = 1:length(fields)
         if contains(fields{i}, 'BCT_edit')
             plot_style = 'o';
             plot_color = 'r';
-        
+            
         elseif  contains(fields{i}, 'BCT_special')
             plot_style = 's';
             plot_color = 'y';
@@ -100,10 +104,19 @@ for i = 1:length(fields)
             plot_style = '*';
             plot_color = 'k';
         end
-        loglog(x_data, y_data,plot_style,'DisplayName', replace(replace(replace(fields{i},'un',''), 'directed', ''), '_', ' '))
-        hold on
+        save_data(ind) = struct('x', x_data, 'y', y_data, 'DisplayName', fields{i});
+        ind = ind+1;
+        %loglog(x_data, y_data,plot_style,'DisplayName', replace(replace(replace(fields{i},'un',''), 'directed', ''), '_', ' '))
+        %loglog(x_data, y_data, plot_style, 'MarkerFaceColor', plot_color, 'MarkerEdgeColor', 'k')
+        %hold on
+        if max(y_data) > y_max
+            y_max = max(y_data);
+        end
     end
 end
+
+save(save_name, 'save_data')
+
 %xlabel('Nodes', 'interpreter', 'latex', 'FontSize', 12)
 %ylabel('Time per randomization [s]', 'interpreter', 'latex', 'FontSize', 12)
 %title(sprintf('Time comparison for %s graph of density: %d',dir_type, densities(1)), 'interpreter', 'latex', 'FontSize', 14)
